@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-purple: #55167b;
+  --color-brand-deep: #450d69;
+  --color-brand-yellow: #fbcf08;
+  --color-brand-orange: #e83c22;
+  --color-brand-cyan: #16bfd9;
+  --color-brand-lime: #8bec1a;
+  --color-brand-surface: #f8f5fa;
+  --color-brand-ink: #23182b;
+  --font-heading: var(--font-manrope);
+  --font-body: var(--font-inter);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

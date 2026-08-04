@@ -12,7 +12,7 @@
   <meta property="og:description" content="Explore curated group trips, fixed departures and customised holidays with TravelEnfield." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="en_IN" />
-  <meta property="og:image" content="https://www.travelenfield.in/images/hero.jpg" />
+  <meta property="og:image" content="https://www.travelenfield.in/images/group-trips-himalaya-hero.jpg" />
   <meta name="theme-color" content="#55167B" />
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -122,16 +122,25 @@
 
   <main id="main-content">
     <!-- ============ 3. HERO SECTION ============ -->
-    <section class="hero" id="hero">
+    <section class="hero hero-seo" id="hero" aria-labelledby="hero-heading">
       <div class="hero-bg">
-        <img src="/images/hero-travelenfield-2026.jpg" alt="Indian travellers overlooking a Himalayan valley at sunrise" class="hero-img" width="1680" height="945" fetchpriority="high" decoding="async" />
+        <img src="/images/group-trips-himalaya-hero.jpg" alt="A small group of travellers exploring a Himalayan valley at sunrise" class="hero-img" width="1536" height="1024" fetchpriority="high" decoding="async" />
         <div class="hero-overlay"></div>
       </div>
+      <figure class="hero-person hero-person-left" aria-hidden="true">
+        <img src="/images/woman-adventure-traveller.jpg" alt="" width="1024" height="1536" decoding="async" />
+        <figcaption><i data-lucide="map-pinned"></i><span><strong>Routes that fit you</strong><small>Planned by travel experts</small></span></figcaption>
+      </figure>
+      <figure class="hero-person hero-person-right" aria-hidden="true">
+        <img src="/images/bike-trip-captain.jpg" alt="" width="1024" height="1536" decoding="async" />
+        <figcaption><i data-lucide="shield-check"></i><span><strong>Travel with confidence</strong><small>Experienced trip captains</small></span></figcaption>
+      </figure>
       <div class="hero-content">
-        <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Small groups. Big stories.</span>
-        <h1 class="hero-title">Go farther.<br/><span class="hero-highlight">Feel more.</span></h1>
-        <p class="hero-subtitle">Curated group adventures and personal journeys, designed by people who know the road.</p>
-        <div class="hero-search-wrap">
+        <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Curated journeys. Real human support.</span>
+        <h1 class="hero-title" id="hero-heading">Curated Group Trips &amp;<br/><span class="hero-highlight">Custom Tour Packages</span></h1>
+        <p class="hero-subtitle">Explore fixed departures, bike trips, weekend getaways and personalised holidays across India and beyond—with transparent pricing and expert support.</p>
+        <div class="hero-trust-typer" aria-live="polite"><span class="hero-trust-label"><i data-lucide="badge-check"></i> Why travellers choose us</span><strong id="hero-trust-text">Transparent prices. No hidden surprises.</strong></div>
+        <div class="hero-search-wrap" hidden>
           <div class="hero-search-box">
             <svg class="hero-search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             <input type="search" class="hero-search-input" placeholder="Try Ladakh, Bali or a weekend trip" aria-label="Search destinations and trips" autocomplete="off" aria-controls="hero-suggestions" aria-expanded="false" />
@@ -139,11 +148,12 @@
           </div>
           <div class="hero-suggestions" id="hero-suggestions" role="listbox" aria-label="Popular searches"><button type="button" data-hero-query="Ladakh"><img src="/images/destinations/ladakh.jpg" alt=""><span><strong>Ladakh</strong><small>Bike trips · High passes</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Bali"><img src="/images/destinations/bali.jpg" alt=""><span><strong>Bali</strong><small>Island escape · International</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Spiti"><img src="/images/destinations/spiti.jpg" alt=""><span><strong>Spiti Valley</strong><small>Road trips · Mountains</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Manali"><img src="/images/destinations/manali.jpg" alt=""><span><strong>Manali</strong><small>Weekend · Snow adventure</small></span><i data-lucide="arrow-up-right"></i></button></div>
         </div>
-        <div class="hero-quick-picks"><span>Trending</span><button type="button" data-hero-query="Ladakh">Ladakh</button><button type="button" data-hero-query="Bali">Bali</button><button type="button" data-hero-query="Weekend">Weekend trips</button></div>
+        <div class="hero-quick-picks" hidden><span>Trending</span><button type="button" data-hero-query="Ladakh">Ladakh</button><button type="button" data-hero-query="Bali">Bali</button><button type="button" data-hero-query="Weekend">Weekend trips</button></div>
         <div class="hero-ctas">
-          <a href="#upcoming" class="btn btn-primary btn-lg">See upcoming trips <i data-lucide="arrow-right"></i></a>
-          <a href="/custom-trip" class="btn btn-outline-light btn-lg">Build my own trip</a>
+          <a href="/upcoming-trips" class="btn btn-primary btn-lg">Explore Group Trips <i data-lucide="arrow-right"></i></a>
+          <a href="/custom-trip" class="btn btn-outline-light btn-lg">Plan a Custom Trip</a>
         </div>
+        <div class="hero-micro-proof" aria-label="TravelEnfield service highlights"><span><i data-lucide="hotel"></i> Verified stays</span><span><i data-lucide="headphones"></i> 24/7 trip support</span><span><i data-lucide="receipt-text"></i> Clear inclusions</span></div>
       </div>
       <aside class="hero-proof-card" aria-label="TravelEnfield traveller rating"><div class="hero-proof-avatars"><span>RK</span><span>AS</span><span>NM</span></div><div><strong>4.9 traveller rating</strong><small><i data-lucide="star"></i> Built around real travellers</small></div></aside>
       <a class="hero-scroll-cue" href="#trust-strip" aria-label="Scroll to traveller proof"><span>Discover</span><i data-lucide="arrow-down"></i></a>

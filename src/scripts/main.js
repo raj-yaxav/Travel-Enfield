@@ -119,7 +119,12 @@ const menu = $('#mobile-nav');
 const menuOverlay = $('#mobile-nav-overlay');
 const hamburger = $('#hamburger');
 const menuClose = $('#mobile-nav-close');
+const drawerTriggers = $$('[data-drawer-trigger]');
 let menuReturnFocus = null;
+
+// The sticky header uses backdrop-filter, which creates a containing block for
+// fixed descendants. Portal the drawer to body so it always fills the viewport.
+if (menuOverlay && menu) document.body.append(menuOverlay, menu);
 
 function setMenu(open) {
   if (!menu || !menuOverlay || !hamburger) return;
@@ -127,6 +132,7 @@ function setMenu(open) {
   menuOverlay.classList.toggle('open', open);
   document.body.classList.toggle('menu-open', open);
   hamburger.setAttribute('aria-expanded', String(open));
+  drawerTriggers.forEach(trigger => trigger.setAttribute('aria-expanded', String(open)));
   menu.setAttribute('aria-hidden', String(!open));
   if (open) {
     menuReturnFocus = document.activeElement;
@@ -140,6 +146,7 @@ hamburger?.setAttribute('aria-expanded', 'false');
 hamburger?.setAttribute('aria-controls', 'mobile-nav');
 menu?.setAttribute('aria-hidden', 'true');
 hamburger?.addEventListener('click', () => setMenu(true));
+drawerTriggers.forEach(trigger => trigger.addEventListener('click', () => setMenu(true)));
 menuClose?.addEventListener('click', () => setMenu(false));
 menuOverlay?.addEventListener('click', () => setMenu(false));
 $$('.mobile-nav-link', menu).forEach(link => link.addEventListener('click', () => setMenu(false)));
@@ -279,6 +286,39 @@ $('#login-btn')?.addEventListener('click', () => {
 });
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Keep the hero message useful without motion, then rotate short trust signals
+// for visitors who have not requested reduced motion.
+const heroTrustText = $('#hero-trust-text');
+const heroTrustMessages = [
+  'Transparent prices. No hidden surprises.',
+  'Verified stays and experienced trip captains.',
+  'Real human support before and during your trip.',
+  'Flexible departures and custom-made routes.'
+];
+if (heroTrustText && !reduceMotion) {
+  let messageIndex = 0;
+  let characterIndex = heroTrustMessages[0].length;
+  let deleting = true;
+  const typeTrustMessage = () => {
+    const message = heroTrustMessages[messageIndex];
+    characterIndex += deleting ? -1 : 1;
+    heroTrustText.textContent = message.slice(0, characterIndex);
+
+    let delay = deleting ? 28 : 48;
+    if (!deleting && characterIndex === message.length) {
+      deleting = true;
+      delay = 2100;
+    } else if (deleting && characterIndex === 0) {
+      deleting = false;
+      messageIndex = (messageIndex + 1) % heroTrustMessages.length;
+      delay = 260;
+    }
+    window.setTimeout(typeTrustMessage, delay);
+  };
+  window.setTimeout(typeTrustMessage, 2200);
+}
+
 if (!reduceMotion && 'IntersectionObserver' in window) {
   const revealTargets = $$('.section, .social-banner, .promo-banner');
   revealTargets.forEach(element => element.classList.add('reveal'));
