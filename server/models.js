@@ -1,0 +1,37 @@
+import mongoose from 'mongoose';
+
+const options = { timestamps: true, strict: true };
+const Destination = mongoose.model('Destination', new mongoose.Schema({
+  name: { type: String, required: true }, slug: { type: String, required: true, unique: true, index: true },
+  category: { type: String, enum: ['domestic', 'international'], required: true }, image: String,
+  tagline: String, summary: String, startingPrice: Number, bestTime: String,
+  highlights: [String], thingsToDo: [String], travelTips: [String], faq: [{ question: String, answer: String }],
+}, options));
+const Trip = mongoose.model('Trip', new mongoose.Schema({
+  title: { type: String, required: true }, slug: { type: String, required: true, unique: true, index: true },
+  destinationSlug: { type: String, required: true, index: true }, categories: [String], image: String,
+  duration: String, nights: Number, price: Number, oldPrice: Number, discount: String, badge: String,
+  summary: String, groupSize: String, pickup: String, dates: [String],
+  itinerary: [{ day: Number, title: String, details: [String] }], inclusions: [String], exclusions: [String],
+  notes: [String], featured: { type: Boolean, default: false },
+}, options));
+const Category = mongoose.model('Category', new mongoose.Schema({
+  name: String, slug: { type: String, unique: true }, title: String, description: String, image: String, eyebrow: String, filters: [String],
+}, options));
+const Blog = mongoose.model('Blog', new mongoose.Schema({
+  title: String, slug: { type: String, unique: true }, excerpt: String, image: String, category: String,
+  author: String, readTime: String, publishedAt: Date, sections: [{ heading: String, body: String }],
+}, options));
+const Page = mongoose.model('Page', new mongoose.Schema({
+  slug: { type: String, unique: true }, title: String, eyebrow: String, intro: String,
+  sections: [{ heading: String, body: String }],
+}, options));
+const Enquiry = mongoose.model('Enquiry', new mongoose.Schema({
+  type: { type: String, default: 'general' }, name: String, phone: String, email: String, destination: String,
+  travelDate: String, travellers: Number, budget: String, message: String, status: { type: String, default: 'new' },
+}, options));
+const User = mongoose.model('User', new mongoose.Schema({
+  name: String, email: { type: String, unique: true, lowercase: true }, phone: String, passwordHash: String,
+}, options));
+
+export { Destination, Trip, Category, Blog, Page, Enquiry, User };

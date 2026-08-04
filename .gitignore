@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.codex-dev.log
+*.log
+audit-*.png
+screenshots/
+artifacts/
+source-assets/
+/scripts/
+docx_content.txt
+extract_docx.ps1
+logo.jpeg
+TravelEnfield_Complete_Website_Blueprint.docx
+.vercel/

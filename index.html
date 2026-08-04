@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>TravelEnfield: Group Trips & Customised Tour Packages</title>
+  <meta name="description" content="Explore curated group trips, fixed departures and customised holidays with TravelEnfield. View itineraries, dates, prices and traveller reviews." />
+  <meta name="keywords" content="TravelEnfield, Group Travel, Tour Packages, Adventure Trips, India Travel" />
+  <link rel="canonical" href="https://www.travelenfield.in" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="TravelEnfield: Group Trips & Customised Tour Packages" />
+  <meta property="og:description" content="Explore curated group trips, fixed departures and customised holidays with TravelEnfield." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:image" content="https://www.travelenfield.in/images/hero.jpg" />
+  <meta name="theme-color" content="#55167B" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/styles/index.css" />
+  <!-- Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "TravelEnfield",
+    "url": "https://www.travelenfield.in",
+    "description": "India's Fastest Growing Travel Community"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ============ 1. ANNOUNCEMENT BAR ============ -->
+  <div class="announcement-bar" id="announcement-bar">
+    <div class="announcement-shimmer"></div>
+    <a href="#deals" class="announcement-link">
+      <p><i data-lucide="gift"></i> Monsoon Sale is LIVE — Flat ₹5,000 Off on All Group Trips! <span class="announcement-arrow">→</span></p>
+    </a>
+    <button class="announcement-close" id="announcement-close" aria-label="Close announcement">✕</button>
+  </div>
+
+  <!-- ============ 2. STICKY HEADER ============ -->
+  <header class="header" id="header">
+    <!-- Mobile Header -->
+    <div class="header-mobile">
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a href="/" class="header-logo-mobile">
+        <img src="/images/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img-mobile" />
+      </a>
+      <a href="tel:+919876543210" class="header-phone-mobile" aria-label="Call us">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+      </a>
+    </div>
+
+    <!-- Desktop Header -->
+    <div class="header-desktop">
+      <div class="header-top">
+        <a href="/" class="header-logo">
+          <img src="/images/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img" />
+        </a>
+        <div class="header-search">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" class="search-input" placeholder="Where do you want to go?" id="search-input" aria-label="Search destinations and trips" />
+        </div>
+        <div class="header-actions">
+          <a href="tel:+919876543210" class="header-phone">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z" transform="scale(0.047)"></path></svg>
+            (+91) 98765 43210
+          </a>
+          <button class="btn btn-primary btn-login" id="login-btn">Login</button>
+        </div>
+      </div>
+      <nav class="header-nav" id="header-nav">
+        <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="users"></i> Group Trips <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-wide">
+          <a href="/upcoming-trips"><i data-lucide="calendar-days"></i><span><strong>Upcoming departures</strong><small>Fixed dates, great company</small></span></a><a href="/domestic-trips"><i data-lucide="mountain-snow"></i><span><strong>India trips</strong><small>Mountains, coasts and culture</small></span></a><a href="/international-trips"><i data-lucide="plane"></i><span><strong>International trips</strong><small>Curated journeys beyond borders</small></span></a><a href="/weekend-trips"><i data-lucide="car-front"></i><span><strong>Weekend escapes</strong><small>Short breaks, full experiences</small></span></a>
+        </div></div>
+        <a href="/deals" class="nav-link"><i data-lucide="tags"></i> Deals</a>
+        <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="map"></i> Travel Styles <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu">
+          <a href="/bike-trips"><i data-lucide="bike"></i><span><strong>Bike trips</strong><small>Two wheels, open roads</small></span></a><a href="/backpacking-trips"><i data-lucide="backpack"></i><span><strong>Backpacking</strong><small>Social, immersive journeys</small></span></a><a href="/trekking-trips"><i data-lucide="footprints"></i><span><strong>Treks</strong><small>Trails worth earning</small></span></a>
+        </div></div>
+        <a href="/upcoming-trips" class="nav-link"><i data-lucide="luggage"></i> Upcoming Trips</a>
+        <a href="/weekend-trips" class="nav-link"><i data-lucide="car-front"></i> Weekend Trip</a>
+        <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="earth"></i> Customised <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-right">
+          <a href="/custom-trip"><i data-lucide="wand-sparkles"></i><span><strong>Design my trip</strong><small>Built around your dates and style</small></span></a><a href="/domestic-trips"><i data-lucide="map-pinned"></i><span><strong>Custom India</strong><small>Private journeys across India</small></span></a><a href="/international-trips"><i data-lucide="plane-takeoff"></i><span><strong>Custom international</strong><small>Made-to-fit global holidays</small></span></a>
+        </div></div>
+        <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="sparkles"></i> More <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-right">
+          <a href="/about-us"><i data-lucide="circle-user-round"></i><span><strong>About us</strong></span></a><a href="/reviews"><i data-lucide="star"></i><span><strong>Traveller reviews</strong></span></a><a href="/blog"><i data-lucide="book-open"></i><span><strong>Travel journal</strong></span></a><a href="/contact-us"><i data-lucide="headphones"></i><span><strong>Contact</strong></span></a>
+        </div></div>
+      </nav>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <nav class="mobile-nav" id="mobile-nav">
+      <div class="mobile-nav-header">
+        <img src="/images/brand/logo-navbar.png" alt="TravelEnfield" class="mobile-nav-logo" />
+        <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="/upcoming-trips" class="mobile-nav-link"><i data-lucide="users"></i> Group Trips</a>
+        <a href="/deals" class="mobile-nav-link"><i data-lucide="tags"></i> Deals</a>
+        <a href="#destinations" class="mobile-nav-link"><i data-lucide="map"></i> Travel Styles</a>
+        <a href="/upcoming-trips" class="mobile-nav-link"><i data-lucide="luggage"></i> Upcoming Trips</a>
+        <a href="/weekend-trips" class="mobile-nav-link"><i data-lucide="car-front"></i> Weekend Trip</a>
+        <a href="/custom-trip" class="mobile-nav-link"><i data-lucide="earth"></i> Customised Trips</a>
+        <a href="/reviews" class="mobile-nav-link"><i data-lucide="star"></i> Reviews</a>
+        <a href="/about-us" class="mobile-nav-link"><i data-lucide="sparkles"></i> About Us</a>
+        <a href="/contact-us" class="mobile-nav-link"><i data-lucide="phone"></i> Contact</a>
+      </div>
+      <div class="mobile-nav-footer">
+        <a href="tel:+919876543210" class="btn btn-primary btn-block"><i data-lucide="phone"></i> Call Us Now</a>
+        <a href="https://wa.me/919876543210" class="btn btn-whatsapp btn-block"><i data-lucide="message-circle"></i> WhatsApp Us</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <!-- ============ 3. HERO SECTION ============ -->
+    <section class="hero" id="hero">
+      <div class="hero-bg">
+        <img src="/images/hero-travelenfield-2026.jpg" alt="Indian travellers overlooking a Himalayan valley at sunrise" class="hero-img" width="1680" height="945" fetchpriority="high" decoding="async" />
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="hero-content">
+        <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Small groups. Big stories.</span>
+        <h1 class="hero-title">Go farther.<br/><span class="hero-highlight">Feel more.</span></h1>
+        <p class="hero-subtitle">Curated group adventures and personal journeys, designed by people who know the road.</p>
+        <div class="hero-search-wrap">
+          <div class="hero-search-box">
+            <svg class="hero-search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" class="hero-search-input" placeholder="Try Ladakh, Bali or a weekend trip" aria-label="Search destinations and trips" autocomplete="off" aria-controls="hero-suggestions" aria-expanded="false" />
+            <button class="btn btn-primary hero-search-btn">Explore</button>
+          </div>
+          <div class="hero-suggestions" id="hero-suggestions" role="listbox" aria-label="Popular searches"><button type="button" data-hero-query="Ladakh"><img src="/images/destinations/ladakh.jpg" alt=""><span><strong>Ladakh</strong><small>Bike trips · High passes</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Bali"><img src="/images/destinations/bali.jpg" alt=""><span><strong>Bali</strong><small>Island escape · International</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Spiti"><img src="/images/destinations/spiti.jpg" alt=""><span><strong>Spiti Valley</strong><small>Road trips · Mountains</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Manali"><img src="/images/destinations/manali.jpg" alt=""><span><strong>Manali</strong><small>Weekend · Snow adventure</small></span><i data-lucide="arrow-up-right"></i></button></div>
+        </div>
+        <div class="hero-quick-picks"><span>Trending</span><button type="button" data-hero-query="Ladakh">Ladakh</button><button type="button" data-hero-query="Bali">Bali</button><button type="button" data-hero-query="Weekend">Weekend trips</button></div>
+        <div class="hero-ctas">
+          <a href="#upcoming" class="btn btn-primary btn-lg">See upcoming trips <i data-lucide="arrow-right"></i></a>
+          <a href="/custom-trip" class="btn btn-outline-light btn-lg">Build my own trip</a>
+        </div>
+      </div>
+      <aside class="hero-proof-card" aria-label="TravelEnfield traveller rating"><div class="hero-proof-avatars"><span>RK</span><span>AS</span><span>NM</span></div><div><strong>4.9 traveller rating</strong><small><i data-lucide="star"></i> Built around real travellers</small></div></aside>
+      <a class="hero-scroll-cue" href="#trust-strip" aria-label="Scroll to traveller proof"><span>Discover</span><i data-lucide="arrow-down"></i></a>
+    </section>
+
+    <!-- ============ 4. TRUST STRIP ============ -->
+    <section class="trust-strip" id="trust-strip">
+      <div class="container">
+        <div class="trust-items">
+          <div class="trust-item">
+            <span class="trust-icon"><i data-lucide="camera"></i></span>
+            <span class="trust-value">50K+</span>
+            <span class="trust-label">Community</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <span class="trust-icon"><i data-lucide="star"></i></span>
+            <span class="trust-value">4.9</span>
+            <span class="trust-label">(2.5K+ Reviews)</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <span class="trust-icon"><i data-lucide="luggage"></i></span>
+            <span class="trust-value">10K+</span>
+            <span class="trust-label">Happy Travellers</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <span class="trust-icon"><i data-lucide="shield-check"></i></span>
+            <span class="trust-value">24/7</span>
+            <span class="trust-label">Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. EXPLORE DESTINATIONS ============ -->
+    <section class="destinations section" id="destinations">
+      <div class="container">
+        <div class="destination-heading"><div><span class="section-kicker">Picked for this season</span><h2 class="section-title">Explore Destinations</h2><p>From Himalayan roads to tropical islands—find a journey that matches your pace, people and plans.</p></div><div class="destination-actions"><div class="destination-scroll-controls"><button id="destination-prev" aria-label="Previous destinations"><i data-lucide="chevron-left"></i></button><button id="destination-next" aria-label="Next destinations"><i data-lucide="chevron-right"></i></button></div><a href="/trips" class="destination-view-all">View all trips <i data-lucide="arrow-up-right"></i></a></div></div>
+        <div class="destination-tabs" id="destination-tabs">
+          <button class="tab-btn active" data-tab="all"><i data-lucide="globe-2"></i> All</button>
+          <button class="tab-btn" data-tab="international"><i data-lucide="plane"></i> International</button>
+          <button class="tab-btn" data-tab="domestic"><i data-lucide="mountain-snow"></i> Domestic</button>
+          <button class="tab-btn" data-tab="weekend"><i data-lucide="car-front"></i> Weekend</button>
+        </div>
+        <div class="destination-grid" id="destination-grid">
+          <!-- Row 1: International -->
+          <a href="/destinations/bali" class="destination-card destination-featured" data-category="international" data-price="From ₹44,999" data-trips="4 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/bali.jpg" alt="Bali" loading="lazy" /></div>
+            <span class="destination-name">Bali</span>
+          </a>
+          <a href="/destinations/thailand" class="destination-card" data-category="international" data-price="From ₹32,999" data-trips="3 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/thailand.jpg" alt="Thailand" loading="lazy" /></div>
+            <span class="destination-name">Thailand</span>
+          </a>
+          <a href="/destinations/nepal" class="destination-card" data-category="international" data-price="From ₹29,999" data-trips="5 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/nepal.jpg" alt="Nepal" loading="lazy" /></div>
+            <span class="destination-name">Nepal</span>
+          </a>
+          <!-- Row 2: Domestic -->
+          <a href="/destinations/ladakh" class="destination-card" data-category="domestic" data-price="From ₹19,499" data-trips="8 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/ladakh.jpg" alt="Ladakh" loading="lazy" /></div>
+            <span class="destination-name">Ladakh</span>
+          </a>
+          <a href="/destinations/spiti" class="destination-card" data-category="domestic" data-price="From ₹17,999" data-trips="6 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/spiti.jpg" alt="Spiti Valley" loading="lazy" /></div>
+            <span class="destination-name">Spiti Valley</span>
+          </a>
+          <a href="/destinations/manali" class="destination-card" data-category="domestic weekend" data-price="From ₹9,499" data-trips="7 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/manali.jpg" alt="Manali" loading="lazy" /></div>
+            <span class="destination-name">Manali</span>
+          </a>
+          <a href="/destinations/kerala" class="destination-card" data-category="domestic" data-price="From ₹14,999" data-trips="4 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/kerala.jpg" alt="Kerala" loading="lazy" /></div>
+            <span class="destination-name">Kerala</span>
+          </a>
+          <a href="/destinations/meghalaya" class="destination-card" data-category="domestic" data-price="From ₹15,499" data-trips="5 curated trips">
+            <div class="destination-img-wrap"><img src="/images/destinations/meghalaya.jpg" alt="Meghalaya" loading="lazy" /></div>
+            <span class="destination-name">Meghalaya</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. SOCIAL PROOF BANNER ============ -->
+    <section class="social-banner">
+      <div class="social-banner-bg">
+        <img src="/images/social-banner.jpg" alt="Indian travellers at a Himalayan campsite" loading="lazy" />
+        <div class="social-banner-overlay"></div>
+      </div>
+      <div class="social-banner-content">
+        <h2 class="social-banner-title">Solo, Couple or Friends —<br/>We Have <span class="highlight-yellow">Trips for Everyone</span></h2>
+        <p class="social-banner-text">Most travellers don't just travel with us, they meet strangers who quickly turn into their people.</p>
+        <a href="#upcoming" class="btn btn-primary btn-lg">Find Your Trip</a>
+      </div>
+    </section>
+
+    <!-- ============ 7. UPCOMING GROUP TRIPS ============ -->
+    <section class="upcoming section" id="upcoming">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Upcoming Group Trips</h2>
+          <a href="/trips" class="see-all-link">See All <span>→</span></a>
+        </div>
+        <div class="trip-filters" id="trip-filters">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="leh">Leh Ladakh</button>
+          <button class="filter-pill" data-filter="spiti">Spiti Valley</button>
+          <button class="filter-pill" data-filter="bali">Bali</button>
+          <button class="filter-pill" data-filter="thailand">Thailand</button>
+          <button class="filter-pill" data-filter="manali">Manali</button>
+          <button class="filter-pill" data-filter="meghalaya">Meghalaya</button>
+        </div>
+        <div class="trip-carousel" id="trip-carousel">
+          <div class="trip-carousel-track" id="trip-track">
+            <!-- Trip Card 1 -->
+            <div class="trip-card" data-trip="leh" data-url="/trips/leh-ladakh-bike-trip" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/ladakh.jpg" alt="Leh Ladakh Bike Trip" loading="lazy" />
+                <span class="trip-badge badge-deal"><i data-lucide="gift"></i> Free Goodies</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 6 nights / 7 days</div>
+                <h3 class="trip-title">Leh Ladakh Bike Trip</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Aug 15, Aug 22, Sep 5, Sep 12</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹24,999</span>
+                  <span class="trip-price">₹19,499</span>
+                  <span class="trip-discount">22% Off</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trip Card 2 -->
+            <div class="trip-card" data-trip="spiti" data-url="/trips/spiti-valley-road-trip" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/spiti.jpg" alt="Spiti Valley Road Trip" loading="lazy" />
+                <span class="trip-badge badge-popular"><i data-lucide="flame"></i> Bestseller</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 7 nights / 8 days</div>
+                <h3 class="trip-title">Spiti Valley Road Trip</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Aug 20, Sep 1, Sep 15, Oct 2</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹22,999</span>
+                  <span class="trip-price">₹17,999</span>
+                  <span class="trip-discount">22% Off</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trip Card 3 -->
+            <div class="trip-card" data-trip="bali" data-url="/trips/bali-adventure-tour" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/bali.jpg" alt="Bali Adventure Tour" loading="lazy" />
+                <span class="trip-badge badge-deal"><i data-lucide="gift"></i> Free Goodies</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 5 nights / 6 days</div>
+                <h3 class="trip-title">Bali Adventure Tour</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Sep 10, Sep 24, Oct 8, Oct 22</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹54,999</span>
+                  <span class="trip-price">₹44,999</span>
+                  <span class="trip-discount">18% Off</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trip Card 4 -->
+            <div class="trip-card" data-trip="thailand" data-url="/trips/thailand-beach-getaway" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/thailand.jpg" alt="Thailand Beach Getaway" loading="lazy" />
+                <span class="trip-badge badge-popular"><i data-lucide="flame"></i> Trending</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 5 nights / 6 days</div>
+                <h3 class="trip-title">Thailand Beach Getaway</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Sep 5, Sep 19, Oct 3, Oct 17</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹39,999</span>
+                  <span class="trip-price">₹32,999</span>
+                  <span class="trip-discount">18% Off</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trip Card 5 -->
+            <div class="trip-card" data-trip="manali" data-url="/trips/manali-snow-adventure" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/manali.jpg" alt="Manali Snow Adventure" loading="lazy" />
+                <span class="trip-badge badge-deal"><i data-lucide="gift"></i> Free Goodies</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 3 nights / 4 days</div>
+                <h3 class="trip-title">Manali Snow Adventure</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Aug 10, Aug 17, Aug 24, Aug 31</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹12,999</span>
+                  <span class="trip-price">₹9,499</span>
+                  <span class="trip-discount">27% Off</span>
+                </div>
+              </div>
+            </div>
+            <!-- Trip Card 6 -->
+            <div class="trip-card" data-trip="meghalaya" data-url="/trips/meghalaya-explorer" role="link" tabindex="0">
+              <div class="trip-card-img">
+                <img src="/images/destinations/meghalaya.jpg" alt="Meghalaya Explorer" loading="lazy" />
+                <span class="trip-badge badge-popular"><i data-lucide="flame"></i> New</span>
+                <button class="trip-wishlist" aria-label="Add to wishlist">♡</button>
+              </div>
+              <div class="trip-card-body">
+                <div class="trip-duration"><i data-lucide="clock-3"></i> 5 nights / 6 days</div>
+                <h3 class="trip-title">Meghalaya Explorer</h3>
+                <div class="trip-dates"><i data-lucide="calendar-days"></i> Sep 8, Sep 22, Oct 6, Oct 20</div>
+                <div class="trip-pricing">
+                  <span class="trip-price-old">₹19,999</span>
+                  <span class="trip-price">₹15,499</span>
+                  <span class="trip-discount">23% Off</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-btn carousel-btn-left" id="trip-prev" aria-label="Previous">‹</button>
+          <button class="carousel-btn carousel-btn-right" id="trip-next" aria-label="Next">›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. PROMOTIONAL BANNER ============ -->
+    <section class="promo-banner" id="deals">
+      <div class="container">
+        <div class="promo-card">
+          <div class="promo-content">
+            <div class="promo-tag">Limited Time Offer</div>
+            <h2 class="promo-title">Monsoon Special<br/><span class="highlight-yellow">Flat ₹5,000 Off</span></h2>
+            <p class="promo-text">On all group trips departing in August & September. Use code <strong>MONSOON5K</strong></p>
+            <a href="#upcoming" class="btn btn-primary btn-lg">Grab the Deal →</a>
+          </div>
+          <div class="promo-visual">
+            <div class="promo-destinations">
+              <div class="promo-dest-card">
+                <img src="/images/destinations/bali.jpg" alt="Bali" loading="lazy" />
+                <span>Bali</span>
+              </div>
+              <div class="promo-dest-card">
+                <img src="/images/destinations/manali.jpg" alt="Manali" loading="lazy" />
+                <span>Manali</span>
+              </div>
+              <div class="promo-dest-card">
+                <img src="/images/destinations/kerala.jpg" alt="Kerala" loading="lazy" />
+                <span>Kerala</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. BOOK WITH CONFIDENCE ============ -->
+    <section class="confidence-modern section" id="confidence">
+      <div class="container confidence-story">
+        <div class="confidence-copy"><span class="section-kicker">Travel without second thoughts</span><h2 class="section-title">Your trip, backed at every step.</h2><p class="confidence-lead">From the first payment to the final ride home, you always know what is included, who to call and what happens next.</p>
+          <div class="confidence-points"><div><i data-lucide="receipt-text"></i><span><strong>Clear pricing</strong><small>No surprise charges after checkout.</small></span></div><div><i data-lucide="calendar-sync"></i><span><strong>Plans stay flexible</strong><small>Simple support when life changes.</small></span></div><div><i data-lucide="user-round-check"></i><span><strong>Route-ready people</strong><small>Experienced captains and verified partners.</small></span></div></div>
+          <a href="/custom-trip" class="btn btn-primary">Talk to a trip expert</a>
+        </div>
+        <div class="confidence-visual"><img src="/images/confidence-traveller.jpg" alt="A TravelEnfield traveller planning her Himalayan journey with a trip captain" loading="lazy" /><div class="floating-proof proof-payment"><i data-lucide="badge-indian-rupee"></i><span><strong>20% to reserve</strong><small>Pay the rest later</small></span></div><div class="floating-proof proof-support"><i data-lucide="headphones"></i><span><strong>24/7 support</strong><small>A real team, always reachable</small></span></div><div class="floating-proof proof-rating"><i data-lucide="star"></i><span><strong>4.9 / 5</strong><small>Traveller-rated experiences</small></span></div></div>
+      </div>
+    </section>
+
+    <section class="confidence section legacy-confidence" aria-hidden="true">
+      <div class="container">
+        <h2 class="section-title center">Book with Confidence</h2>
+        <div class="confidence-grid">
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="badge-indian-rupee"></i></div>
+            <h3>Pay Just 20%</h3>
+            <p>Secure your spot by paying only 20% of the trip cost. Rest you can pay later.</p>
+          </div>
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="refresh-ccw"></i></div>
+            <h3>Zero-Cost EMI</h3>
+            <p>Book your dream trip on easy zero-cost EMI plans. Travel now, pay later.</p>
+          </div>
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="circle-check-big"></i></div>
+            <h3>Free Cancellation</h3>
+            <p>Plans changed? Get a full refund with our free cancellation on group trips.</p>
+          </div>
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="calendar-clock"></i></div>
+            <h3>Easy Reschedule</h3>
+            <p>Reschedule your trip at no extra charges. Flexibility is our promise.</p>
+          </div>
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="shield-check"></i></div>
+            <h3>24×7 Support</h3>
+            <p>Trained trip captains and round-the-clock support throughout your journey.</p>
+          </div>
+          <div class="confidence-card">
+            <div class="confidence-icon"><i data-lucide="backpack"></i></div>
+            <h3>Experienced Captains</h3>
+            <p>Every trip is led by experienced, trained trip captains who know the terrain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 10. WHY TRAVELENFIELD ============ -->
+    <section class="why-modern section" id="why-us"><div class="container"><div class="section-header why-heading"><div><span class="section-kicker">Designed around real travellers</span><h2 class="section-title">Why TravelEnfield?</h2></div><p>Good trips need more than a pretty itinerary. We obsess over the details that shape how the journey actually feels.</p></div><div class="why-bento"><article class="why-modern-card why-modern-featured"><i data-lucide="scan-text"></i><h3>No hidden fees</h3><p>Line-by-line inclusions and honest pricing before you reserve. The only surprise should be the view.</p></article><article class="why-modern-card"><i data-lucide="users-round"></i><h3>Groups that click</h3><p>Thoughtfully sized departures that make solo travel naturally social.</p></article><article class="why-modern-card"><i data-lucide="bed-double"></i><h3>Handpicked stays</h3><p>Chosen for location, comfort and character—not just availability.</p></article><article class="why-modern-card"><i data-lucide="shield-check"></i><h3>Safety, always</h3><p>Route checks, trained captains and a support line that never clocks out.</p></article></div></div></section>
+
+    <section class="why-us section legacy-confidence" aria-hidden="true">
+      <div class="container">
+        <h2 class="section-title center">Why TravelEnfield?</h2>
+        <div class="why-cards">
+          <div class="why-card">
+            <div class="why-number">01</div>
+            <h3>No Hidden Fees</h3>
+            <p>What you see is what you pay. No surprise charges, no middlemen, no BS. Transparent pricing from start to finish.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-number">02</div>
+            <h3>Vibe Check First</h3>
+            <p>We group travellers by age and interests. No awkward silences — just instant connections and lifelong friendships.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-number">03</div>
+            <h3>Handpicked Stays</h3>
+            <p>From riverside camps to boutique hotels — every stay is personally vetted. We sleep where we'd want to stay.</p>
+          </div>
+          <div class="why-card">
+            <div class="why-number">04</div>
+            <h3>Safety Always</h3>
+            <p>Trained captains, emergency protocols, and 24/7 support. Your safety is our non-negotiable priority.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 11. TRENDING DESTINATIONS ============ -->
+    <section class="trending section" id="trending">
+      <div class="container">
+        <h2 class="section-title">Trending Destinations</h2>
+        <div class="trending-scroll">
+          <div class="trending-card">
+            <img src="/images/destinations/bali.jpg" alt="Bali Tour Packages" loading="lazy" />
+            <div class="trending-info">
+              <h3>Bali Tour Packages</h3>
+              <p>Starting ₹44,999</p>
+            </div>
+          </div>
+          <div class="trending-card">
+            <img src="/images/destinations/ladakh.jpg" alt="Ladakh Tour Packages" loading="lazy" />
+            <div class="trending-info">
+              <h3>Ladakh Tour Packages</h3>
+              <p>Starting ₹19,499</p>
+            </div>
+          </div>
+          <div class="trending-card">
+            <img src="/images/destinations/spiti.jpg" alt="Spiti Tour Packages" loading="lazy" />
+            <div class="trending-info">
+              <h3>Spiti Tour Packages</h3>
+              <p>Starting ₹17,999</p>
+            </div>
+          </div>
+          <div class="trending-card">
+            <img src="/images/destinations/kerala.jpg" alt="Kerala Tour Packages" loading="lazy" />
+            <div class="trending-info">
+              <h3>Kerala Tour Packages</h3>
+              <p>Starting ₹14,999</p>
+            </div>
+          </div>
+          <div class="trending-card">
+            <img src="/images/destinations/manali.jpg" alt="Manali Tour Packages" loading="lazy" />
+            <div class="trending-info">
+              <h3>Manali Tour Packages</h3>
+              <p>Starting ₹9,499</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 12. TRAVELLER REVIEWS ============ -->
+    <section class="reviews section" id="reviews">
+      <div class="container">
+        <h2 class="section-title center">Reviews From Our Travellers</h2>
+        <div class="review-grid">
+          <div class="review-card">
+            <div class="review-img">
+              <span class="review-avatar" aria-hidden="true">RK</span>
+            </div>
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">The trip was incredibly well-planned. From the stays to the activities, everything was top-notch. The trip captain was amazing and made sure everyone was comfortable. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Rahul K.</div>
+              <div class="review-trip">Spiti Valley Road Trip</div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-img">
+              <span class="review-avatar" aria-hidden="true">PS</span>
+            </div>
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">As a solo female traveller, I felt completely safe throughout the trip. Made some amazing friends and the landscapes of Ladakh took my breath away. Highly recommended! <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Priya S.</div>
+              <div class="review-trip">Leh Ladakh Bike Trip</div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-img">
+              <span class="review-avatar" aria-hidden="true">AD</span>
+            </div>
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Best trip of my life! The Bali itinerary was perfect — from temple visits to beach parties. The team handled everything smoothly. Can't wait to book my next trip! <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Amit D.</div>
+              <div class="review-trip">Bali Adventure Tour</div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-img">
+              <span class="review-avatar" aria-hidden="true">SM</span>
+            </div>
+            <div class="review-body">
+              <div class="review-stars">★★★★★</div>
+              <p class="review-text">Kerala backwaters were magical! The houseboat experience was something else. TravelEnfield's team made this trip absolutely hassle-free. 10/10 would go again. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Sneha M.</div>
+              <div class="review-trip">Kerala Backwater Bliss</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 13. FAQs ============ -->
+    <section class="faq section" id="faq">
+      <div class="container">
+        <h2 class="section-title center">Frequently Asked Questions</h2>
+        <div class="faq-list" id="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What is the typical group size for TravelEnfield trips?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Our group trips typically have 15–25 travellers. We keep the groups intimate enough for meaningful connections but large enough for a vibrant community experience.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What's included in the trip price?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>All our trips include accommodation, meals (as specified), transport, sightseeing, activities, trip captain support and all applicable taxes. Flights and personal expenses are excluded unless mentioned.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Is it safe for solo travellers, especially women?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely! Over 60% of our travellers are solo. We have trained trip captains, 24/7 support, and strict safety protocols. Many of our solo female travellers have given us 5-star reviews.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>Can I customise a trip for my group?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! We offer fully customised trips for private groups, college trips, corporate outings and families. Share your preferences and we'll craft a personalised itinerary.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>What is the cancellation and refund policy?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>We offer free cancellation on most group trips up to 15 days before departure. Partial refunds apply for later cancellations. You can also reschedule at no extra cost. Check the specific trip page for detailed terms.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <span>How do I make a payment?</span>
+              <span class="faq-toggle">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>You can secure your spot by paying just 20% upfront via UPI, cards, net banking or EMI. The remaining balance is due before the trip starts. We use Razorpay for secure payments.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 14. COMMUNITY GALLERY ============ -->
+    <section class="gallery section" id="gallery">
+      <div class="container">
+        <h2 class="section-title center">Loved by Travellers Across India</h2>
+        <p class="section-subtitle">Follow us <a href="https://www.instagram.com/travelenfield.in" target="_blank" rel="noopener" class="instagram-link">@travelenfield.in</a></p>
+        <div class="gallery-grid">
+          <div class="gallery-item"><img src="/images/destinations/ladakh.jpg" alt="Mountain road in Ladakh" loading="lazy" /></div>
+          <div class="gallery-item"><img src="/images/destinations/manali.jpg" alt="Manali mountain adventure" loading="lazy" /></div>
+          <div class="gallery-item"><img src="/images/destinations/kerala.jpg" alt="Kerala travel experience" loading="lazy" /></div>
+          <div class="gallery-item"><img src="/images/destinations/meghalaya.jpg" alt="Living root bridge in Meghalaya" loading="lazy" /></div>
+          <div class="gallery-item"><img src="/images/destinations/nepal.jpg" alt="Himalayan village in Nepal" loading="lazy" /></div>
+          <div class="gallery-item"><img src="/images/destinations/thailand.jpg" alt="Thailand island adventure" loading="lazy" /></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 15. FOOTER ============ -->
+  <footer class="footer" id="contact">
+    <div class="footer-wave">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,64L60,69.3C120,75,240,85,360,80C480,75,600,53,720,48C840,43,960,53,1080,58.7C1200,64,1320,64,1380,64L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z" fill="#450D69"/></svg>
+    </div>
+    <div class="footer-body">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img src="/images/brand/logo-footer.png" alt="TravelEnfield" class="footer-logo" />
+            <p class="footer-tagline">Trips that feel unforgettable, not complicated.</p>
+            <div class="footer-socials">
+              <a href="https://www.instagram.com/travelenfield.in" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="https://www.facebook.com/share/1U6md2aqrC/" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.125-5.864 10.125-11.854z"/></svg>
+              </a>
+              <a href="https://wa.me/919876543210" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="/about-us">About Us</a>
+            <a href="/reviews">Reviews</a>
+            <a href="/blog">Blog</a>
+            <a href="/contact-us">Contact Us</a>
+            <a href="/faq">FAQs</a>
+          </div>
+          <div class="footer-col">
+            <h4>Travel Styles</h4>
+            <a href="/upcoming-trips">Group Trips</a>
+            <a href="/bike-trips">Bike Trips</a>
+            <a href="/backpacking-trips">Backpacking</a>
+            <a href="/weekend-trips">Weekend Trips</a>
+            <a href="/trekking-trips">Treks</a>
+            <a href="/custom-trip">Custom Trips</a>
+          </div>
+          <div class="footer-col">
+            <h4>Top Destinations</h4>
+            <a href="/destinations/ladakh">Ladakh</a>
+            <a href="/destinations/spiti">Spiti Valley</a>
+            <a href="/destinations/bali">Bali</a>
+            <a href="/destinations/thailand">Thailand</a>
+            <a href="/destinations/kerala">Kerala</a>
+            <a href="/destinations/manali">Manali</a>
+          </div>
+          <div class="footer-col">
+            <h4>Talk to Us</h4>
+            <a href="tel:+919876543210"><i data-lucide="phone"></i> +91 98765 43210</a>
+            <a href="mailto:hello@travelenfield.in"><i data-lucide="mail"></i> hello@travelenfield.in</a>
+            <a href="https://wa.me/919876543210"><i data-lucide="message-circle"></i> WhatsApp Us</a>
+            <div class="footer-address">
+              <p>📍 New Delhi, India</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer-policies">
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms-and-conditions">Terms & Conditions</a>
+          <a href="/cancellation-policy">Cancellation Policy</a>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2024 – 2026 TravelEnfield India Pvt Ltd. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ FLOATING WHATSAPP ============ -->
+  <a href="https://wa.me/919876543210" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" id="whatsapp-float">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- ============ STICKY MOBILE CTA ============ -->
+  <div class="mobile-sticky-cta" id="mobile-sticky-cta">
+    <div class="sticky-cta-info">
+      <span class="sticky-cta-price">From ₹9,499</span>
+      <span class="sticky-cta-label">per person</span>
+    </div>
+    <a href="/trips" class="btn btn-primary sticky-cta-btn">Explore Trips</a>
+  </div>
+
+  <script type="module" src="/src/scripts/main.js"></script>
+</body>
+</html>
