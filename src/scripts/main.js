@@ -120,6 +120,7 @@ const menuOverlay = $('#mobile-nav-overlay');
 const hamburger = $('#hamburger');
 const menuClose = $('#mobile-nav-close');
 const drawerTriggers = $$('[data-drawer-trigger]');
+const mobileDropdowns = [...document.querySelectorAll('.mobile-nav-dropdown')];
 let menuReturnFocus = null;
 
 // The sticky header uses backdrop-filter, which creates a containing block for
@@ -137,8 +138,9 @@ function setMenu(open) {
   if (open) {
     menuReturnFocus = document.activeElement;
     menuClose?.focus();
-  } else if (menuReturnFocus instanceof HTMLElement) {
-    menuReturnFocus.focus();
+  } else {
+    mobileDropdowns?.forEach(d => d.classList.remove('open'));
+    if (menuReturnFocus instanceof HTMLElement) menuReturnFocus.focus();
   }
 }
 
@@ -149,7 +151,20 @@ hamburger?.addEventListener('click', () => setMenu(true));
 drawerTriggers.forEach(trigger => trigger.addEventListener('click', () => setMenu(true)));
 menuClose?.addEventListener('click', () => setMenu(false));
 menuOverlay?.addEventListener('click', () => setMenu(false));
-$$('.mobile-nav-link', menu).forEach(link => link.addEventListener('click', () => setMenu(false)));
+$$('.mobile-nav-link', menu).forEach(link => {
+  if (link.classList.contains('mobile-dropdown-toggle')) return;
+  link.addEventListener('click', () => setMenu(false));
+});
+
+mobileDropdowns.forEach(dropdown => {
+  const toggle = dropdown.querySelector('.mobile-dropdown-toggle');
+  toggle?.addEventListener('click', () => {
+    const wasOpen = dropdown.classList.contains('open');
+    mobileDropdowns.forEach(d => d.classList.remove('open'));
+    if (!wasOpen) dropdown.classList.add('open');
+  });
+});
+
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && menu?.classList.contains('open')) setMenu(false);
 });

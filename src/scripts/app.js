@@ -23,9 +23,12 @@ document.addEventListener('click', event => { if(!event.target.closest('.nav-dro
 const mobileNav=document.querySelector('#mobile-nav'), mobileOverlay=document.querySelector('#mobile-nav-overlay');
 if(mobileOverlay&&mobileNav)document.body.append(mobileOverlay,mobileNav);
 const drawerTriggers=[...document.querySelectorAll('[data-drawer-trigger]')];
-const setMobileNav=open=>{mobileNav?.classList.toggle('open',open);mobileOverlay?.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);mobileNav?.setAttribute('aria-hidden',String(!open));document.querySelector('#hamburger')?.setAttribute('aria-expanded',String(open));drawerTriggers.forEach(trigger=>trigger.setAttribute('aria-expanded',String(open)))};
+const mobileDropdowns=[...document.querySelectorAll('.mobile-nav-dropdown')];
+const setMobileNav=open=>{mobileNav?.classList.toggle('open',open);mobileOverlay?.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);mobileNav?.setAttribute('aria-hidden',String(!open));document.querySelector('#hamburger')?.setAttribute('aria-expanded',String(open));drawerTriggers.forEach(trigger=>trigger.setAttribute('aria-expanded',String(open)));if(!open)mobileDropdowns.forEach(d=>d.classList.remove('open'))};
 document.querySelector('#hamburger')?.addEventListener('click',()=>setMobileNav(true));document.querySelector('#mobile-nav-close')?.addEventListener('click',()=>setMobileNav(false));mobileOverlay?.addEventListener('click',()=>setMobileNav(false));
 drawerTriggers.forEach(trigger=>trigger.addEventListener('click',()=>setMobileNav(true)));
+document.querySelectorAll('.mobile-nav-link',mobileNav).forEach(link=>{if(!link.classList.contains('mobile-dropdown-toggle'))link.addEventListener('click',()=>setMobileNav(false))});
+mobileDropdowns.forEach(dropdown=>{const toggle=dropdown.querySelector('.mobile-dropdown-toggle');toggle?.addEventListener('click',()=>{const wasOpen=dropdown.classList.contains('open');mobileDropdowns.forEach(d=>d.classList.remove('open'));if(!wasOpen)dropdown.classList.add('open')})});
 document.addEventListener('keydown', event => { if(event.key==='Escape'){setMobileNav(false);dropdowns.forEach(x=>{x.classList.remove('open');x.querySelector('button')?.setAttribute('aria-expanded','false')})} });
 
 function hero({ title, description, image = '/images/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {

@@ -103,15 +103,43 @@
         <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
       </div>
       <div class="mobile-nav-links">
-        <a href="/upcoming-trips" class="mobile-nav-link"><i data-lucide="users"></i> Group Trips</a>
+        <div class="mobile-nav-dropdown">
+          <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="users"></i> Group Trips <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
+          <div class="mobile-dropdown-menu">
+            <a href="/upcoming-trips"><i data-lucide="calendar-days"></i> Upcoming departures</a>
+            <a href="/domestic-trips"><i data-lucide="mountain-snow"></i> India trips</a>
+            <a href="/international-trips"><i data-lucide="plane"></i> International trips</a>
+            <a href="/weekend-trips"><i data-lucide="car-front"></i> Weekend escapes</a>
+          </div>
+        </div>
         <a href="/deals" class="mobile-nav-link"><i data-lucide="tags"></i> Deals</a>
-        <a href="#destinations" class="mobile-nav-link"><i data-lucide="map"></i> Travel Styles</a>
+        <div class="mobile-nav-dropdown">
+          <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="map"></i> Travel Styles <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
+          <div class="mobile-dropdown-menu">
+            <a href="/bike-trips"><i data-lucide="bike"></i> Bike trips</a>
+            <a href="/backpacking-trips"><i data-lucide="backpack"></i> Backpacking</a>
+            <a href="/trekking-trips"><i data-lucide="footprints"></i> Treks</a>
+          </div>
+        </div>
         <a href="/upcoming-trips" class="mobile-nav-link"><i data-lucide="luggage"></i> Upcoming Trips</a>
         <a href="/weekend-trips" class="mobile-nav-link"><i data-lucide="car-front"></i> Weekend Trip</a>
-        <a href="/custom-trip" class="mobile-nav-link"><i data-lucide="earth"></i> Customised Trips</a>
-        <a href="/reviews" class="mobile-nav-link"><i data-lucide="star"></i> Reviews</a>
-        <a href="/about-us" class="mobile-nav-link"><i data-lucide="sparkles"></i> About Us</a>
-        <a href="/contact-us" class="mobile-nav-link"><i data-lucide="phone"></i> Contact</a>
+        <div class="mobile-nav-dropdown">
+          <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="earth"></i> Customised <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
+          <div class="mobile-dropdown-menu">
+            <a href="/custom-trip"><i data-lucide="wand-sparkles"></i> Design my trip</a>
+            <a href="/domestic-trips"><i data-lucide="map-pinned"></i> Custom India</a>
+            <a href="/international-trips"><i data-lucide="plane-takeoff"></i> Custom international</a>
+          </div>
+        </div>
+        <div class="mobile-nav-dropdown">
+          <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="sparkles"></i> More <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
+          <div class="mobile-dropdown-menu">
+            <a href="/about-us"><i data-lucide="circle-user-round"></i> About us</a>
+            <a href="/reviews"><i data-lucide="star"></i> Traveller reviews</a>
+            <a href="/blog"><i data-lucide="book-open"></i> Travel journal</a>
+            <a href="/contact-us"><i data-lucide="headphones"></i> Contact</a>
+          </div>
+        </div>
       </div>
       <div class="mobile-nav-footer">
         <a href="tel:+919876543210" class="btn btn-primary btn-block"><i data-lucide="phone"></i> Call Us Now</a>

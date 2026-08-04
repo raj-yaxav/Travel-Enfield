@@ -641,3 +641,24 @@ body.popup-open{overflow:hidden}.enquiry-modal{position:fixed;inset:0;z-index:12
   .mobile-nav-footer .btn{width:100%;min-height:48px}
   .mobile-nav-overlay{width:100vw;height:100dvh}
 }
+
+/* Mobile nav dropdown submenus */
+.mobile-nav-dropdown{width:100%}
+.mobile-dropdown-toggle{width:100%;display:flex;align-items:center;gap:10px;border:0;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.mobile-dropdown-toggle i:first-child{width:20px;height:20px;flex:0 0 auto;color:var(--purple)}
+.mobile-nav-chevron{width:16px;height:16px;margin-left:auto;transition:transform .25s var(--ease);flex:0 0 auto}
+.mobile-nav-dropdown.open .mobile-nav-chevron{transform:rotate(180deg)}
+.mobile-dropdown-menu{display:grid;gap:2px;padding:4px 0 6px 18px;max-height:0;overflow:hidden;transition:max-height .3s var(--ease),opacity .25s,visibility .25s;opacity:0;visibility:hidden}
+.mobile-nav-dropdown.open .mobile-dropdown-menu{max-height:300px;opacity:1;visibility:visible}
+.mobile-dropdown-menu a{display:flex;align-items:center;gap:10px;min-height:42px;padding:8px 12px;border-radius:10px;color:var(--muted);font-size:.86rem;font-weight:600;transition:color .2s,background .2s}
+.mobile-dropdown-menu a:hover,.mobile-dropdown-menu a:active{color:var(--purple);background:var(--surface)}
+.mobile-dropdown-menu a i{width:18px;height:18px;flex:0 0 auto;color:var(--purple)}
+
+/* Announcement bar marquee on mobile */
+@media(max-width:560px){
+  .announcement-bar{overflow:hidden}
+  .announcement-link{overflow:hidden;width:100%;display:block;padding:7px 44px 7px 0}
+  .announcement-link p{display:inline-flex;white-space:nowrap;animation:announce-marquee 18s linear infinite}
+  .announcement-shimmer{display:none}
+  @keyframes announce-marquee{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+}
