@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@source "../index.html";
+@source "../app.html";
+@source "../components/**/*.{js,jsx}";
+@source "../lib/**/*.{js,jsx}";
+@source "../src/scripts/**/*.js";
 
 @theme {
   --color-brand-purple: #55167b;
@@ -13,13 +18,459 @@
   --font-body: var(--font-inter);
 }
 
-html {
-  scroll-behavior: smooth;
+@layer base {
+  html { @apply scroll-smooth; }
+  body { @apply min-w-80 overflow-x-clip bg-white font-body text-brand-ink antialiased; }
+  button, a { @apply touch-manipulation; }
+  a { @apply no-underline; }
+  img { @apply block max-w-full; }
+  button, input, textarea, select { font: inherit; }
 }
 
-body {
-  min-width: 320px;
-  overflow-x: clip;
+/* Tailwind component layer for the server-rendered legacy-document markup. These
+   are deliberately kept here instead of loading the removed legacy stylesheets. */
+@layer components {
+  .container { @apply mx-auto w-[min(calc(100%_-_32px),1600px)]; }
+  .section { @apply relative; }
+  .section-kicker { @apply mb-2 inline-flex items-center gap-2 font-heading text-xs font-extrabold uppercase tracking-[.16em] text-brand-purple; }
+  .section-title { @apply m-0 font-heading text-[clamp(2rem,4vw,3.2rem)] font-extrabold leading-[1.08] tracking-[-.045em] text-brand-deep; }
+  .section-title.center { @apply text-center; }
+  .section-subtitle { @apply mx-auto mb-9 mt-3 max-w-2xl text-center leading-7 text-gray-600; }
+  .section-header { @apply mb-8 flex items-end justify-between gap-5; }
+  .see-all-link { @apply inline-flex min-h-11 items-center gap-2 rounded-full px-3 font-bold text-brand-purple transition-colors hover:text-brand-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow; }
+
+  .btn { @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-transparent px-6 py-3 font-heading text-sm font-extrabold transition duration-200 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow; }
+  .btn-primary { @apply bg-brand-yellow text-brand-deep shadow-[0_12px_30px_rgba(251,207,8,.22)] hover:-translate-y-0.5 hover:bg-[#ffe05a]; }
+  .btn-outline-light { @apply border-white/60 bg-white/5 text-white backdrop-blur-sm hover:border-white hover:bg-white hover:text-brand-deep; }
+  .btn-lg { @apply min-h-14 px-7 text-base; }
+  .btn-block { @apply w-full; }
+
+  .skip-link { @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[130] focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:font-bold focus:text-brand-purple focus:shadow-xl; }
+  .announcement-bar { @apply relative z-50 grid min-h-10 place-items-center overflow-hidden bg-brand-deep text-brand-yellow; }
+  .announcement-link { @apply block w-full px-12 py-2 text-center text-xs font-extrabold sm:text-sm; }
+
+  .announcement-link p { @apply inline-flex items-center justify-center gap-2; }
+  .announcement-link svg { @apply size-5; }
+  .header-nav svg { @apply size-[22px] shrink-0; }
+  .nav-chevron { @apply size-4 transition-transform; }
+  .nav-dropdown.open .nav-chevron { @apply rotate-180; }
+  .nav-dropdown-menu svg { @apply size-5 text-brand-purple; }
+  .nav-dropdown-menu span { @apply grid gap-0.5; }
+  .nav-dropdown-menu strong { @apply text-sm; }
+  .nav-dropdown-menu small { @apply text-[11px] font-medium text-gray-500; }
+  #header-nav .nav-highlight,
+  #header-nav .nav-highlight:hover { @apply rounded-full bg-brand-yellow px-4 text-brand-deep shadow-[0_8px_22px_rgba(251,207,8,.4)] hover:bg-[#ffe05a] hover:text-brand-deep; }
+  #header-nav .nav-highlight svg { @apply text-brand-deep; }
+  #mobile-nav .mobile-nav-highlight,
+  #mobile-nav .mobile-nav-highlight:hover { @apply rounded-xl bg-brand-yellow text-brand-deep hover:bg-[#ffe05a] hover:text-brand-deep; }
+  #mobile-nav .mobile-nav-highlight svg { @apply text-brand-deep; }
+  .trust-strip { @apply min-h-[124px] content-center; }
+  .trust-items { @apply mx-auto max-w-[1680px]; }
+  .trust-item { @apply min-h-11; }
+  .trust-item:nth-child(odd) { @apply justify-self-start; }
+  .trust-item:nth-child(even) { @apply justify-self-end; }
+  .trust-icon svg { @apply size-6; }
+
+  /* Homepage hero */
+  .hero-seo .hero-overlay { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(26,4,39,.78),rgba(37,7,51,.4)_32%,rgba(37,7,51,.46)_68%,rgba(26,4,39,.8)),linear-gradient(0deg,rgba(22,3,32,.8),rgba(33,6,47,.08)_55%,rgba(24,4,36,.42))]; }
+  .hero-seo .hero-content { @apply flex flex-col items-center justify-start pt-[90px]; }
+  .hero-eyebrow { @apply mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-brand-deep/40 px-4 py-2 font-heading text-xs font-extrabold uppercase tracking-[.1em] text-brand-yellow backdrop-blur-md; }
+  .hero-eyebrow svg { @apply size-4; }
+  .hero-title { @apply mx-auto mb-5 max-w-[1050px] font-heading text-[clamp(3rem,5vw,6rem)] font-extrabold leading-[.98] tracking-[-.055em] text-white; }
+  .hero-highlight { @apply text-brand-yellow; }
+  .hero-subtitle { @apply mx-auto mb-6 max-w-4xl text-[clamp(.95rem,1.3vw,1.1rem)] leading-7 text-white/85; }
+  .hero-trust-typer { @apply mb-6 grid min-h-20 w-full max-w-[840px] place-items-center gap-1 rounded-2xl border border-white/20 bg-brand-deep/35 px-5 py-4 text-center backdrop-blur-md; }
+  .hero-trust-label { @apply inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-[.09em] text-brand-yellow; }
+  .hero-trust-label svg { @apply size-4; }
+  .hero-trust-typer strong { @apply block text-base font-bold text-white md:text-lg; }
+  .hero-ctas { @apply flex flex-wrap items-center justify-center gap-3; }
+  .hero-micro-proof { @apply mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-bold text-white/80; }
+  .hero-micro-proof span { @apply inline-flex items-center gap-2; }
+  .hero-micro-proof svg { @apply size-4 text-brand-yellow; }
+  .hero-proof-card { @apply hidden; }
+  .hero-scroll-cue { @apply absolute bottom-5 left-1/2 z-20 hidden -translate-x-1/2 place-items-center gap-1 text-[10px] font-bold uppercase tracking-[.18em] text-white/70 lg:grid; }
+  .hero-scroll-cue svg { @apply size-5; }
+  .hero-trip-float { animation: hero-card-float 5s ease-in-out infinite; }
+  .hero-trip-right { animation-delay: -2.5s; }
+
+  /* Explore destinations */
+  .destination-heading p { @apply mt-3 max-w-2xl leading-7 text-gray-600; }
+  .destination-actions { @apply flex shrink-0 items-center gap-3; }
+  .destination-scroll-controls { @apply flex gap-2; }
+  .destination-scroll-controls button { @apply grid size-11 cursor-pointer place-items-center rounded-full border border-brand-purple/15 bg-white text-brand-purple shadow-sm transition hover:border-brand-purple hover:bg-brand-purple hover:text-white; }
+  .destination-scroll-controls svg { @apply size-5; }
+  .destination-view-all { @apply inline-flex min-h-11 items-center gap-2 rounded-full px-3 font-bold text-brand-purple; }
+  .destination-grid { scrollbar-width: thin; scrollbar-color: rgb(85 22 123 / .28) transparent; }
+  .destination-card { @apply text-brand-ink transition duration-300 hover:-translate-y-1; }
+  .destination-img-wrap { @apply border border-brand-purple/10 bg-brand-surface shadow-sm transition duration-300; }
+  .destination-card:hover .destination-img-wrap { @apply border-brand-purple/30 shadow-xl; }
+
+  /* Reusable image-led sections */
+  .social-banner { @apply bg-white py-16 md:py-20; }
+  .social-banner-card { @apply relative grid min-h-[430px] overflow-hidden rounded-[32px] bg-brand-deep text-white shadow-2xl md:grid-cols-[1.15fr_.85fr]; }
+  .social-banner-media { @apply relative min-h-72 overflow-hidden; }
+  .social-banner-media::after { content: ''; @apply absolute inset-0 bg-gradient-to-r from-transparent to-brand-deep/80; }
+  .social-banner-media img { @apply size-full object-cover; }
+  .social-banner-badge { @apply absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-xs font-extrabold text-brand-deep; }
+  .social-banner-content { @apply relative z-10 flex flex-col justify-center p-7 md:p-10; }
+  .social-banner-content .section-kicker { @apply text-brand-yellow; }
+  .social-banner-content h2 { @apply mb-4 font-heading text-[clamp(2rem,4vw,3.5rem)] font-extrabold leading-tight; }
+  .social-banner-content p { @apply mb-6 leading-7 text-white/75; }
+  .social-banner-pills { @apply mb-7 flex flex-wrap gap-2; }
+  .social-banner-pills span { @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs font-bold text-white/85; }
+  .social-banner-pills svg { @apply size-4 text-brand-yellow; }
+  .social-banner-cta { @apply self-start; }
+
+  /* Cards/carousels */
+  .trip-section, .promotional-banner, .book-confidence, .credibility-banner, .gallery, .blogs, .corporate, .story-rail-section { @apply py-16 md:py-20; }
+  .trip-filters { @apply mb-6 flex flex-wrap gap-2; }
+  .filter-pill { @apply min-h-11 cursor-pointer rounded-full border border-brand-purple/15 bg-white px-5 font-bold text-brand-ink transition hover:border-brand-purple; }
+  .filter-pill.active { @apply border-brand-purple bg-brand-purple text-white; }
+  .trip-carousel, .review-carousel { @apply relative; }
+  .carousel-btn { @apply absolute top-1/2 z-10 grid size-12 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-brand-purple/10 bg-white text-2xl font-bold text-brand-purple shadow-xl transition hover:bg-brand-purple hover:text-white; }
+  .carousel-btn-left { @apply -left-4; }
+  .carousel-btn-right { @apply -right-4; }
+  .trip-carousel-track { scrollbar-width: thin; scrollbar-color: rgb(85 22 123 / .25) transparent; }
+  .trip-duration, .trip-dates { @apply flex items-center gap-2; }
+  .trip-duration svg, .trip-dates svg { @apply size-4 shrink-0; }
+  .trip-badge { @apply absolute left-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-extrabold text-white shadow-lg; }
+  .trip-badge svg { @apply size-3.5; }
+  .badge-deal { @apply bg-brand-orange; }
+  .badge-popular { @apply bg-brand-purple; }
+  .trip-wishlist { @apply absolute right-3 top-3 z-10 grid size-11 cursor-pointer place-items-center rounded-full border border-white/50 bg-white/95 text-brand-purple shadow-lg transition hover:bg-brand-yellow; }
+  .trip-wishlist svg { @apply size-5; }
+  .rail-promo { @apply relative block h-full snap-start overflow-hidden rounded-2xl border border-brand-purple/10 bg-brand-deep text-white shadow-lg transition duration-300 hover:-translate-y-1.5; }
+  .rail-promo > img { @apply absolute inset-0 size-full object-cover transition duration-500; }
+  .rail-promo:hover > img { @apply scale-105; }
+  .rail-promo::after { content: ''; @apply absolute inset-0 bg-gradient-to-t from-[#21052f] via-brand-deep/65 to-brand-deep/10; }
+  .rail-promo-body { @apply absolute inset-x-0 bottom-0 z-10 p-6; }
+  .rail-promo-kicker { @apply mb-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-2 text-xs font-extrabold text-brand-yellow backdrop-blur; }
+  .rail-promo-kicker svg { @apply size-4; }
+  .rail-promo h3 { @apply font-heading text-3xl font-extrabold leading-tight; }
+  .rail-promo p { @apply my-3 max-w-xs text-sm leading-6 text-white/75; }
+  .rail-promo-cta { @apply inline-flex items-center gap-2 font-heading text-sm font-extrabold text-brand-yellow; }
+  .rail-promo-cta svg { @apply size-4 transition-transform; }
+  .rail-promo:hover .rail-promo-cta svg { @apply translate-x-1; }
+
+  /* Confidence and reasons */
+  .book-confidence { @apply overflow-hidden bg-gradient-to-br from-brand-deep via-brand-purple to-[#742697] text-white; }
+  .book-confidence .section-title { @apply text-white; }
+  .confidence-grid { @apply mt-9; }
+  .confidence-card { @apply backdrop-blur-sm transition hover:-translate-y-1 hover:bg-white/15; }
+  .confidence-icon { @apply grid size-14 place-items-center rounded-2xl bg-brand-yellow text-brand-deep; }
+  .confidence-icon svg { @apply size-7; }
+  .confidence-card h3 { @apply font-heading font-extrabold leading-snug; }
+
+  /* Credibility */
+  .credibility-card { @apply grid overflow-hidden rounded-[32px] bg-brand-deep text-white shadow-2xl md:grid-cols-2; }
+  .credibility-media { @apply min-h-80 overflow-hidden; }
+  .credibility-media img { @apply size-full object-cover transition duration-700 hover:scale-105; }
+  .credibility-copy { @apply flex flex-col justify-center p-7 md:p-12; }
+  .credibility-copy .section-kicker { @apply text-brand-yellow; }
+  .credibility-copy .section-title { @apply text-white; }
+  .credibility-copy > p { @apply my-5 leading-7 text-white/75; }
+  .credibility-stats { @apply mb-7 grid grid-cols-3 gap-3; }
+  .credibility-stats div { @apply grid gap-1 border-l border-white/20 pl-3 first:border-0 first:pl-0; }
+  .credibility-stats strong { @apply font-heading text-xl font-extrabold text-brand-yellow; }
+  .credibility-stats small { @apply text-[11px] text-white/65; }
+
+  /* FAQ */
+  .faq-heading { @apply relative mb-9 flex items-end justify-between gap-8; }
+  .faq-heading > div { @apply max-w-3xl; }
+  .faq-heading p { @apply mt-3 max-w-2xl leading-7 text-gray-600; }
+  .faq-count { @apply inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-brand-purple/10 bg-white px-4 text-xs font-extrabold text-brand-purple shadow-sm; }
+  .faq-count svg { @apply size-5; }
+  .faq-help-icon { @apply mb-auto grid size-14 place-items-center rounded-2xl bg-brand-yellow text-brand-deep; }
+  .faq-help-icon svg { @apply size-7; }
+  .faq-help-card .section-kicker { @apply mt-6 text-brand-yellow; }
+  .faq-help-card h3 { @apply my-2 max-w-[12ch] font-heading text-3xl font-extrabold leading-tight; }
+  .faq-help-card > p { @apply mb-6 leading-7 text-white/70; }
+  .faq-help-proof { @apply mt-6 flex items-center gap-3 border-t border-white/15 pt-5; }
+  .faq-help-proof > svg { @apply size-6 shrink-0 text-brand-yellow; }
+  .faq-help-proof span { @apply grid gap-1; }
+  .faq-help-proof strong { @apply text-xs; }
+  .faq-help-proof small { @apply text-[11px] text-white/55; }
+  .faq-question { @apply flex items-center justify-between gap-4 text-left; }
+  .faq-answer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s ease; }
+  .faq-answer > * { @apply min-h-0 overflow-hidden; }
+  .faq-item:not(.open) .faq-answer { @apply invisible; }
+  .faq-item.open .faq-answer { grid-template-rows: 1fr; }
+  .faq-item.open .faq-answer { @apply visible; }
+  .faq-toggle { @apply shrink-0 transition-transform duration-200; }
+  .faq-item.open .faq-toggle { @apply rotate-45; }
+
+  /* Footer */
+  .footer { @apply bg-[#21052f] pb-28 pt-16 text-white md:pb-12; }
+  .footer-grid { @apply grid gap-10 md:grid-cols-2 lg:grid-cols-[1.25fr_repeat(3,1fr)]; }
+  .footer-col { @apply flex flex-col items-start gap-3; }
+  .footer-col h4 { @apply mb-2 font-heading text-base font-extrabold text-brand-yellow; }
+  .footer-col a { @apply text-sm text-white/70 transition hover:text-white; }
+  .footer-logo { @apply mb-4 h-20 w-auto object-contain; }
+  .footer-desc { @apply max-w-sm text-sm leading-7 text-white/65; }
+  .footer-bottom { @apply mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50; }
+  .social-links { @apply mt-5 flex flex-wrap gap-2; }
+  .social-link { @apply grid size-11 place-items-center rounded-full border border-white/15 text-white/75 transition hover:border-brand-yellow hover:bg-brand-yellow hover:text-brand-deep; }
+  .social-link svg { @apply size-5; }
+}
+
+/* Tailwind ships a built-in `.container` utility. This document predates that
+   utility and uses the same semantic hook, so keep the branded content gutter
+   authoritative across every section. */
+.legacy-document-bridge .container {
+  width: min(calc(100% - 96px), 1600px) !important;
+  margin-inline: auto !important;
+}
+
+/* Shared gutters for dynamic category, destination and trip detail routes. */
+.legacy-document-bridge #page-content > section:not(.page-hero):not(.trip-detail-hero),
+.legacy-document-bridge #main-content > section:not(.hero):not(.trust-strip) {
+  min-width: 0;
+}
+.legacy-document-bridge .category-results-layout,
+.legacy-document-bridge .category-list-wrap,
+.legacy-document-bridge .category-trip-list,
+.legacy-document-bridge .trip-detail-layout,
+.legacy-document-bridge .trip-detail-main,
+.legacy-document-bridge .content-grid,
+.legacy-document-bridge .cards-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+.legacy-document-bridge .category-trip-card,
+.legacy-document-bridge .listing-card,
+.legacy-document-bridge .trip-enquiry-card,
+.legacy-document-bridge .side-card {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Dynamic listing and destination typography */
+.category-intro h2 { @apply mt-1 font-heading text-[clamp(1.9rem,3.5vw,3rem)] font-extrabold leading-tight tracking-[-.035em] text-brand-deep; }
+.category-intro p { @apply mt-3 max-w-3xl text-base leading-7 text-gray-600; }
+.category-tabs button { @apply cursor-pointer capitalize transition duration-200; }
+.category-tabs button.active { @apply border-brand-purple! bg-brand-purple! text-white! shadow-lg; }
+.category-tabs button:empty::before { content: 'All trips'; }
+.page-hero::after { content: ''; @apply pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-black/80 via-brand-deep/35 to-transparent; }
+.page-hero-content { @apply relative z-10; }
+
+/* Trip detail routes: shared Tailwind component skin for every /trips/[slug]. */
+@layer components {
+  .trip-detail-hero { @apply relative isolate grid min-h-[620px] place-items-center overflow-hidden bg-[#21062f] text-white; }
+  .trip-detail-bg { @apply absolute inset-0 -z-30 size-full scale-[1.03] object-cover saturate-90; }
+  .trip-detail-scrim { @apply absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(28,4,43,.5),rgba(28,4,43,.78))]; }
+  .trip-detail-hero-copy { @apply relative z-10 flex min-h-[620px] flex-col items-center justify-center py-24 text-center; }
+  .trip-detail-hero-copy .breadcrumbs { @apply mb-5 flex flex-wrap justify-center gap-2 text-sm text-white/70; }
+  .trip-detail-kicker { @apply mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-wider text-brand-yellow backdrop-blur-md; }
+  .trip-detail-kicker svg { @apply size-4; }
+  .trip-detail-hero h1 { @apply mx-auto max-w-4xl text-balance font-heading text-[clamp(2.8rem,6vw,5.5rem)] font-extrabold leading-[.96] tracking-[-.055em] text-white; }
+  .trip-detail-hero-copy > p { @apply mx-auto mt-6 max-w-2xl text-base leading-7 text-white/80; }
+  .trip-hero-chips { @apply mt-7 flex flex-wrap justify-center gap-2; }
+  .trip-hero-chips span { @apply inline-flex min-h-11 items-center gap-2 rounded-full border border-white/20 bg-black/20 px-4 text-sm font-bold backdrop-blur-md; }
+  .trip-hero-chips svg { @apply size-4 text-brand-yellow; }
+  .trip-float { @apply absolute z-[2] hidden w-[clamp(135px,13vw,195px)] overflow-hidden rounded-[100px_100px_22px_22px] border-[7px] border-white/85 bg-white/85 shadow-2xl xl:block; }
+  .trip-float img { @apply aspect-[.7] size-full object-cover; }
+  .trip-float-left { @apply bottom-16 left-[4.5%] -rotate-[8deg]; }
+  .trip-float-right { @apply right-[4.5%] top-20 rotate-[8deg]; }
+
+  .trip-tabs { @apply sticky top-0 z-30 border-b border-brand-purple/10 bg-white/95 shadow-sm backdrop-blur-xl; }
+  .trip-progress { @apply flex min-h-16 items-center justify-between gap-4; }
+  .trip-progress-links { @apply hidden items-center gap-1 lg:flex; }
+  .trip-progress-links a { @apply rounded-full px-4 py-2 text-sm font-bold text-gray-600 transition hover:bg-[#f8f5fa] hover:text-brand-purple; }
+  .trip-progress-links a.active { @apply bg-brand-purple text-white; }
+  .trip-next-step { @apply ml-auto inline-flex min-h-11 items-center gap-3 rounded-full bg-brand-purple px-4 text-white shadow-lg transition hover:bg-brand-deep; }
+  .trip-next-step span { @apply grid text-left leading-none; }
+  .trip-next-step small { @apply mb-1 text-[9px] font-bold uppercase tracking-wider text-white/60; }
+  .trip-next-step strong { @apply text-xs; }
+  .trip-next-step svg { @apply size-4; }
+
+  .trip-detail-shell { @apply bg-[radial-gradient(circle_at_10%_5%,#f5ecf9,transparent_28%),#fcfbfd] py-16 lg:py-20; }
+  .trip-detail-layout { @apply grid min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_340px] xl:gap-14; }
+  .trip-detail-main { @apply min-w-0; }
+  .trip-enquiry-sticky { @apply order-first min-w-0 lg:order-none lg:sticky lg:top-24; }
+  .trip-enquiry-card { @apply min-w-0 overflow-hidden rounded-[26px] border border-brand-purple/10 bg-white p-6 shadow-[0_24px_60px_rgba(69,13,105,.14)]; }
+  .enquiry-trust { @apply inline-flex items-center gap-2 rounded-full bg-lime-100 px-3 py-2 text-xs font-extrabold text-lime-800; }
+  .enquiry-trust svg { @apply size-4; }
+  .trip-from { @apply mb-1 mt-5 text-xs text-gray-500; }
+  .trip-enquiry-price { @apply flex flex-wrap items-end gap-2; }
+  .trip-enquiry-price strong { @apply font-heading text-3xl font-extrabold text-brand-deep; }
+  .trip-enquiry-price del { @apply mb-1 text-xs text-gray-400; }
+  .trip-saving { @apply mb-5 mt-1 text-xs font-extrabold text-brand-orange; }
+  .trip-mini-form { @apply grid min-w-0 gap-3; }
+  .trip-mini-form label { @apply grid min-w-0 gap-1.5 text-xs font-bold text-gray-800; }
+  .trip-mini-form input { @apply min-h-12 min-w-0 w-full rounded-xl border border-brand-purple/15 bg-[#fcfbfd] px-3 text-sm outline-none transition focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10; }
+  .mini-form-row { @apply grid min-w-0 grid-cols-2 gap-2; }
+  .trip-mini-form .btn { @apply mt-1 flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-brand-yellow px-5 font-extrabold text-brand-deep transition hover:-translate-y-0.5 hover:shadow-lg; }
+  .trip-mini-form .btn svg { @apply size-4; }
+  .enquiry-assurance { @apply mt-4 flex flex-wrap justify-between gap-2 border-t border-gray-100 pt-4 text-[10px] text-gray-500; }
+  .enquiry-assurance span { @apply inline-flex items-center gap-1; }
+  .enquiry-assurance svg { @apply size-3.5 text-brand-purple; }
+
+  .trip-story, .trip-roadmap, .trip-package, .trip-dates { @apply scroll-mt-28 py-12; }
+  .trip-story, .trip-section-heading { @apply text-center; }
+  .trip-story .page-eyebrow, .trip-section-heading .page-eyebrow { @apply text-xs font-extrabold uppercase tracking-[.16em] text-brand-purple; }
+  .trip-story h2, .trip-section-heading h2 { @apply mx-auto mt-2 max-w-3xl text-balance font-heading text-[clamp(2rem,4vw,3.25rem)] font-extrabold leading-[1.05] tracking-[-.04em] text-brand-deep; }
+  .trip-story > p, .trip-section-heading > p { @apply mx-auto mt-4 max-w-2xl leading-7 text-gray-600; }
+  .trip-facts { @apply mt-8 grid gap-3 sm:grid-cols-3; }
+  .trip-facts article { @apply grid justify-items-center gap-1 rounded-2xl border border-brand-purple/10 bg-white p-5 shadow-sm; }
+  .trip-facts svg { @apply size-6 text-brand-purple; }
+  .trip-facts small { @apply text-xs text-gray-500; }
+  .trip-facts strong { @apply text-center text-sm; }
+
+  .roadmap-line { @apply relative mt-10; }
+  .roadmap-line::before { content: ''; @apply absolute bottom-5 left-7 top-5 w-0.5 bg-gradient-to-b from-brand-purple via-purple-200 to-brand-yellow md:left-1/2; }
+  .roadmap-stop { @apply relative mb-8 grid min-w-0 grid-cols-[54px_minmax(0,1fr)] items-start gap-3 md:min-h-64 md:grid-cols-[minmax(0,1fr)_70px_minmax(0,1fr)] md:items-center md:gap-5; }
+  .roadmap-media { @apply col-start-2 row-start-2 mt-2 overflow-hidden rounded-2xl shadow-lg md:col-start-1 md:row-start-1 md:mt-0; }
+  .roadmap-media img { @apply aspect-[1.45] w-full object-cover transition duration-500 hover:scale-105; }
+  .roadmap-dot { @apply relative z-10 col-start-1 row-start-1 grid size-14 place-items-center rounded-full border-4 border-[#fcfbfd] bg-brand-purple text-center font-heading font-black leading-none text-white shadow; }
+  .roadmap-dot small { @apply block text-[7px] tracking-widest; }
+  .roadmap-copy { @apply col-start-2 row-start-1 min-w-0 rounded-2xl border border-brand-purple/10 bg-white p-5 text-left shadow-sm md:col-start-3; }
+  .roadmap-copy > span { @apply text-[10px] font-extrabold uppercase tracking-widest text-brand-purple; }
+  .roadmap-copy h3 { @apply my-2 font-heading text-xl font-extrabold text-brand-deep; }
+  .roadmap-copy p { @apply mt-2 text-sm leading-6 text-gray-600; }
+  .roadmap-right .roadmap-media { @apply md:col-start-3; }
+  .roadmap-right .roadmap-copy { @apply md:col-start-1 md:row-start-1; }
+
+  .trip-package-grid { @apply mt-8 grid gap-4 md:grid-cols-2; }
+  .package-panel { @apply rounded-2xl border border-brand-purple/10 bg-white p-6 shadow-sm; }
+  .package-panel h3 { @apply mb-4 flex items-center gap-2 font-heading text-lg font-extrabold; }
+  .package-panel h3 svg { @apply size-5 text-brand-purple; }
+  .package-panel ul { @apply grid gap-3; }
+  .package-panel li { @apply flex items-start gap-2 text-sm leading-6 text-gray-600; }
+  .package-panel li svg { @apply mt-1 size-4 shrink-0 text-lime-600; }
+  .package-panel.excluded li svg { @apply text-red-500; }
+  .trip-date-grid { @apply mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3; }
+  .trip-date-grid button { @apply grid min-h-32 cursor-pointer place-items-center gap-1 rounded-2xl border border-brand-purple/15 bg-white p-4 text-center transition hover:-translate-y-1 hover:border-brand-purple hover:shadow-lg; }
+  .trip-date-grid svg { @apply size-5 text-brand-purple; }
+  .trip-date-grid strong { @apply text-sm; }
+  .trip-date-grid small { @apply text-xs text-lime-700; }
+  .trip-date-grid em { @apply text-[10px] not-italic text-brand-purple; }
+  .trip-notes { @apply scroll-mt-28 rounded-3xl bg-brand-deep p-6 text-white md:p-8; }
+  .trip-notes h2 { @apply mb-4 flex items-center gap-2 font-heading text-xl font-extrabold; }
+  .trip-notes h2 svg { @apply size-5 text-brand-yellow; }
+  .trip-notes ul { @apply list-disc space-y-2 pl-5 text-sm leading-6 text-white/75; }
+}
+
+/* Floating enquiry trigger */
+.enquiry-orbit {
+  width: auto !important;
+  min-width: 188px;
+  max-width: calc(100vw - 32px);
+  justify-content: center;
+  white-space: nowrap;
+}
+.enquiry-orbit > svg { @apply size-6 shrink-0; }
+.enquiry-orbit > span:last-child { @apply block whitespace-nowrap leading-none; }
+.enquiry-orbit-ring { @apply rounded-full; }
+
+/* Traveller story rail */
+.trip-stories .section-header { @apply mb-3 items-end; }
+.trip-stories .section-kicker { @apply text-brand-yellow; }
+.trip-stories .section-title { @apply text-white; }
+.trip-stories .section-subtitle { @apply mb-8 ml-0 max-w-2xl text-left text-white/70; }
+.trip-stories .destination-scroll-controls button { @apply border-white/20 bg-white text-brand-purple hover:border-brand-yellow hover:bg-brand-yellow hover:text-brand-deep; }
+.story-reel { scrollbar-width: thin; scrollbar-color: rgb(251 207 8 / .55) transparent; }
+.story-frame::after { content: ''; @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent; }
+.story-frame { @apply transition duration-300 hover:-translate-y-1 hover:border-brand-yellow/60; }
+.story-frame img { @apply transition duration-500; }
+.story-frame:hover img { @apply scale-105; }
+.story-play { @apply transition duration-200; }
+.story-frame:hover .story-play { @apply scale-110; }
+.story-play svg { @apply size-6 fill-current; }
+
+/* Footer alignment and hierarchy */
+.footer-wave { @apply hidden; }
+.footer .footer-grid { @apply items-start; }
+.footer .footer-brand { @apply xl:order-first; }
+.footer .footer-col { @apply gap-0; }
+.footer .footer-col h4 { @apply mb-4; }
+.footer .footer-address { @apply mt-5 text-sm leading-relaxed text-white/65; }
+.footer .footer-address h5 { @apply mb-1 font-heading font-bold text-white; }
+.footer .footer-tagline { @apply text-sm text-white/70; }
+.footer .footer-payments { @apply text-xs text-white/60; }
+.footer .footer-bottom { @apply mt-0 border-t-0 text-white/50; }
+
+@keyframes hero-card-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 860px) {
+  @layer components {
+    .container { @apply w-[min(calc(100%_-_28px),1600px)]; }
+    .hero-seo { @apply min-h-[760px]; }
+    .hero-seo .hero-content { @apply justify-start pt-14; }
+    .hero-title { @apply text-[clamp(2.5rem,8vw,4.1rem)]; }
+    .destination-actions { @apply justify-between; }
+    .social-banner-card { @apply grid-cols-1; }
+    .social-banner-media::after { @apply bg-gradient-to-t from-brand-deep to-transparent; }
+    .faq-heading { @apply grid gap-4; }
+    .trust-strip { @apply min-h-0; }
+    .trust-items { @apply gap-x-2; }
+    .trust-item { @apply justify-self-center! px-1; }
+  }
+  .legacy-document-bridge .container { width: min(calc(100% - 48px), 1600px) !important; }
+  .trip-stories .section-header { @apply flex; }
+  .trip-stories .section-subtitle { @apply text-sm; }
+}
+
+@media (max-width: 560px) {
+  @layer components {
+    .section-title { @apply text-[clamp(1.85rem,9vw,2.55rem)]; }
+    .section-header { @apply items-start; }
+    .btn-lg { @apply min-h-12 px-4 text-sm; }
+    .hero-seo { @apply min-h-[calc(100svh-64px)]; }
+    .hero-seo .hero-content { @apply px-0 pb-[178px] pt-9; }
+    .hero-eyebrow { @apply px-3 py-1.5 text-[10px]; }
+    .hero-title { @apply mb-4 text-[clamp(2.15rem,10.5vw,2.8rem)] leading-[1.04]; }
+    .hero-subtitle { @apply mb-4 text-sm leading-6; }
+    .hero-trust-typer { @apply mb-4 min-h-16 px-3 py-3; }
+    .hero-trust-typer strong { @apply text-sm; }
+    .hero-ctas { @apply grid w-full grid-cols-2 gap-2; }
+    .hero-micro-proof { @apply hidden; }
+    .trust-label { @apply hidden sm:inline; }
+    .destination-heading { @apply gap-4; }
+    .destination-actions { @apply w-full; }
+    .destination-view-all { @apply text-sm; }
+    .carousel-btn { @apply hidden; }
+    .confidence-grid { @apply grid-cols-1; }
+    .confidence-card { @apply min-h-0 flex-row items-center justify-start gap-4 p-4; }
+    .confidence-card h3 { @apply m-0 text-base; }
+    .credibility-stats { @apply grid-cols-1; }
+    .credibility-stats div { @apply border-l-0 border-t border-white/20 pl-0 pt-3 first:border-0 first:pt-0; }
+    .faq-help-card { @apply min-h-0 p-6; }
+    .faq-help-icon { @apply mb-5; }
+    .faq-help-card .section-kicker { @apply mt-0; }
+    .faq-help-card h3 { @apply max-w-none text-2xl; }
+    .footer-grid { @apply grid-cols-1 gap-8; }
+  }
+  .trip-stories { @apply py-12; }
+  .trip-stories .section-header { @apply items-center; }
+  .trip-stories .section-subtitle { @apply mb-6; }
+  .footer .footer-brand { @apply order-first; }
+  .legacy-document-bridge .container { width: calc(100% - 32px) !important; }
+  .legacy-document-bridge .category-trip-body,
+  .legacy-document-bridge .listing-card-body,
+  .legacy-document-bridge .trip-enquiry-card,
+  .legacy-document-bridge .side-card { @apply p-4; }
+  .enquiry-orbit { min-width: 158px; @apply min-h-12 px-4 text-xs; }
+  .trip-detail-hero { @apply min-h-[540px]; }
+  .trip-detail-hero-copy { @apply min-h-[540px] py-16; }
+  .trip-detail-hero h1 { @apply text-[clamp(2.25rem,11vw,3.25rem)]; }
+  .trip-detail-hero-copy > p { @apply text-sm leading-6; }
+  .trip-hero-chips span { @apply min-h-10 px-3 text-xs; }
+  .trip-detail-shell { @apply py-10; }
+  .trip-detail-layout { @apply gap-7; }
+  .trip-enquiry-card { @apply rounded-2xl p-4; }
+  .mini-form-row { @apply grid-cols-1; }
+  .trip-story, .trip-roadmap, .trip-package, .trip-dates { @apply py-9; }
+  .trip-date-grid { @apply grid-cols-1; }
+  .trip-date-grid button { @apply min-h-24 grid-cols-[24px_1fr] justify-items-start text-left; }
+  .trip-date-grid button em { @apply col-span-2; }
+  .trip-notes { @apply p-5; }
+}
+
+@media (min-width: 1280px) {
+  .footer .footer-grid { grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

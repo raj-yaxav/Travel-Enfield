@@ -1,7 +1,10 @@
+
+// opencode -s ses_02d4b5353ffejPKj1teaU8yne1
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 import { connectDatabase } from '../../../lib/mongodb';
-import { Destination, Trip, Category, Blog, Page, Enquiry, User } from '../../../server/models';
+import { Destination, Trip, Category, Blog, Page, Enquiry, User, Hotel } from '../../../server/models';
+import { destinations, trips, categoryData, blogs, pageData, hotels } from '../../../server/seed';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -11,6 +14,29 @@ const failure = error => {
   console.error('API request failed:', error);
   return json({ error: 'Something went wrong. Please try again shortly.' }, 500);
 };
+
+function localReadFallback(route, request) {
+  const pathname = route.join('/');
+  const url = new URL(request.url);
+  if (pathname === 'destinations') return destinations;
+  if (route[0] === 'destinations' && route[1]) return destinations.find(item => item.slug === route[1]);
+  if (pathname === 'trips') {
+    const category = url.searchParams.get('category');
+    const destination = url.searchParams.get('destination');
+    return trips.filter(item => (!category || category === 'all' || item.categories.includes(category)) && (!destination || item.destinationSlug === destination));
+  }
+  if (route[0] === 'trips' && route[1]) return trips.find(item => item.slug === route[1]);
+  if (route[0] === 'categories' && route[1]) return categoryData.find(item => item.slug === route[1]);
+  if (pathname === 'blogs') return [...blogs].sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  if (route[0] === 'blogs' && route[1]) return blogs.find(item => item.slug === route[1]);
+  if (route[0] === 'pages' && route[1]) return pageData.find(item => item.slug === route[1]);
+  if (pathname === 'hotels') {
+    const destination = url.searchParams.get('destination');
+    return hotels.filter(item => !destination || item.destinationSlug === destination);
+  }
+  if (route[0] === 'hotels' && route[1]) return hotels.find(item => item.slug === route[1]);
+  return undefined;
+}
 
 export async function GET(request, context) {
   try {
@@ -23,7 +49,8 @@ export async function GET(request, context) {
     const knownReadRoute = pathname === 'destinations'
       || pathname === 'trips'
       || pathname === 'blogs'
-      || (['destinations', 'trips', 'categories', 'blogs', 'pages'].includes(route[0]) && Boolean(route[1]));
+      || pathname === 'hotels'
+      || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]));
     if (!knownReadRoute) return json({ error: 'API route not found' }, 404);
     await connectDatabase();
     const url = new URL(request.url);
@@ -58,8 +85,24 @@ export async function GET(request, context) {
       const item = await Page.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Page not found' }, 404);
     }
+    if (pathname === 'hotels') {
+      const query = {};
+      const destination = url.searchParams.get('destination');
+      if (destination) query.destinationSlug = destination;
+      return json(await Hotel.find(query).sort({ rating: -1 }).lean());
+    }
+    if (route[0] === 'hotels' && route[1]) {
+      const item = await Hotel.findOne({ slug: route[1] }).lean();
+      return item ? json(item) : json({ error: 'Hotel not found' }, 404);
+    }
     return json({ error: 'API route not found' }, 404);
   } catch (error) {
+    const { route = [] } = await context.params;
+    const fallback = localReadFallback(route, request);
+    if (fallback !== undefined) {
+      console.warn(`MongoDB unavailable; serving local read fallback for /api/${route.join('/')}.`);
+      return fallback ? json(fallback) : json({ error: 'Content not found' }, 404);
+    }
     return failure(error);
   }
 }

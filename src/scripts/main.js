@@ -4,10 +4,13 @@ import {
   Backpack,
   ArrowDown,
   ArrowRight,
+  ArrowUp,
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   BedDouble,
+  Home,
+  Search,
   Bike,
   BookOpen,
   BadgeIndianRupee,
@@ -24,6 +27,7 @@ import {
   Flame,
   Gift,
   Globe2,
+  Heart,
   Luggage,
   Map,
   MapPinned,
@@ -33,6 +37,7 @@ import {
   Phone,
   Plane,
   PlaneTakeoff,
+  Play,
   ReceiptText,
   RefreshCcw,
   ShieldCheck,
@@ -53,10 +58,13 @@ createIcons({
     Backpack,
     ArrowDown,
     ArrowRight,
+    ArrowUp,
     ArrowUpRight,
     ChevronLeft,
     ChevronRight,
     BedDouble,
+    Home,
+    Search,
     Bike,
     BookOpen,
     BadgeIndianRupee,
@@ -73,6 +81,7 @@ createIcons({
     Flame,
     Gift,
     Globe2,
+    Heart,
     Luggage,
     Map,
     MapPinned,
@@ -82,6 +91,7 @@ createIcons({
     Phone,
     Plane,
     PlaneTakeoff,
+    Play,
     ReceiptText,
     RefreshCcw,
     ShieldCheck,
@@ -223,6 +233,31 @@ function updateCarouselButtons() {
 tripTrack?.addEventListener('scroll', updateCarouselButtons, { passive: true });
 window.addEventListener('resize', updateCarouselButtons, { passive: true });
 updateCarouselButtons();
+
+// Generic horizontal rail: arrow controls that disable at either end.
+function wireRail(trackSelector, prevSelector, nextSelector, itemSelector, fallbackStep) {
+  const track = $(trackSelector);
+  const prev = $(prevSelector);
+  const next = $(nextSelector);
+  if (!track) return;
+  const step = () => ($(itemSelector, track)?.getBoundingClientRect().width || fallbackStep) + 20;
+  prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  const update = () => {
+    if (prev) prev.disabled = track.scrollLeft < 5;
+    if (next) next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 5;
+  };
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}
+
+wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
+wireRail('#story-reel', '#story-prev', '#story-next', '.story-frame', 240);
+
+$('#back-to-top')?.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
 $$('.faq-item').forEach((item, index) => {
   const question = $('.faq-question', item);

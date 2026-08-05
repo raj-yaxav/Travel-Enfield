@@ -1,7 +1,5 @@
 import { Inter, Manrope } from 'next/font/google';
 import './globals.css';
-import '../src/styles/index.css';
-import '../src/styles/pages.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
