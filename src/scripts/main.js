@@ -51,6 +51,7 @@ import {
   WandSparkles,
   Headphones,
   CalendarSync,
+  Hotel,
 } from 'lucide';
 
 createIcons({
@@ -105,6 +106,7 @@ createIcons({
     WandSparkles,
     Headphones,
     CalendarSync,
+    Hotel,
   },
 });
 
@@ -381,4 +383,49 @@ if (!reduceMotion && 'IntersectionObserver' in window) {
     });
   }, { threshold: .08, rootMargin: '0px 0px -40px' });
   revealTargets.forEach(element => observer.observe(element));
+}
+
+// Three-part campaign carousel: offer, trending trips and curated hotels.
+const campaignSlider = $('#campaign-slider');
+if (campaignSlider) {
+  const track = $('#campaign-track');
+  const slides = $$('.campaign-slide', campaignSlider);
+  const dots = $$('.campaign-dots button', campaignSlider);
+  let campaignIndex = 0;
+  let campaignTimer;
+  let touchStartX = 0;
+
+  const showCampaign = index => {
+    campaignIndex = (index + slides.length) % slides.length;
+    track.style.transform = `translate3d(-${campaignIndex * 100}%,0,0)`;
+    slides.forEach((slide, i) => slide.setAttribute('aria-hidden', String(i !== campaignIndex)));
+    dots.forEach((dot, i) => {
+      const active = i === campaignIndex;
+      dot.classList.toggle('active', active);
+      dot.setAttribute('aria-selected', String(active));
+      dot.tabIndex = active ? 0 : -1;
+    });
+  };
+  const stopCampaigns = () => window.clearInterval(campaignTimer);
+  const startCampaigns = () => {
+    stopCampaigns();
+    if (!reduceMotion) campaignTimer = window.setInterval(() => showCampaign(campaignIndex + 1), 5500);
+  };
+
+  $('.campaign-prev', campaignSlider)?.addEventListener('click', () => { showCampaign(campaignIndex - 1); startCampaigns(); });
+  $('.campaign-next', campaignSlider)?.addEventListener('click', () => { showCampaign(campaignIndex + 1); startCampaigns(); });
+  dots.forEach((dot, i) => dot.addEventListener('click', () => { showCampaign(i); startCampaigns(); }));
+  campaignSlider.addEventListener('mouseenter', stopCampaigns);
+  campaignSlider.addEventListener('mouseleave', startCampaigns);
+  campaignSlider.addEventListener('focusin', stopCampaigns);
+  campaignSlider.addEventListener('focusout', startCampaigns);
+  campaignSlider.addEventListener('touchstart', event => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+  campaignSlider.addEventListener('touchend', event => {
+    const distance = event.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(distance) > 45) showCampaign(campaignIndex + (distance < 0 ? 1 : -1));
+    startCampaigns();
+  }, { passive: true });
+  document.addEventListener('visibilitychange', () => document.hidden ? stopCampaigns() : startCampaigns());
+  showCampaign(0);
+  startCampaigns();
 }

@@ -10,6 +10,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const json = (data, status = 200) => NextResponse.json(data, { status });
+
 const failure = error => {
   console.error('API request failed:', error);
   return json({ error: 'Something went wrong. Please try again shortly.' }, 500);
@@ -26,9 +27,11 @@ function localReadFallback(route, request) {
     return trips.filter(item => (!category || category === 'all' || item.categories.includes(category)) && (!destination || item.destinationSlug === destination));
   }
   if (route[0] === 'trips' && route[1]) return trips.find(item => item.slug === route[1]);
+  if (pathname === 'categories') return categoryData;
   if (route[0] === 'categories' && route[1]) return categoryData.find(item => item.slug === route[1]);
   if (pathname === 'blogs') return [...blogs].sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
   if (route[0] === 'blogs' && route[1]) return blogs.find(item => item.slug === route[1]);
+  if (pathname === 'pages') return pageData;
   if (route[0] === 'pages' && route[1]) return pageData.find(item => item.slug === route[1]);
   if (pathname === 'hotels') {
     const destination = url.searchParams.get('destination');
@@ -48,7 +51,9 @@ export async function GET(request, context) {
     const pathname = route.join('/');
     const knownReadRoute = pathname === 'destinations'
       || pathname === 'trips'
+      || pathname === 'categories'
       || pathname === 'blogs'
+      || pathname === 'pages'
       || pathname === 'hotels'
       || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]));
     if (!knownReadRoute) return json({ error: 'API route not found' }, 404);
@@ -72,6 +77,7 @@ export async function GET(request, context) {
       const item = await Trip.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Trip not found' }, 404);
     }
+    if (pathname === 'categories') return json(await Category.find().lean());
     if (route[0] === 'categories' && route[1]) {
       const item = await Category.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Category not found' }, 404);
@@ -81,6 +87,7 @@ export async function GET(request, context) {
       const item = await Blog.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Article not found' }, 404);
     }
+    if (pathname === 'pages') return json(await Page.find().lean());
     if (route[0] === 'pages' && route[1]) {
       const item = await Page.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Page not found' }, 404);

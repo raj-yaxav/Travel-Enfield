@@ -79,7 +79,7 @@
         <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="users"></i> Group Trips <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-wide">
           <a href="/upcoming-trips"><i data-lucide="calendar-days"></i><span><strong>Upcoming departures</strong><small>Fixed dates, great company</small></span></a><a href="/domestic-trips"><i data-lucide="mountain-snow"></i><span><strong>India trips</strong><small>Mountains, coasts and culture</small></span></a><a href="/international-trips"><i data-lucide="plane"></i><span><strong>International trips</strong><small>Curated journeys beyond borders</small></span></a><a href="/weekend-trips"><i data-lucide="car-front"></i><span><strong>Weekend escapes</strong><small>Short breaks, full experiences</small></span></a>
         </div></div>
-        <a href="/hotels" class="nav-link nav-highlight"><i data-lucide="hotel"></i> Hotels</a>
+        <a href="/hotels" class="nav-link nav-highlight"><i data-lucide="hotel"></i> Hotels <span class="nav-new-badge">NEW</span></a>
         <a href="/deals" class="nav-link"><i data-lucide="tags"></i> Deals</a>
         <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="map"></i> Travel Styles <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu">
           <a href="/bike-trips"><i data-lucide="bike"></i><span><strong>Bike trips</strong><small>Two wheels, open roads</small></span></a><a href="/backpacking-trips"><i data-lucide="backpack"></i><span><strong>Backpacking</strong><small>Social, immersive journeys</small></span></a><a href="/trekking-trips"><i data-lucide="footprints"></i><span><strong>Treks</strong><small>Trails worth earning</small></span></a>
@@ -112,7 +112,7 @@
             <a href="/weekend-trips"><i data-lucide="car-front"></i> Weekend escapes</a>
           </div>
         </div>
-        <a href="/hotels" class="mobile-nav-link mobile-nav-highlight"><i data-lucide="hotel"></i> Hotels</a>
+        <a href="/hotels" class="mobile-nav-link mobile-nav-highlight"><i data-lucide="hotel"></i> Hotels <span class="nav-new-badge">NEW</span></a>
         <a href="/deals" class="mobile-nav-link"><i data-lucide="tags"></i> Deals</a>
         <div class="mobile-nav-dropdown">
           <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="map"></i> Travel Styles <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
@@ -188,7 +188,7 @@
     <!-- ============ 4. COMMUNITY STATS STRIP ============ -->
     <section class="trust-strip bg-brand-purple py-3 text-white" id="trust-strip">
       <div class="container">
-        <div class="trust-items grid grid-cols-2 items-center gap-x-12 gap-y-3 py-1">
+        <div class="trust-items grid grid-cols-2 items-center gap-x-6 gap-y-3 py-1 lg:grid-cols-4">
           <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="camera"></i></span><span class="trust-value font-heading text-lg font-extrabold">50K+</span><span class="trust-label text-xs text-white/75">Community</span></div>
           <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="star"></i></span><span class="trust-value font-heading text-lg font-extrabold">4.9</span><span class="trust-label text-xs text-white/75">(2.5K+ Reviews)</span></div>
           <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="luggage"></i></span><span class="trust-value font-heading text-lg font-extrabold">10K+</span><span class="trust-label text-xs text-white/75">Happy Travellers</span></div>
@@ -522,8 +522,19 @@
       </div>
     </section>
 
-    <!-- ============ 8. PROMOTIONAL BANNER ============ -->
-    <section class="promo-banner bg-white py-8 md:py-12" id="deals">
+    <!-- ============ 8. CAMPAIGN SLIDER ============ -->
+    <section class="promo-banner bg-white py-8 md:py-12" id="deals" aria-label="TravelEnfield highlights">
+      <div class="container"><div class="campaign-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" id="campaign-slider" aria-roledescription="carousel">
+        <div class="campaign-track flex transition-transform duration-500 ease-out" id="campaign-track">
+          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="1 of 3: Limited time trip offer"><img src="/images/campaigns/offer-escape.png" alt="Tropical coast, Himalayan valley and Kerala backwaters" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Limited time offer</span><h2>Monsoon Special<br><mark>Flat ₹5,000 Off</mark></h2><p>Save on selected group departures with transparent pricing and expert trip captains.</p><a href="/deals" class="btn btn-primary btn-lg">Explore the offer <i data-lucide="arrow-right"></i></a></div></article>
+          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="2 of 3: Trending group trips"><img src="/images/campaigns/trending-trips.png" alt="Friends watching sunrise during a Himalayan group trip" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Trending now</span><h2>Trips everyone<br><mark>is talking about</mark></h2><p>Discover this season's most-loved road trips, island escapes and fixed departures.</p><a href="/upcoming-trips" class="btn btn-primary btn-lg">See trending trips <i data-lucide="arrow-right"></i></a></div></article>
+          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="3 of 3: Curated hotels"><img src="/images/campaigns/curated-hotels.png" alt="Boutique mountain resort with an infinity pool at twilight" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Handpicked stays</span><h2>Hotels worth<br><mark>staying in for</mark></h2><p>Explore verified boutique hotels, mountain retreats and memorable stays.</p><a href="/hotels" class="btn btn-primary btn-lg">Explore hotels <i data-lucide="arrow-right"></i></a></div></article>
+        </div>
+        <button class="campaign-arrow campaign-prev" type="button" aria-label="Previous campaign"><i data-lucide="chevron-left"></i></button><button class="campaign-arrow campaign-next" type="button" aria-label="Next campaign"><i data-lucide="chevron-right"></i></button>
+        <div class="campaign-dots" role="tablist" aria-label="Choose campaign"><button class="active" type="button" role="tab" aria-label="Show offer" aria-selected="true"></button><button type="button" role="tab" aria-label="Show trending trips" aria-selected="false"></button><button type="button" role="tab" aria-label="Show hotels" aria-selected="false"></button></div>
+      </div></div>
+    </section>
+    <section class="hidden" aria-hidden="true">
       <div class="container">
         <div class="promo-card relative grid min-h-[390px] grid-cols-[1fr_1.05fr] items-center gap-10 overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-deep via-brand-purple to-[#7b279d] px-10 py-9 text-white shadow-2xl max-md:grid-cols-1 max-md:gap-7 max-md:px-6 max-md:py-8">
           <div class="promo-content relative z-10">

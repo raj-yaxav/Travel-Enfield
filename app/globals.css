@@ -51,6 +51,11 @@
 
   .announcement-link p { @apply inline-flex items-center justify-center gap-2; }
   .announcement-link svg { @apply size-5; }
+
+  /* Shared route loader used by the dynamic app document. */
+  .page-loader { @apply grid min-h-[65vh] place-content-center justify-items-center gap-4 bg-brand-surface px-6 text-center text-gray-600; }
+  .page-loader span { @apply size-12 animate-spin rounded-full border-4 border-brand-purple/15 border-t-brand-purple motion-reduce:animate-none; }
+  .page-loader p { @apply font-body text-sm font-semibold text-brand-ink; }
   .header-nav svg { @apply size-[22px] shrink-0; }
   .nav-chevron { @apply size-4 transition-transform; }
   .nav-dropdown.open .nav-chevron { @apply rotate-180; }
@@ -59,16 +64,15 @@
   .nav-dropdown-menu strong { @apply text-sm; }
   .nav-dropdown-menu small { @apply text-[11px] font-medium text-gray-500; }
   #header-nav .nav-highlight,
-  #header-nav .nav-highlight:hover { @apply rounded-full bg-brand-yellow px-4 text-brand-deep shadow-[0_8px_22px_rgba(251,207,8,.4)] hover:bg-[#ffe05a] hover:text-brand-deep; }
-  #header-nav .nav-highlight svg { @apply text-brand-deep; }
+  #header-nav .nav-highlight:hover { @apply relative text-brand-ink hover:text-brand-purple; }
+  #header-nav .nav-highlight svg { @apply text-brand-purple; }
   #mobile-nav .mobile-nav-highlight,
-  #mobile-nav .mobile-nav-highlight:hover { @apply rounded-xl bg-brand-yellow text-brand-deep hover:bg-[#ffe05a] hover:text-brand-deep; }
-  #mobile-nav .mobile-nav-highlight svg { @apply text-brand-deep; }
+  #mobile-nav .mobile-nav-highlight:hover { @apply text-brand-ink hover:bg-brand-surface hover:text-brand-purple; }
+  #mobile-nav .mobile-nav-highlight svg { @apply text-brand-purple; }
+  .nav-new-badge { @apply ml-0.5 inline-flex min-h-5 items-center rounded-full bg-brand-orange px-2 font-heading text-[9px] font-extrabold tracking-[.08em] text-white shadow-[0_4px_10px_rgba(232,60,34,.25)]; }
   .trust-strip { @apply min-h-[124px] content-center; }
   .trust-items { @apply mx-auto max-w-[1680px]; }
-  .trust-item { @apply min-h-11; }
-  .trust-item:nth-child(odd) { @apply justify-self-start; }
-  .trust-item:nth-child(even) { @apply justify-self-end; }
+  .trust-item { @apply min-h-11 justify-self-center; }
   .trust-icon svg { @apply size-6; }
 
   /* Homepage hero */
@@ -152,6 +156,24 @@
   .rail-promo-cta svg { @apply size-4 transition-transform; }
   .rail-promo:hover .rail-promo-cta svg { @apply translate-x-1; }
 
+  /* Campaign slider */
+  .campaign-slide { @apply min-h-[430px] text-white; }
+  .campaign-slide > img { @apply absolute inset-0 size-full object-cover; }
+  .campaign-scrim { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(34,5,48,.94)_0%,rgba(55,10,75,.72)_38%,rgba(31,6,43,.12)_72%)]; }
+  .campaign-copy { @apply relative z-10 flex min-h-[430px] max-w-[760px] flex-col items-start justify-center px-[clamp(32px,6vw,92px)] py-14; }
+  .campaign-tag { @apply mb-4 inline-flex rounded-full border border-brand-yellow/40 bg-brand-yellow/10 px-3 py-2 text-xs font-extrabold uppercase tracking-wider text-brand-yellow backdrop-blur; }
+  .campaign-copy h2 { @apply mb-4 font-heading text-[clamp(2.6rem,5vw,5rem)] font-extrabold leading-[.94] tracking-[-.05em] text-white; }
+  .campaign-copy mark { @apply bg-transparent text-brand-yellow; }
+  .campaign-copy p { @apply mb-6 max-w-xl text-sm leading-7 text-white/80 md:text-base; }
+  .campaign-copy .btn svg { @apply size-5; }
+  .campaign-arrow { @apply absolute top-1/2 z-20 grid size-12 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-white/90 text-brand-purple shadow-xl transition hover:bg-brand-yellow; }
+  .campaign-arrow svg { @apply size-5; }
+  .campaign-prev { @apply left-4; }
+  .campaign-next { @apply right-4; }
+  .campaign-dots { @apply absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full bg-black/25 p-2 backdrop-blur; }
+  .campaign-dots button { @apply h-2 w-2 cursor-pointer rounded-full bg-white/55 transition-all; }
+  .campaign-dots button.active { @apply w-7 bg-brand-yellow; }
+
   /* Confidence and reasons */
   .book-confidence { @apply overflow-hidden bg-gradient-to-br from-brand-deep via-brand-purple to-[#742697] text-white; }
   .book-confidence .section-title { @apply text-white; }
@@ -221,6 +243,169 @@
   margin-inline: auto !important;
 }
 
+/* Destination guide routes */
+.destination-intro { @apply bg-white py-12 md:py-16; }
+.destination-fact-bar { @apply relative z-10 -mt-20 mb-14 grid overflow-hidden rounded-[28px] border border-brand-purple/10 bg-white shadow-[0_24px_70px_rgba(69,13,105,.14)] md:grid-cols-[1fr_1.35fr_1fr_auto]; }
+.destination-fact-bar > div { @apply flex min-h-28 items-center gap-4 border-b border-brand-purple/10 px-6 md:border-b-0 md:border-r; }
+.destination-fact-bar > div > svg { @apply size-6 shrink-0 text-brand-purple; }
+.destination-fact-bar span { @apply grid min-w-0 gap-1; }
+.destination-fact-bar small { @apply text-[11px] font-bold uppercase tracking-[.12em] text-gray-500; }
+.destination-fact-bar strong { @apply truncate font-heading text-sm font-extrabold text-brand-deep; }
+.destination-fact-bar > a { @apply flex min-h-16 items-center justify-center gap-2 bg-brand-yellow px-7 font-heading text-sm font-extrabold text-brand-deep transition hover:bg-[#ffe05a] md:min-h-28; }
+.destination-fact-bar > a svg { @apply size-4; }
+.destination-guide-grid { @apply grid min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_360px] xl:gap-16; }
+.destination-guide { @apply min-w-0; }
+.destination-guide > h2 { @apply max-w-3xl font-heading text-[clamp(2.2rem,4vw,4rem)] font-extrabold leading-[1.05] tracking-[-.05em] text-brand-deep; }
+.destination-lead { @apply mt-5 max-w-3xl text-lg leading-8 text-gray-600; }
+.destination-guide-block { @apply mt-12 border-t border-brand-purple/10 pt-9; }
+.destination-block-heading { @apply mb-6 flex items-center gap-4; }
+.destination-block-heading > span { @apply grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-surface text-brand-purple; }
+.destination-block-heading svg { @apply size-6; }
+.destination-block-heading small { @apply text-[11px] font-extrabold uppercase tracking-[.13em] text-brand-purple; }
+.destination-block-heading h3 { @apply font-heading text-2xl font-extrabold text-brand-deep md:text-3xl; }
+.destination-highlight-grid { @apply grid gap-4 md:grid-cols-3; }
+.destination-highlight-grid article { @apply min-h-48 rounded-2xl border border-brand-purple/10 bg-brand-surface p-6 transition duration-300 hover:-translate-y-1 hover:border-brand-purple/25 hover:shadow-lg; }
+.destination-highlight-grid article > span { @apply text-xs font-extrabold text-brand-purple/50; }
+.destination-highlight-grid h4 { @apply my-5 font-heading text-xl font-extrabold text-brand-deep; }
+.destination-highlight-grid p { @apply text-sm leading-6 text-gray-600; }
+.destination-check-list { @apply grid gap-3 sm:grid-cols-2; }
+.destination-check-list li { @apply flex min-h-14 items-center gap-3 rounded-xl border border-brand-purple/10 bg-white px-4 font-semibold text-brand-ink shadow-sm; }
+.destination-check-list svg { @apply size-5 shrink-0 text-brand-purple; }
+.destination-essentials ul { @apply grid overflow-hidden rounded-2xl border border-brand-purple/10 sm:grid-cols-2; }
+.destination-essentials li { @apply flex min-h-16 items-center gap-3 border-b border-brand-purple/10 px-5 text-sm text-gray-700 last:border-b-0 sm:odd:border-r; }
+.destination-essentials li svg { @apply size-4 shrink-0 text-brand-purple; }
+.destination-plan-card { @apply rounded-[28px] border border-brand-purple/10 bg-brand-deep p-7 text-white shadow-[0_28px_70px_rgba(45,7,64,.22)] lg:sticky lg:top-28; }
+.destination-plan-label { @apply inline-flex rounded-full bg-white/10 px-3 py-2 text-[11px] font-extrabold uppercase tracking-[.11em] text-brand-yellow; }
+.destination-plan-card h3 { @apply mb-4 mt-6 font-heading text-3xl font-extrabold leading-tight; }
+.destination-plan-card > p { @apply leading-7 text-white/70; }
+.destination-plan-price { @apply my-7 grid border-y border-white/15 py-5; }
+.destination-plan-price small { @apply text-xs text-white/60; }
+.destination-plan-price strong { @apply mt-1 font-heading text-4xl font-extrabold text-brand-yellow; }
+.destination-plan-price span { @apply mt-1 text-xs text-white/50; }
+.destination-plan-proof { @apply mt-5 grid grid-cols-2 gap-2 text-[11px] font-bold text-white/65; }
+.destination-plan-proof span { @apply flex items-center gap-1.5; }
+.destination-plan-proof svg { @apply size-4 shrink-0 text-brand-yellow; }
+.destination-trips { @apply scroll-mt-24 bg-brand-surface py-16 md:py-20; }
+.destination-trips .section-header p { @apply mt-3 max-w-2xl leading-7 text-gray-600; }
+
+@media (max-width: 767px) {
+  .destination-fact-bar { @apply -mt-14 mb-10 grid-cols-1 rounded-2xl; }
+  .destination-fact-bar > div { @apply min-h-20 px-5; }
+  .destination-fact-bar strong { @apply whitespace-normal; }
+  .destination-guide > h2 { @apply text-[2.2rem]; }
+  .destination-lead { @apply text-base leading-7; }
+  .destination-highlight-grid article { @apply min-h-0; }
+  .destination-trips .section-header { @apply items-start; }
+}
+
+/* Hotel discovery and property experience */
+.hotel-discovery-hero { @apply relative isolate min-h-[690px] overflow-hidden bg-brand-deep text-white; }
+.hotel-discovery-hero > img { @apply absolute inset-0 size-full object-cover object-center; }
+.hotel-discovery-scrim { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(25,4,37,.92)_0%,rgba(34,7,48,.7)_43%,rgba(20,4,31,.08)_75%),linear-gradient(0deg,rgba(20,4,30,.72),transparent_55%)]; }
+.hotel-discovery-copy { @apply relative z-10 flex min-h-[690px] flex-col justify-center py-20; }
+.hotel-discovery-copy .breadcrumbs { @apply mb-7 flex gap-2 text-xs text-white/60; }
+.hotel-discovery-kicker,.hotel-property-kicker { @apply mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-extrabold uppercase tracking-[.1em] text-brand-yellow backdrop-blur-md; }
+.hotel-discovery-kicker svg,.hotel-property-kicker svg { @apply size-4; }
+.hotel-discovery-copy h1 { @apply max-w-4xl font-heading text-[clamp(3.3rem,6.5vw,6.7rem)] font-extrabold leading-[.92] tracking-[-.06em]; }
+.hotel-discovery-copy h1 em { @apply not-italic text-brand-yellow; }
+.hotel-discovery-copy > p { @apply mt-6 max-w-2xl text-base leading-7 text-white/75 md:text-lg; }
+.hotel-discovery-hero .hotel-search-inline { @apply mt-9 max-w-[1280px] border-white/30 bg-white/95 shadow-[0_28px_80px_rgba(7,1,12,.45)] backdrop-blur-xl; }
+.hotel-search-inline label { @apply relative; }
+.hotel-search-inline label > svg { @apply absolute left-0 top-0 size-4 text-brand-purple; }
+.hotel-search-inline label:has(>svg) { @apply pl-5; }
+.hotel-hero-trust { @apply mt-5 flex flex-wrap gap-x-7 gap-y-2 text-xs font-bold text-white/70; }
+.hotel-hero-trust span { @apply inline-flex items-center gap-2; }
+.hotel-hero-trust svg { @apply size-4 text-brand-yellow; }
+.hotel-results-shell { @apply bg-[#fbfafc] py-16 md:py-20; }
+.hotel-results-head { @apply mb-7 flex items-end justify-between gap-8; }
+.hotel-results-head p { @apply mt-3 max-w-2xl leading-7 text-gray-600; }
+.hotel-result-summary { @apply grid size-28 shrink-0 place-content-center rounded-full bg-brand-deep text-center text-white shadow-xl; }
+.hotel-result-summary strong { @apply font-heading text-3xl font-extrabold text-brand-yellow; }
+.hotel-result-summary span { @apply text-[10px] font-bold uppercase tracking-wider text-white/65; }
+.hotel-destination-tabs { @apply mb-5 flex gap-2 overflow-x-auto pb-2; scrollbar-width: none; }
+.hotel-destination-tabs button,.hotel-quick-filters button { @apply min-h-11 shrink-0 cursor-pointer rounded-full border border-brand-purple/10 bg-white px-5 text-sm font-bold text-gray-600 transition hover:border-brand-purple/40 hover:text-brand-purple; }
+.hotel-destination-tabs button.active,.hotel-quick-filters button.active { @apply border-brand-purple bg-brand-purple text-white shadow-lg; }
+.hotel-filter-dock { @apply sticky top-0 z-20 mb-8 flex items-center gap-3 rounded-2xl border border-brand-purple/10 bg-white/95 p-3 shadow-[0_14px_40px_rgba(69,13,105,.1)] backdrop-blur-xl; }
+.hotel-filter-dock > label { @apply flex min-h-12 min-w-[240px] flex-1 items-center gap-2 rounded-xl bg-brand-surface px-4; }
+.hotel-filter-dock > label svg { @apply size-5 shrink-0 text-brand-purple; }
+.hotel-filter-dock input { @apply min-w-0 flex-1 bg-transparent text-sm outline-none; }
+.hotel-filter-dock select { @apply min-h-12 rounded-xl border border-brand-purple/10 bg-white px-4 text-sm font-bold outline-none focus:border-brand-purple; }
+.hotel-quick-filters { @apply flex gap-2 overflow-x-auto; scrollbar-width: none; }
+.hotel-quick-filters button { @apply px-4 text-xs; }
+.hotel-quick-filters svg { @apply inline size-3.5 fill-current; }
+.hotel-results-grid { @apply gap-6 lg:grid-cols-3; }
+.hotel-confidence-panel { @apply mt-10 grid overflow-hidden rounded-3xl bg-brand-deep text-white md:grid-cols-3; }
+.hotel-confidence-panel > div { @apply flex items-center gap-4 border-b border-white/10 p-6 last:border-0 md:border-b-0 md:border-r; }
+.hotel-confidence-panel > div > svg { @apply size-7 shrink-0 text-brand-yellow; }
+.hotel-confidence-panel span { @apply grid gap-1; }
+.hotel-confidence-panel strong { @apply font-heading text-sm font-extrabold; }
+.hotel-confidence-panel small { @apply text-xs leading-5 text-white/55; }
+
+.hotel-property-hero { @apply relative isolate min-h-[580px] overflow-hidden bg-brand-deep text-white; }
+.hotel-property-hero > img { @apply absolute inset-0 size-full object-cover; transform: scale(1.02); animation: hotel-hero-drift 14s ease-out both; }
+.hotel-property-scrim { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(28,4,40,.9)_0%,rgba(36,7,51,.58)_48%,rgba(20,3,30,.12)_75%),linear-gradient(0deg,rgba(20,3,29,.82),transparent_60%)]; }
+.hotel-property-copy { @apply relative z-10 flex min-h-[580px] flex-col justify-end pb-16 pt-24; }
+.hotel-property-copy .breadcrumbs { @apply mb-auto flex flex-wrap gap-2 text-xs text-white/65; }
+.hotel-property-copy h1 { @apply max-w-4xl font-heading text-[clamp(3rem,6vw,6rem)] font-extrabold leading-[.94] tracking-[-.055em]; }
+.hotel-property-copy > p { @apply mt-4 max-w-2xl text-base leading-7 text-white/75; }
+.hotel-property-copy .hotel-property-kicker { @apply mb-4 mt-10; }
+.hotel-hero-rate { @apply absolute bottom-14 right-12 hidden min-w-52 rounded-2xl border border-white/20 bg-white/95 p-5 text-brand-deep shadow-2xl backdrop-blur-xl lg:grid; }
+.hotel-hero-rate small { @apply text-xs text-gray-500; }
+.hotel-hero-rate strong { @apply my-1 font-heading text-3xl font-extrabold; }
+.hotel-hero-rate span { @apply flex items-center justify-between text-xs font-bold text-brand-purple; }
+.hotel-hero-rate svg { @apply size-4; }
+.hotel-detail-nav { @apply sticky top-0 z-30 border-b border-brand-purple/10 bg-white/95 backdrop-blur-xl; }
+.hotel-detail-nav .container { @apply flex min-h-16 items-center gap-1 overflow-x-auto; scrollbar-width: none; }
+.hotel-detail-nav a { @apply relative flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-bold text-gray-500 transition hover:text-brand-purple; }
+.hotel-detail-nav a.active { @apply bg-brand-surface text-brand-purple; }
+.hotel-detail-nav .hotel-nav-cta { @apply ml-auto bg-brand-yellow px-5 text-brand-deep hover:text-brand-deep; }
+.hotel-gallery-wrap { @apply relative; }
+.hotel-gallery-grid { @apply overflow-hidden rounded-[28px] bg-brand-deep p-1; }
+.hotel-gallery-count { @apply absolute bottom-4 right-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-xs font-extrabold text-brand-deep shadow-lg; }
+.hotel-gallery-count svg { @apply size-4; }
+.hotel-room-media { @apply relative overflow-hidden rounded-xl; }
+.hotel-room-media img { @apply aspect-[1.4] size-full object-cover transition duration-500 lg:aspect-auto lg:h-40; }
+.hotel-room-card:hover .hotel-room-media img { @apply scale-105; }
+.hotel-room-media > span { @apply absolute inset-x-2 bottom-2 flex items-center gap-1.5 rounded-lg bg-brand-deep/80 px-3 py-2 text-[10px] font-bold text-white backdrop-blur; }
+.hotel-room-media svg { @apply size-3.5 text-brand-yellow; }
+.hotel-tax-note { @apply mt-1 block text-[10px] font-bold text-lime-700; }
+.hotel-booking-card h2 { @apply mt-5 font-heading text-2xl font-extrabold text-brand-deep; }
+.hotel-booking-note { @apply mb-5 mt-1 text-xs leading-5 text-gray-500; }
+.hotel-reveal { opacity: 0; transform: translateY(24px); transition: opacity .55s ease var(--hotel-delay,0ms), transform .55s cubic-bezier(.2,.7,.2,1) var(--hotel-delay,0ms); }
+.hotel-reveal.is-visible { opacity: 1; transform: translateY(0); }
+@keyframes hotel-hero-drift { from { transform: scale(1.08); } to { transform: scale(1.02); } }
+
+@media (max-width: 1023px) {
+  .hotel-filter-dock { @apply static flex-wrap; }
+  .hotel-quick-filters { @apply order-3 w-full; }
+  .hotel-detail-nav .hotel-nav-cta { @apply mr-1; }
+}
+@media (max-width: 767px) {
+  .hotel-discovery-hero,.hotel-discovery-copy { @apply min-h-[720px]; }
+  .hotel-discovery-hero > img { @apply object-[70%_center]; }
+  .hotel-discovery-scrim { @apply bg-[linear-gradient(0deg,rgba(25,4,37,.98)_0%,rgba(31,6,44,.78)_63%,rgba(20,3,29,.2)_100%)]; }
+  .hotel-discovery-copy { @apply justify-end pb-8 pt-24; }
+  .hotel-discovery-copy h1 { @apply text-[3.15rem]; }
+  .hotel-discovery-copy > p { @apply mt-4 text-sm leading-6; }
+  .hotel-discovery-hero .hotel-search-inline { @apply mt-6; }
+  .hotel-search-inline label:has(>svg) { @apply pl-5; }
+  .hotel-results-head { @apply items-start; }
+  .hotel-result-summary { @apply size-20; }
+  .hotel-result-summary strong { @apply text-2xl; }
+  .hotel-filter-dock > label { @apply min-w-full; }
+  .hotel-filter-dock select { @apply w-full; }
+  .hotel-property-hero,.hotel-property-copy { @apply min-h-[540px]; }
+  .hotel-property-copy { @apply pb-10 pt-20; }
+  .hotel-property-copy h1 { @apply text-[2.7rem]; }
+  .hotel-property-copy .hotel-hero-pills span:nth-child(3) { @apply hidden; }
+  .hotel-detail-nav a { @apply px-3 text-xs; }
+  .hotel-detail-nav .hotel-nav-cta { @apply hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hotel-property-hero > img { animation: none; transform: none; }
+  .hotel-reveal { opacity: 1; transform: none; transition: none; }
+}
+
 /* Shared gutters for dynamic category, destination and trip detail routes. */
 .legacy-document-bridge #page-content > section:not(.page-hero):not(.trip-detail-hero),
 .legacy-document-bridge #main-content > section:not(.hero):not(.trust-strip) {
@@ -288,8 +473,8 @@
   .trip-detail-main { @apply min-w-0; }
   .trip-enquiry-sticky { @apply order-first min-w-0 lg:order-none lg:sticky lg:top-24; }
   .trip-enquiry-card { @apply min-w-0 overflow-hidden rounded-[26px] border border-brand-purple/10 bg-white p-6 shadow-[0_24px_60px_rgba(69,13,105,.14)]; }
-  .enquiry-trust { @apply inline-flex items-center gap-2 rounded-full bg-lime-100 px-3 py-2 text-xs font-extrabold text-lime-800; }
-  .enquiry-trust svg { @apply size-4; }
+  .trip-enquiry-card .enquiry-trust { @apply inline-flex items-center gap-2 rounded-full bg-lime-100 px-3 py-2 text-xs font-extrabold text-lime-800; }
+  .trip-enquiry-card .enquiry-trust svg { @apply size-4; }
   .trip-from { @apply mb-1 mt-5 text-xs text-gray-500; }
   .trip-enquiry-price { @apply flex flex-wrap items-end gap-2; }
   .trip-enquiry-price strong { @apply font-heading text-3xl font-extrabold text-brand-deep; }
@@ -442,6 +627,16 @@
     .faq-help-card .section-kicker { @apply mt-0; }
     .faq-help-card h3 { @apply max-w-none text-2xl; }
     .footer-grid { @apply grid-cols-1 gap-8; }
+    .campaign-slider { @apply rounded-2xl; }
+    .campaign-slide, .campaign-copy { @apply min-h-[470px]; }
+    .campaign-slide > img { @apply object-[65%_center]; }
+    .campaign-scrim { @apply bg-[linear-gradient(0deg,rgba(35,5,49,.97)_0%,rgba(50,9,70,.78)_52%,rgba(35,5,49,.14)_100%)]; }
+    .campaign-copy { @apply justify-end px-5 pb-16 pt-28; }
+    .campaign-copy h2 { @apply text-[clamp(2.15rem,11vw,3.25rem)]; }
+    .campaign-copy p { @apply text-sm leading-6; }
+    .campaign-arrow { @apply top-5 size-10 translate-y-0; }
+    .campaign-prev { @apply left-auto right-16; }
+    .campaign-next { @apply right-3; }
   }
   .trip-stories { @apply py-12; }
   .trip-stories .section-header { @apply items-center; }
