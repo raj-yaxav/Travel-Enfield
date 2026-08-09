@@ -17,6 +17,7 @@ const Trip = mongoose.models.Trip || mongoose.model('Trip', new mongoose.Schema(
 }, options));
 const Category = mongoose.models.Category || mongoose.model('Category', new mongoose.Schema({
   name: String, slug: { type: String, unique: true }, title: String, description: String, image: String, eyebrow: String, filters: [String],
+  faq: [{ question: String, answer: String }],
 }, options));
 const Hotel = mongoose.models.Hotel || mongoose.model('Hotel', new mongoose.Schema({
   name: { type: String, required: true }, slug: { type: String, required: true, unique: true, index: true },

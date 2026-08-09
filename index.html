@@ -45,7 +45,7 @@
   <!-- ============ 2. STICKY HEADER ============ -->
   <header class="header sticky top-0 z-40 bg-white shadow-[0_1px_0_rgba(69,13,105,.09)]" id="header">
     <!-- Mobile Header -->
-    <div class="header-mobile grid min-h-16 grid-cols-[48px_1fr_48px] items-center px-3.5 min-[981px]:hidden">
+    <div class="header-mobile grid min-h-16 grid-cols-[48px_1fr_48px] items-center px-3.5 md:hidden">
       <button class="hamburger relative z-10 grid size-11 place-content-center gap-1.5 rounded-xl border-0 bg-transparent text-brand-purple hover:bg-brand-surface focus-visible:outline-2 focus-visible:outline-brand-purple/30" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -58,24 +58,24 @@
     </div>
 
     <!-- Desktop Header -->
-    <div class="header-desktop hidden min-[981px]:block">
-      <div class="header-top mx-auto grid min-h-20 w-[min(calc(100%_-_48px),1740px)] grid-cols-[250px_minmax(320px,540px)_1fr] items-center gap-7">
-        <a href="/" class="header-logo flex w-52 items-center">
-          <img src="/images/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img h-[76px] w-[205px] object-contain object-left" />
+    <div class="header-desktop hidden md:block">
+      <div class="header-top mx-auto grid min-h-20 w-[min(calc(100%_-_48px),1740px)] grid-cols-[140px_minmax(160px,1fr)_auto] items-center gap-3 lg:grid-cols-[250px_minmax(320px,540px)_1fr] lg:gap-7">
+        <a href="/" class="header-logo flex w-32 items-center lg:w-52">
+          <img src="/images/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img h-12 w-32 object-contain object-left lg:h-[76px] lg:w-[205px]" />
         </a>
         <div class="header-search flex h-12 items-center gap-2.5 rounded-full border border-brand-purple/15 bg-brand-surface px-4 focus-within:border-brand-purple focus-within:ring-4 focus-within:ring-brand-purple/10">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           <input type="search" class="search-input w-full border-0 bg-transparent text-brand-ink outline-none" placeholder="Where do you want to go?" id="search-input" aria-label="Search destinations and trips" />
         </div>
-        <div class="header-actions flex items-center justify-end gap-5">
-          <a href="tel:+919876543210" class="header-phone flex items-center gap-2 whitespace-nowrap font-bold text-brand-ink">
+        <div class="header-actions flex items-center justify-end gap-2 lg:gap-5">
+          <a href="tel:+919876543210" class="header-phone hidden items-center gap-2 whitespace-nowrap font-bold text-brand-ink lg:flex">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M497.39 361.8l-112-48a24 24 0 0 0-28 6.9l-49.6 60.6A370.66 370.66 0 0 1 130.6 204.11l60.6-49.6a23.94 23.94 0 0 0 6.9-28l-48-112A24.16 24.16 0 0 0 122.6.61l-104 24A24 24 0 0 0 0 48c0 256.5 207.9 464 464 464a24 24 0 0 0 23.4-18.6l24-104a24.29 24.29 0 0 0-14.01-27.6z" transform="scale(0.047)"></path></svg>
             (+91) 98765 43210
           </a>
           <button class="btn btn-primary btn-login min-w-24" id="login-btn">Login</button>
         </div>
       </div>
-      <nav class="header-nav flex min-h-12 items-center justify-center gap-[clamp(14px,2vw,30px)] border-t border-brand-purple/10 px-5 [&_.nav-dropdown]:relative [&_.nav-dropdown]:flex [&_.nav-dropdown]:self-stretch [&_.nav-dropdown]:items-center [&_.nav-link]:relative [&_.nav-link]:inline-flex [&_.nav-link]:items-center [&_.nav-link]:gap-1.5 [&_.nav-link]:whitespace-nowrap [&_.nav-link]:py-3 [&_.nav-link]:text-sm [&_.nav-link]:font-bold [&_.nav-link:hover]:text-brand-purple [&_.nav-dropdown-menu]:invisible [&_.nav-dropdown-menu]:absolute [&_.nav-dropdown-menu]:top-[calc(100%-2px)] [&_.nav-dropdown-menu]:left-1/2 [&_.nav-dropdown-menu]:z-20 [&_.nav-dropdown-menu]:grid [&_.nav-dropdown-menu]:w-[310px] [&_.nav-dropdown-menu]:translate-x-[-50%] [&_.nav-dropdown-menu]:translate-y-2.5 [&_.nav-dropdown-menu]:gap-1 [&_.nav-dropdown-menu]:rounded-2xl [&_.nav-dropdown-menu]:border [&_.nav-dropdown-menu]:border-brand-purple/10 [&_.nav-dropdown-menu]:bg-white [&_.nav-dropdown-menu]:p-3 [&_.nav-dropdown-menu]:opacity-0 [&_.nav-dropdown-menu]:shadow-2xl [&_.nav-dropdown-menu]:transition [&_.nav-dropdown.open_.nav-dropdown-menu]:visible [&_.nav-dropdown.open_.nav-dropdown-menu]:translate-y-0 [&_.nav-dropdown.open_.nav-dropdown-menu]:opacity-100 [&_.nav-dropdown-menu_a]:flex [&_.nav-dropdown-menu_a]:min-h-14 [&_.nav-dropdown-menu_a]:items-center [&_.nav-dropdown-menu_a]:gap-3 [&_.nav-dropdown-menu_a]:rounded-xl [&_.nav-dropdown-menu_a]:px-3 [&_.nav-dropdown-menu_a]:py-2 [&_.nav-dropdown-menu_a:hover]:bg-brand-surface [&_.nav-dropdown-menu_a:hover]:text-brand-purple [&_.nav-menu-wide]:w-[590px] [&_.nav-menu-wide]:grid-cols-2" id="header-nav">
+      <nav class="header-nav flex min-h-12 items-center justify-start gap-2 overflow-x-auto border-t border-brand-purple/10 px-3 [scrollbar-width:none] lg:justify-center lg:gap-[clamp(14px,2vw,30px)] lg:px-5 [&_.nav-dropdown]:relative [&_.nav-dropdown]:flex [&_.nav-dropdown]:self-stretch [&_.nav-dropdown]:items-center [&_.nav-link]:relative [&_.nav-link]:inline-flex [&_.nav-link]:items-center [&_.nav-link]:gap-1.5 [&_.nav-link]:whitespace-nowrap [&_.nav-link]:py-3 [&_.nav-link]:text-sm [&_.nav-link]:font-bold [&_.nav-link:hover]:text-brand-purple [&_.nav-dropdown-menu]:invisible [&_.nav-dropdown-menu]:absolute [&_.nav-dropdown-menu]:top-[calc(100%-2px)] [&_.nav-dropdown-menu]:left-1/2 [&_.nav-dropdown-menu]:z-20 [&_.nav-dropdown-menu]:grid [&_.nav-dropdown-menu]:w-[310px] [&_.nav-dropdown-menu]:translate-x-[-50%] [&_.nav-dropdown-menu]:translate-y-2.5 [&_.nav-dropdown-menu]:gap-1 [&_.nav-dropdown-menu]:rounded-2xl [&_.nav-dropdown-menu]:border [&_.nav-dropdown-menu]:border-brand-purple/10 [&_.nav-dropdown-menu]:bg-white [&_.nav-dropdown-menu]:p-3 [&_.nav-dropdown-menu]:opacity-0 [&_.nav-dropdown-menu]:shadow-2xl [&_.nav-dropdown-menu]:transition [&_.nav-dropdown.open_.nav-dropdown-menu]:visible [&_.nav-dropdown.open_.nav-dropdown-menu]:translate-y-0 [&_.nav-dropdown.open_.nav-dropdown-menu]:opacity-100 [&_.nav-dropdown-menu_a]:flex [&_.nav-dropdown-menu_a]:min-h-14 [&_.nav-dropdown-menu_a]:items-center [&_.nav-dropdown-menu_a]:gap-3 [&_.nav-dropdown-menu_a]:rounded-xl [&_.nav-dropdown-menu_a]:px-3 [&_.nav-dropdown-menu_a]:py-2 [&_.nav-dropdown-menu_a:hover]:bg-brand-surface [&_.nav-dropdown-menu_a:hover]:text-brand-purple [&_.nav-menu-wide]:w-[590px] [&_.nav-menu-wide]:grid-cols-2" id="header-nav">
         <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="users"></i> Group Trips <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-wide">
           <a href="/upcoming-trips"><i data-lucide="calendar-days"></i><span><strong>Upcoming departures</strong><small>Fixed dates, great company</small></span></a><a href="/domestic-trips"><i data-lucide="mountain-snow"></i><span><strong>India trips</strong><small>Mountains, coasts and culture</small></span></a><a href="/international-trips"><i data-lucide="plane"></i><span><strong>International trips</strong><small>Curated journeys beyond borders</small></span></a><a href="/weekend-trips"><i data-lucide="car-front"></i><span><strong>Weekend escapes</strong><small>Short breaks, full experiences</small></span></a>
         </div></div>
@@ -96,8 +96,8 @@
     </div>
 
     <!-- Mobile Navigation Drawer -->
-    <div class="mobile-nav-overlay invisible fixed inset-0 z-50 block bg-brand-ink/60 opacity-0 transition [&.open]:visible [&.open]:opacity-100 min-[981px]:hidden" id="mobile-nav-overlay"></div>
-    <nav class="mobile-nav fixed inset-y-0 left-0 z-[60] grid h-dvh w-[min(88vw,380px)] -translate-x-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-white shadow-2xl transition-transform duration-300 [&.open]:translate-x-0 min-[981px]:hidden" id="mobile-nav">
+    <div class="mobile-nav-overlay invisible fixed inset-0 z-50 block bg-brand-ink/60 opacity-0 transition [&.open]:visible [&.open]:opacity-100 md:hidden" id="mobile-nav-overlay"></div>
+    <nav class="mobile-nav fixed inset-y-0 left-0 z-[60] grid h-dvh w-[min(88vw,380px)] -translate-x-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-white shadow-2xl transition-transform duration-300 [&.open]:translate-x-0 md:hidden" id="mobile-nav">
       <div class="mobile-nav-header flex min-h-18 items-center justify-between border-b border-brand-purple/10 px-3.5 py-2">
         <img src="/images/brand/logo-navbar.png" alt="TravelEnfield" class="mobile-nav-logo h-14 w-44 object-contain" />
         <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
@@ -155,13 +155,7 @@
       <div class="hero-bg absolute inset-0 overflow-hidden bg-[url('/images/group-trips-himalaya-hero.jpg')] bg-cover bg-[center_48%]">
         <div class="hero-overlay"></div>
       </div>
-      <a href="/trips/leh-ladakh-bike-trip" class="hero-trip-float hero-trip-left absolute bottom-24 left-[clamp(18px,4vw,72px)] z-10 aspect-4/5 w-[clamp(210px,16vw,290px)] -rotate-3 overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl transition hover:-translate-y-2 max-[860px]:bottom-16 max-[860px]:left-[calc(50%_-_166px)] max-[860px]:w-40 max-[560px]:left-3.5 max-[560px]:w-[calc(50%_-_20px)] max-[560px]:rotate-0" aria-label="Explore Leh Ladakh Bike Trip from ₹19,499">
-        <div class="hero-trip-media size-full overflow-hidden"><img class="size-full object-cover transition duration-500 hover:scale-105" src="/images/destinations/ladakh.jpg" alt="Leh Ladakh mountain road and lake" width="640" height="480" decoding="async" /></div>
-      </a>
-      <a href="/trips/bali-adventure-tour" class="hero-trip-float hero-trip-right absolute bottom-24 right-[clamp(18px,4vw,72px)] z-10 aspect-4/5 w-[clamp(210px,16vw,290px)] rotate-3 overflow-hidden rounded-3xl border border-white/40 bg-white shadow-2xl transition hover:-translate-y-2 max-[860px]:bottom-16 max-[860px]:right-[calc(50%_-_166px)] max-[860px]:w-40 max-[560px]:right-3.5 max-[560px]:w-[calc(50%_-_20px)] max-[560px]:rotate-0" aria-label="Explore Bali Adventure Tour from ₹44,999">
-        <div class="hero-trip-media size-full overflow-hidden"><img class="size-full object-cover transition duration-500 hover:scale-105" src="/images/destinations/bali.jpg" alt="Turquoise Bali coastline surrounded by green cliffs" width="640" height="480" decoding="async" /></div>
-      </a>
-      <div class="hero-content relative z-10 mx-auto w-[min(calc(100%_-_40px),1100px)] py-18 text-center max-[860px]:pb-[250px] max-[560px]:w-[calc(100%_-_28px)] max-[560px]:pb-[225px] max-[560px]:pt-10">
+      <div class="hero-content relative z-10 mx-auto w-[min(calc(100%_-_40px),1100px)] py-18 text-center max-sm:w-[calc(100%_-_28px)] max-sm:pt-10">
         <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Curated journeys. Real human support.</span>
         <h1 class="hero-title" id="hero-heading">Curated Group Trips &amp;<br/><span class="hero-highlight">Custom Tour Packages</span></h1>
         <p class="hero-subtitle">Explore fixed departures, bike trips, weekend getaways and personalised holidays across India and beyond—with transparent pricing and expert support.</p>
@@ -207,7 +201,7 @@
           <button class="tab-btn" data-tab="domestic"><i data-lucide="mountain-snow"></i> Domestic</button>
           <button class="tab-btn" data-tab="weekend"><i data-lucide="car-front"></i> Weekend</button>
         </div>
-        <div class="destination-grid grid auto-cols-[clamp(168px,10.5vw,200px)] grid-flow-col grid-rows-[repeat(2,306px)] items-start gap-x-[clamp(22px,1.65vw,32px)] gap-y-6 overflow-x-auto overflow-y-hidden pb-5 [scroll-snap-type:x_mandatory] max-[860px]:auto-cols-[144px] max-[860px]:grid-rows-[repeat(2,246px)] max-[560px]:auto-cols-[122px] max-[560px]:grid-rows-[repeat(2,210px)] max-[560px]:gap-3 [&_.destination-card]:grid [&_.destination-card]:h-[294px] [&_.destination-card]:grid-rows-[250px_auto] [&_.destination-card]:gap-3 [&_.destination-card]:text-center [&_.destination-card]:[scroll-snap-align:start] max-[860px]:[&_.destination-card]:h-[236px] max-[860px]:[&_.destination-card]:grid-rows-[198px_auto] max-[560px]:[&_.destination-card]:h-[202px] max-[560px]:[&_.destination-card]:grid-rows-[164px_auto] [&_.destination-img-wrap]:h-[250px] [&_.destination-img-wrap]:overflow-hidden [&_.destination-img-wrap]:rounded-full max-[860px]:[&_.destination-img-wrap]:h-[198px] max-[560px]:[&_.destination-img-wrap]:h-[164px] [&_.destination-img-wrap_img]:size-full [&_.destination-img-wrap_img]:object-cover [&_.destination-name]:font-heading [&_.destination-name]:text-base [&_.destination-name]:font-bold max-[560px]:[&_.destination-name]:text-sm" id="destination-grid">
+        <div class="destination-grid grid auto-cols-[clamp(168px,10.5vw,200px)] grid-flow-col grid-rows-[repeat(2,306px)] items-start gap-x-[clamp(22px,1.65vw,32px)] gap-y-6 overflow-x-auto overflow-y-hidden pb-5 [scroll-snap-type:x_mandatory] max-md:auto-cols-[144px] max-md:grid-rows-[repeat(2,246px)] max-sm:auto-cols-[122px] max-sm:grid-rows-[repeat(2,210px)] max-sm:gap-3 [&_.destination-card]:grid [&_.destination-card]:h-[294px] [&_.destination-card]:grid-rows-[250px_auto] [&_.destination-card]:gap-3 [&_.destination-card]:text-center [&_.destination-card]:[scroll-snap-align:start] max-md:[&_.destination-card]:h-[236px] max-md:[&_.destination-card]:grid-rows-[198px_auto] max-sm:[&_.destination-card]:h-[202px] max-sm:[&_.destination-card]:grid-rows-[164px_auto] [&_.destination-img-wrap]:h-[250px] [&_.destination-img-wrap]:overflow-hidden [&_.destination-img-wrap]:rounded-full max-md:[&_.destination-img-wrap]:h-[198px] max-sm:[&_.destination-img-wrap]:h-[164px] [&_.destination-img-wrap_img]:size-full [&_.destination-img-wrap_img]:object-cover [&_.destination-name]:font-heading [&_.destination-name]:text-base [&_.destination-name]:font-bold max-sm:[&_.destination-name]:text-sm" id="destination-grid">
           <!-- Row 1: International -->
           <a href="/destinations/bali" class="destination-card destination-featured" data-category="international" data-price="From ₹44,999" data-trips="4 curated trips">
             <div class="destination-img-wrap"><img src="/images/destinations/bali.jpg" alt="Bali" loading="lazy" /></div>
@@ -864,22 +858,6 @@
       </div>
     </section>
 
-    <!-- ============ 14. COMMUNITY GALLERY ============ -->
-    <section class="gallery section bg-white py-16 md:py-20" id="gallery">
-      <div class="container">
-        <h2 class="section-title center">Loved by Travellers Across India</h2>
-        <p class="section-subtitle">Follow us <a href="https://www.instagram.com/travelenfield.in" target="_blank" rel="noopener" class="instagram-link">@travelenfield.in</a></p>
-        <div class="gallery-grid grid grid-cols-2 auto-rows-[165px] gap-3 md:grid-cols-4 md:auto-rows-[205px] [&_.gallery-item]:overflow-hidden [&_.gallery-item]:rounded-2xl [&_.gallery-item_img]:size-full [&_.gallery-item_img]:object-cover [&_.gallery-item_img]:transition [&_.gallery-item_img]:duration-500 [&_.gallery-item:hover_img]:scale-105 md:[&_.gallery-item:first-child]:row-span-2 md:[&_.gallery-item:nth-child(4)]:row-span-2">
-          <div class="gallery-item"><img src="/images/destinations/ladakh.jpg" alt="Mountain road in Ladakh" loading="lazy" /></div>
-          <div class="gallery-item"><img src="/images/destinations/manali.jpg" alt="Manali mountain adventure" loading="lazy" /></div>
-          <div class="gallery-item"><img src="/images/destinations/kerala.jpg" alt="Kerala travel experience" loading="lazy" /></div>
-          <div class="gallery-item"><img src="/images/destinations/meghalaya.jpg" alt="Living root bridge in Meghalaya" loading="lazy" /></div>
-          <div class="gallery-item"><img src="/images/destinations/nepal.jpg" alt="Himalayan village in Nepal" loading="lazy" /></div>
-          <div class="gallery-item"><img src="/images/destinations/thailand.jpg" alt="Thailand island adventure" loading="lazy" /></div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ 16. RELATED BLOGS ============ -->
     <section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title">
       <div class="container">
@@ -1008,7 +986,6 @@
     <img class="block h-auto w-full object-contain max-sm:min-h-[150px] max-sm:object-cover max-sm:object-[43%_center]" src="/images/travel-exciting-footer.png" alt="Travel should feel exciting. Fresh journeys, playful routes, unforgettable moments." width="2172" height="724" loading="lazy" decoding="async" />
   </section>
 
-  <!-- ============ 15. FOOTER ============ -->
   <!-- ============ 19. FOOTER ============ -->
   <footer class="footer relative bg-brand-deep text-white/75 max-md:pb-17" id="contact">
     <div class="footer-wave">

@@ -9,6 +9,12 @@ const commonFaq = name => [
   { question: `Can I customise my ${name} trip?`, answer: 'Yes. Dates, stay category, activities and transfers can be customised for private groups, couples and families.' },
   { question: 'Are solo travellers welcome?', answer: 'Absolutely. Our fixed departures are designed for solo travellers as well as friends and couples.' },
 ];
+const categoryFaq = name => [
+  { question: `How do I choose the right ${name.toLowerCase()}?`, answer: 'Compare duration, group size and price on each trip card, or use the filters to narrow things down by destination and budget.' },
+  { question: 'Can these trips be customised?', answer: 'Yes. If a fixed departure does not fit your dates or group, our team can put together a private itinerary instead.' },
+  { question: 'Are solo travellers welcome?', answer: 'Absolutely. Every departure is designed so solo travellers join a group from day one, not just a seat on a bus.' },
+  { question: 'What is included in the price?', answer: 'Stays, transfers, a trip captain and the experiences listed on each trip page. Flights, personal expenses and taxes are shown separately before you book.' },
+];
 export const destinations = [
   ['Ladakh','ladakh','domestic',19499,'May to September','High passes, blue lakes and unforgettable Himalayan roads',['Pangong Lake','Nubra Valley','Khardung La'],['Bike through mountain passes','Visit monasteries','Camp near Pangong']],
   ['Spiti Valley','spiti','domestic',17999,'May to October','Ancient monasteries and stark high-altitude landscapes',['Kaza','Key Monastery','Chandratal Lake'],['Drive the full circuit','Stargaze in remote villages','Explore fossil villages']],
@@ -55,7 +61,7 @@ export const categoryData = [
   ['Bike Trips','bike-trips','Ride farther. Feel more.','Supported motorcycle journeys through Ladakh and India’s most dramatic open roads.','/images/categories/bike-trips.jpg','Two wheels, one unforgettable road'],
   ['Backpacking Trips','backpacking-trips','Backpacking trips for curious people','Social, immersive routes with thoughtful stays and experienced trip captains.','/images/destinations/spiti.jpg','Travel light, connect deeply'],
   ['Trekking Trips','trekking-trips','Trails worth earning','High-altitude landscapes, expert-led routes and small-group mountain experiences.','/images/destinations/nepal.jpg','Walk into the wild'],
-].map(([name,slug,title,description,image,eyebrow]) => ({name,slug,title,description,image,eyebrow,filters:['destination','budget','duration','date']}));
+].map(([name,slug,title,description,image,eyebrow]) => ({name,slug,title,description,image,eyebrow,filters:['destination','budget','duration','date'],faq:categoryFaq(name)}));
 
 export const blogs = [
   ['Best Time to Visit Ladakh','best-time-to-visit-ladakh','Plan around open roads, comfortable weather and the experiences you value most.','ladakh','Destination Guide'],

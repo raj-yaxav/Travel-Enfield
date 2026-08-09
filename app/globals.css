@@ -94,9 +94,6 @@
   .hero-proof-card { @apply hidden; }
   .hero-scroll-cue { @apply absolute bottom-5 left-1/2 z-20 hidden -translate-x-1/2 place-items-center gap-1 text-[10px] font-bold uppercase tracking-[.18em] text-white/70 lg:grid; }
   .hero-scroll-cue svg { @apply size-5; }
-  .hero-trip-float { animation: hero-card-float 5s ease-in-out infinite; }
-  .hero-trip-right { animation-delay: -2.5s; }
-
   /* Explore destinations */
   .destination-heading p { @apply mt-3 max-w-2xl leading-7 text-gray-600; }
   .destination-actions { @apply flex shrink-0 items-center gap-3; }
@@ -239,7 +236,7 @@
    utility and uses the same semantic hook, so keep the branded content gutter
    authoritative across every section. */
 .legacy-document-bridge .container {
-  width: min(calc(100% - 96px), 1600px) !important;
+  width: min(calc(100% - 160px), 1600px) !important;
   margin-inline: auto !important;
 }
 
@@ -574,12 +571,7 @@
 .footer .footer-payments { @apply text-xs text-white/60; }
 .footer .footer-bottom { @apply mt-0 border-t-0 text-white/50; }
 
-@keyframes hero-card-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@media (max-width: 860px) {
+@media (max-width: 767px) {
   @layer components {
     .container { @apply w-[min(calc(100%_-_28px),1600px)]; }
     .hero-seo { @apply min-h-[760px]; }
@@ -598,13 +590,13 @@
   .trip-stories .section-subtitle { @apply text-sm; }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 639px) {
   @layer components {
     .section-title { @apply text-[clamp(1.85rem,9vw,2.55rem)]; }
     .section-header { @apply items-start; }
     .btn-lg { @apply min-h-12 px-4 text-sm; }
     .hero-seo { @apply min-h-[calc(100svh-64px)]; }
-    .hero-seo .hero-content { @apply px-0 pb-[178px] pt-9; }
+    .hero-seo .hero-content { @apply px-0 pb-10 pt-9; }
     .hero-eyebrow { @apply px-3 py-1.5 text-[10px]; }
     .hero-title { @apply mb-4 text-[clamp(2.15rem,10.5vw,2.8rem)] leading-[1.04]; }
     .hero-subtitle { @apply mb-4 text-sm leading-6; }
