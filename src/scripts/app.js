@@ -326,7 +326,7 @@ function journalSection(blogs) {
 }
 
 function offersSliderSection() {
-  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield offers and highlights"><div class="container"><div class="section-header"><div><span class="section-kicker">More ways to travel</span><h2 class="section-title">Offers, trending trips & stays</h2></div><a class="see-all-link" href="/deals">View all deals ${icon('arrow-right')}</a></div><div class="campaign-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" aria-roledescription="carousel"><div class="campaign-track flex transition-transform duration-500 ease-out"><article class="campaign-slide relative min-w-full overflow-hidden" aria-label="1 of 3: Limited time trip offer"><img src="/images/campaigns/offer-escape.png" alt="Tropical coast, Himalayan valley and Kerala backwaters" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Limited time offer</span><h2>Monsoon Special<br><mark>Flat ₹5,000 Off</mark></h2><p>Save on selected group departures with transparent pricing and expert trip captains.</p><a href="/deals" class="btn btn-primary btn-lg">Explore the offer ${icon('arrow-right')}</a></div></article><article class="campaign-slide relative min-w-full overflow-hidden" aria-label="2 of 3: Trending group trips"><img src="/images/campaigns/trending-trips.png" alt="Friends watching sunrise during a Himalayan group trip" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Trending now</span><h2>Trips everyone<br><mark>is talking about</mark></h2><p>Discover this season's most-loved road trips, island escapes and fixed departures.</p><a href="/upcoming-trips" class="btn btn-primary btn-lg">See trending trips ${icon('arrow-right')}</a></div></article><article class="campaign-slide relative min-w-full overflow-hidden" aria-label="3 of 3: Curated hotels"><img src="/images/campaigns/curated-hotels.png" alt="Boutique mountain resort with an infinity pool at twilight" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Handpicked stays</span><h2>Hotels worth<br><mark>staying in for</mark></h2><p>Explore verified boutique hotels, mountain retreats and memorable stays.</p><a href="/hotels" class="btn btn-primary btn-lg">Explore hotels ${icon('arrow-right')}</a></div></article></div><button class="campaign-arrow campaign-prev" type="button" aria-label="Previous highlight">${icon('chevron-left')}</button><button class="campaign-arrow campaign-next" type="button" aria-label="Next highlight">${icon('chevron-right')}</button><div class="campaign-dots" aria-label="Choose a highlight"><button class="active" type="button" aria-label="Show offer" aria-current="true"></button><button type="button" aria-label="Show trending trips"></button><button type="button" aria-label="Show curated hotels"></button></div></div></div></section>`;
+  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="/images/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="/images/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="/images/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
 }
 
 function wireCampaignSlider(root = mount) {
@@ -334,24 +334,17 @@ function wireCampaignSlider(root = mount) {
   slider.dataset.ready = 'true';
   const track = slider.querySelector('.campaign-track');
   const slides = [...slider.querySelectorAll('.campaign-slide')];
-  const dots = [...slider.querySelectorAll('.campaign-dots button')];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let index = 0; let timer; let touchStartX = 0;
+  let index = 0; let timer;
   const show = next => {
     index = (next + slides.length) % slides.length;
     track.style.transform = `translate3d(-${index * 100}%,0,0)`;
-    slides.forEach((slide, i) => slide.setAttribute('aria-hidden', String(i !== index)));
-    dots.forEach((dot, i) => { dot.classList.toggle('active', i === index); if (i === index) dot.setAttribute('aria-current', 'true'); else dot.removeAttribute('aria-current'); });
+    slides.forEach((slide, i) => { const active = i === index; slide.setAttribute('aria-hidden', String(!active)); slide.tabIndex = active ? 0 : -1; });
   };
   const stop = () => window.clearInterval(timer);
-  const start = () => { stop(); if (!reduceMotion) timer = window.setInterval(() => show(index + 1), 5500); };
-  slider.querySelector('.campaign-prev')?.addEventListener('click', () => { show(index - 1); start(); });
-  slider.querySelector('.campaign-next')?.addEventListener('click', () => { show(index + 1); start(); });
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); start(); }));
+  const start = () => { stop(); if (!reduceMotion) timer = window.setInterval(() => show(index + 1), 4500); };
   slider.addEventListener('mouseenter', stop); slider.addEventListener('mouseleave', start);
   slider.addEventListener('focusin', stop); slider.addEventListener('focusout', start);
-  slider.addEventListener('touchstart', event => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
-  slider.addEventListener('touchend', event => { const distance = event.changedTouches[0].clientX - touchStartX; if (Math.abs(distance) > 45) show(index + (distance < 0 ? 1 : -1)); }, { passive: true });
   show(0); start();
 }
 

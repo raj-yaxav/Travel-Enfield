@@ -151,11 +151,11 @@
 
   <main id="main-content">
     <!-- ============ 3. HERO SECTION ============ -->
-    <section class="hero hero-seo relative isolate grid min-h-[clamp(820px,88vh,940px)] w-full overflow-hidden bg-[#260735] text-white" id="hero" aria-labelledby="hero-heading">
+    <section class="hero hero-seo relative isolate grid min-h-[clamp(620px,70vh,720px)] w-full overflow-hidden bg-[#260735] text-white" id="hero" aria-labelledby="hero-heading">
       <div class="hero-bg absolute inset-0 overflow-hidden bg-[url('/images/group-trips-himalaya-hero.jpg')] bg-cover bg-[center_48%]">
         <div class="hero-overlay"></div>
       </div>
-      <div class="hero-content relative z-10 mx-auto w-[min(calc(100%_-_40px),1100px)] py-18 text-center max-sm:w-[calc(100%_-_28px)] max-sm:pt-10">
+      <div class="hero-content relative z-10 mx-auto w-[min(calc(100%_-_40px),1100px)] py-12 text-center max-sm:w-[calc(100%_-_28px)] max-sm:py-9">
         <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Curated journeys. Real human support.</span>
         <h1 class="hero-title" id="hero-heading">Curated Group Trips &amp;<br/><span class="hero-highlight">Custom Tour Packages</span></h1>
         <p class="hero-subtitle">Explore fixed departures, bike trips, weekend getaways and personalised holidays across India and beyond—with transparent pricing and expert support.</p>
@@ -176,23 +176,21 @@
         <div class="hero-micro-proof" aria-label="TravelEnfield service highlights"><span><i data-lucide="bed-double"></i> Verified stays</span><span><i data-lucide="headphones"></i> 24/7 trip support</span><span><i data-lucide="receipt-text"></i> Clear inclusions</span></div>
       </div>
       <aside class="hero-proof-card" aria-label="TravelEnfield traveller rating"><div class="hero-proof-avatars"><span>RK</span><span>AS</span><span>NM</span></div><div><strong>4.9 traveller rating</strong><small><i data-lucide="star"></i> Built around real travellers</small></div></aside>
-      <a class="hero-scroll-cue" href="#trust-strip" aria-label="Scroll to traveller proof"><span>Discover</span><i data-lucide="arrow-down"></i></a>
     </section>
 
     <!-- ============ 4. COMMUNITY STATS STRIP ============ -->
-    <section class="trust-strip bg-brand-purple py-3 text-white" id="trust-strip">
+    <section class="trust-strip py-3" id="trust-strip" aria-label="TravelEnfield community proof">
       <div class="container">
-        <div class="trust-items grid grid-cols-2 items-center gap-x-6 gap-y-3 py-1 lg:grid-cols-4">
-          <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="camera"></i></span><span class="trust-value font-heading text-lg font-extrabold">50K+</span><span class="trust-label text-xs text-white/75">Community</span></div>
-          <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="star"></i></span><span class="trust-value font-heading text-lg font-extrabold">4.9</span><span class="trust-label text-xs text-white/75">(2.5K+ Reviews)</span></div>
-          <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="luggage"></i></span><span class="trust-value font-heading text-lg font-extrabold">10K+</span><span class="trust-label text-xs text-white/75">Happy Travellers</span></div>
-          <div class="trust-item flex min-w-0 items-center justify-center gap-2 px-3"><span class="trust-icon grid size-8 place-items-center rounded-full bg-white/10 text-brand-yellow"><i data-lucide="shield-check"></i></span><span class="trust-value font-heading text-lg font-extrabold">24/7</span><span class="trust-label text-xs text-white/75">Support</span></div>
+        <div class="trust-items grid grid-cols-1 items-center gap-x-8 gap-y-3 py-1 sm:grid-cols-3">
+          <div class="trust-item"><img class="trust-social-logo" src="/socialmedia/instagram.svg" alt="Instagram" /><span class="trust-value">573K+</span><span class="trust-label">Community</span></div>
+          <div class="trust-item"><img class="trust-social-logo trust-google-logo" src="/socialmedia/google.svg" alt="Google" /><i class="trust-review-star" data-lucide="star" aria-hidden="true"></i><span class="trust-value">4.9</span><span class="trust-label">(8.5K+ Reviews)</span></div>
+          <div class="trust-item"><img class="trust-social-logo trust-traveller-logo" src="/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
         </div>
       </div>
     </section>
 
     <!-- ============ 5. EXPLORE DESTINATIONS ============ -->
-    <section class="destinations section overflow-hidden bg-white py-16 md:py-20" id="destinations">
+    <section class="destinations section overflow-hidden bg-white py-12 md:py-16" id="destinations">
       <div class="container">
         <div class="destination-heading mb-7 flex items-end justify-between gap-8 max-md:grid"><div><span class="section-kicker">Picked for this season</span><h2 class="section-title">Explore Destinations</h2><p>From Himalayan roads to tropical islands—find a journey that matches your pace, people and plans.</p></div><div class="destination-actions"><div class="destination-scroll-controls"><button id="destination-prev" aria-label="Previous destinations"><i data-lucide="chevron-left"></i></button><button id="destination-next" aria-label="Next destinations"><i data-lucide="chevron-right"></i></button></div><a href="/trips" class="destination-view-all">View all trips <i data-lucide="arrow-up-right"></i></a></div></div>
         <div class="destination-tabs mb-6 flex flex-wrap gap-2.5 [&_.tab-btn]:inline-flex [&_.tab-btn]:min-h-11 [&_.tab-btn]:items-center [&_.tab-btn]:gap-2 [&_.tab-btn]:rounded-full [&_.tab-btn]:border [&_.tab-btn]:border-brand-purple/15 [&_.tab-btn]:bg-white [&_.tab-btn]:px-5 [&_.tab-btn]:font-bold [&_.tab-btn]:text-brand-ink [&_.tab-btn.active]:border-brand-purple [&_.tab-btn.active]:bg-brand-purple [&_.tab-btn.active]:text-white" id="destination-tabs">
@@ -201,7 +199,7 @@
           <button class="tab-btn" data-tab="domestic"><i data-lucide="mountain-snow"></i> Domestic</button>
           <button class="tab-btn" data-tab="weekend"><i data-lucide="car-front"></i> Weekend</button>
         </div>
-        <div class="destination-grid grid auto-cols-[clamp(168px,10.5vw,200px)] grid-flow-col grid-rows-[repeat(2,306px)] items-start gap-x-[clamp(22px,1.65vw,32px)] gap-y-6 overflow-x-auto overflow-y-hidden pb-5 [scroll-snap-type:x_mandatory] max-md:auto-cols-[144px] max-md:grid-rows-[repeat(2,246px)] max-sm:auto-cols-[122px] max-sm:grid-rows-[repeat(2,210px)] max-sm:gap-3 [&_.destination-card]:grid [&_.destination-card]:h-[294px] [&_.destination-card]:grid-rows-[250px_auto] [&_.destination-card]:gap-3 [&_.destination-card]:text-center [&_.destination-card]:[scroll-snap-align:start] max-md:[&_.destination-card]:h-[236px] max-md:[&_.destination-card]:grid-rows-[198px_auto] max-sm:[&_.destination-card]:h-[202px] max-sm:[&_.destination-card]:grid-rows-[164px_auto] [&_.destination-img-wrap]:h-[250px] [&_.destination-img-wrap]:overflow-hidden [&_.destination-img-wrap]:rounded-full max-md:[&_.destination-img-wrap]:h-[198px] max-sm:[&_.destination-img-wrap]:h-[164px] [&_.destination-img-wrap_img]:size-full [&_.destination-img-wrap_img]:object-cover [&_.destination-name]:font-heading [&_.destination-name]:text-base [&_.destination-name]:font-bold max-sm:[&_.destination-name]:text-sm" id="destination-grid">
+        <div class="destination-grid grid auto-cols-[clamp(150px,9vw,180px)] grid-flow-col grid-rows-[repeat(2,250px)] items-start gap-x-[clamp(18px,1.4vw,28px)] gap-y-5 overflow-x-auto overflow-y-hidden pb-5 [scroll-snap-type:x_mandatory] max-md:auto-cols-[130px] max-md:grid-rows-[repeat(2,210px)] max-sm:auto-cols-[110px] max-sm:grid-rows-[repeat(2,180px)] max-sm:gap-3 [&_.destination-card]:grid [&_.destination-card]:h-[238px] [&_.destination-card]:grid-rows-[200px_auto] [&_.destination-card]:gap-2 [&_.destination-card]:text-center [&_.destination-card]:[scroll-snap-align:start] max-md:[&_.destination-card]:h-[200px] max-md:[&_.destination-card]:grid-rows-[168px_auto] max-sm:[&_.destination-card]:h-[172px] max-sm:[&_.destination-card]:grid-rows-[142px_auto] [&_.destination-img-wrap]:h-[200px] [&_.destination-img-wrap]:overflow-hidden [&_.destination-img-wrap]:rounded-full max-md:[&_.destination-img-wrap]:h-[168px] max-sm:[&_.destination-img-wrap]:h-[142px] [&_.destination-img-wrap_img]:size-full [&_.destination-img-wrap_img]:object-cover [&_.destination-name]:font-heading [&_.destination-name]:text-base [&_.destination-name]:font-bold max-sm:[&_.destination-name]:text-sm" id="destination-grid">
           <!-- Row 1: International -->
           <a href="/destinations/bali" class="destination-card destination-featured" data-category="international" data-price="From ₹44,999" data-trips="4 curated trips">
             <div class="destination-img-wrap"><img src="/images/destinations/bali.jpg" alt="Bali" loading="lazy" /></div>
@@ -308,27 +306,17 @@
       </div>
     </section>
 
-    <!-- ============ 6. SOCIAL PROOF BANNER ============ -->
-    <section class="social-banner">
+    <!-- ============ 6. LUXURY TRAVEL BANNER ============ -->
+    <section class="luxury-intro-banner" aria-label="Luxury travel experiences">
       <div class="container">
-        <div class="social-banner-card">
-          <div class="social-banner-media">
-            <img src="/images/moonlight.png" alt="Travellers sharing a trip under the moonlight" loading="lazy" />
-            <span class="social-banner-badge"><i data-lucide="sparkles"></i> Real trips, real people</span>
-          </div>
-          <div class="social-banner-content">
-            <span class="section-kicker">Travel your way</span>
-            <h2>Solo, couple or friends—there’s a trip for every vibe.</h2>
-            <p>Join a handpicked departure, meet travellers who match your energy and explore with an experienced trip captain by your side.</p>
-            <div class="social-banner-pills" aria-label="Available travel styles"><span><i data-lucide="user-round-check"></i> Solo-friendly</span><span><i data-lucide="heart"></i> Couple escapes</span><span><i data-lucide="users-round"></i> Group adventures</span></div>
-            <a href="/trips" class="btn btn-primary btn-lg social-banner-cta">Explore Trips <i data-lucide="arrow-right"></i></a>
-          </div>
-        </div>
+        <a href="/trips" class="luxury-intro-link" aria-label="Explore luxury TravelEnfield trips">
+          <img src="/home-page/luxury-intro.png" width="2172" height="724" alt="Luxury TravelEnfield trip experiences" loading="lazy" />
+        </a>
       </div>
     </section>
 
     <!-- ============ 7. UPCOMING GROUP TRIPS ============ -->
-    <section class="upcoming section bg-white py-16 md:py-20" id="upcoming">
+    <section class="upcoming section bg-white py-12 md:py-16" id="upcoming">
       <div class="container">
         <div class="section-header">
           <h2 class="section-title">Upcoming Group Trips</h2>
@@ -518,14 +506,12 @@
 
     <!-- ============ 8. CAMPAIGN SLIDER ============ -->
     <section class="promo-banner bg-white py-8 md:py-12" id="deals" aria-label="TravelEnfield highlights">
-      <div class="container"><div class="campaign-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" id="campaign-slider" aria-roledescription="carousel">
+      <div class="container"><div class="campaign-slider campaign-image-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" id="campaign-slider" aria-roledescription="carousel" aria-label="TravelEnfield travel categories">
         <div class="campaign-track flex transition-transform duration-500 ease-out" id="campaign-track">
-          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="1 of 3: Limited time trip offer"><img src="/images/campaigns/offer-escape.png" alt="Tropical coast, Himalayan valley and Kerala backwaters" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Limited time offer</span><h2>Monsoon Special<br><mark>Flat ₹5,000 Off</mark></h2><p>Save on selected group departures with transparent pricing and expert trip captains.</p><a href="/deals" class="btn btn-primary btn-lg">Explore the offer <i data-lucide="arrow-right"></i></a></div></article>
-          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="2 of 3: Trending group trips"><img src="/images/campaigns/trending-trips.png" alt="Friends watching sunrise during a Himalayan group trip" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Trending now</span><h2>Trips everyone<br><mark>is talking about</mark></h2><p>Discover this season's most-loved road trips, island escapes and fixed departures.</p><a href="/upcoming-trips" class="btn btn-primary btn-lg">See trending trips <i data-lucide="arrow-right"></i></a></div></article>
-          <article class="campaign-slide relative min-w-full overflow-hidden" aria-label="3 of 3: Curated hotels"><img src="/images/campaigns/curated-hotels.png" alt="Boutique mountain resort with an infinity pool at twilight" loading="lazy"><div class="campaign-scrim"></div><div class="campaign-copy"><span class="campaign-tag">Handpicked stays</span><h2>Hotels worth<br><mark>staying in for</mark></h2><p>Explore verified boutique hotels, mountain retreats and memorable stays.</p><a href="/hotels" class="btn btn-primary btn-lg">Explore hotels <i data-lucide="arrow-right"></i></a></div></article>
+          <a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="/images/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a>
+          <a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="/images/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a>
+          <a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="/images/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a>
         </div>
-        <button class="campaign-arrow campaign-prev" type="button" aria-label="Previous campaign"><i data-lucide="chevron-left"></i></button><button class="campaign-arrow campaign-next" type="button" aria-label="Next campaign"><i data-lucide="chevron-right"></i></button>
-        <div class="campaign-dots" role="tablist" aria-label="Choose campaign"><button class="active" type="button" role="tab" aria-label="Show offer" aria-selected="true"></button><button type="button" role="tab" aria-label="Show trending trips" aria-selected="false"></button><button type="button" role="tab" aria-label="Show hotels" aria-selected="false"></button></div>
       </div></div>
     </section>
     <section class="hidden" aria-hidden="true">
@@ -558,38 +544,37 @@
     </section>
 
     <!-- ============ 9. BOOK WITH CONFIDENCE ============ -->
-    <section class="confidence section relative overflow-hidden bg-gradient-to-br from-[#2c073f] via-brand-deep to-[#681894] py-14 text-white md:py-16" id="confidence">
+    <section class="confidence section" id="confidence">
       <div class="container">
-        <h2 class="section-title center text-white">Book with Confidence</h2>
-        <p class="section-subtitle text-white/70">Every departure comes with the same promises, whatever you book.</p>
-        <div class="confidence-grid mx-auto grid max-w-7xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 [&_.confidence-card]:flex [&_.confidence-card]:min-h-[124px] [&_.confidence-card]:items-center [&_.confidence-card]:gap-4 [&_.confidence-card]:rounded-2xl [&_.confidence-card]:border [&_.confidence-card]:border-white/15 [&_.confidence-card]:bg-white/10 [&_.confidence-card]:p-5 [&_.confidence-card]:shadow-xl [&_.confidence-icon]:grid [&_.confidence-icon]:size-14 [&_.confidence-icon]:shrink-0 [&_.confidence-icon]:place-items-center [&_.confidence-icon]:rounded-2xl [&_.confidence-icon]:bg-brand-yellow [&_.confidence-icon]:text-brand-deep [&_.confidence-card_h3]:m-0 [&_.confidence-card_h3]:font-heading [&_.confidence-card_h3]:text-base [&_.confidence-card_h3]:font-extrabold [&_.confidence-card_h3]:text-white lg:[&_.confidence-card:nth-last-child(-n+2)]:translate-x-1/2 max-sm:[&_.confidence-card]:min-h-[82px] max-sm:[&_.confidence-card]:p-3.5 max-sm:[&_.confidence-icon]:size-12 max-sm:[&_.confidence-card_h3]:text-sm">
+        <h2 class="section-title center">Book with Confidence</h2>
+        <div class="confidence-grid">
           <div class="confidence-card">
-            <div class="confidence-icon"><i data-lucide="badge-indian-rupee"></i></div>
+            <img class="confidence-icon" src="/home-page/confidence/secure-deposit.png" alt="Secure advance booking" width="80" height="80" loading="lazy">
             <h3>Secure Your Spot by Paying 20% of the Trip</h3>
           </div>
           <div class="confidence-card">
-            <div class="confidence-icon"><i data-lucide="refresh-ccw"></i></div>
+            <img class="confidence-icon" src="/home-page/confidence/zero-cost-emi.png" alt="Zero-cost EMI" width="80" height="80" loading="lazy">
             <h3>Book Your Trip on Easy Zero-Cost EMI</h3>
           </div>
           <div class="confidence-card">
-            <div class="confidence-icon"><i data-lucide="circle-check-big"></i></div>
+            <img class="confidence-icon" src="/home-page/confidence/free-cancellation.png" alt="Free cancellation" width="80" height="80" loading="lazy">
             <h3>Free Cancellation on Group Trips</h3>
           </div>
           <div class="confidence-card">
-            <div class="confidence-icon"><i data-lucide="calendar-clock"></i></div>
+            <img class="confidence-icon" src="/home-page/confidence/free-reschedule.png" alt="Free rescheduling" width="80" height="80" loading="lazy">
             <h3>Reschedule at No Extra Charges</h3>
           </div>
           <div class="confidence-card">
-            <div class="confidence-icon"><i data-lucide="shield-check"></i></div>
+            <img class="confidence-icon" src="/home-page/confidence/support-24-7.png" alt="24/7 travel support" width="80" height="80" loading="lazy">
             <h3>24*7 Support &amp; Trained Trip Captains</h3>
           </div>
         </div>
-        <p class="confidence-note mt-7 text-right text-xs text-white/60">T&amp;C applied*</p>
+        <p class="confidence-note">T&amp;C applied*</p>
       </div>
     </section>
 
     <!-- ============ 10. REASONS TO TRAVEL WITH US ============ -->
-    <section class="why-us section bg-brand-surface py-16 md:py-20" id="why-us">
+    <section class="why-us section bg-brand-surface py-12 md:py-16" id="why-us">
       <div class="container">
         <h2 class="section-title center">Reasons To Make Us Your Travel Bestie</h2>
         <p class="section-subtitle">Five things our travellers tell us make the difference.</p>
@@ -676,110 +661,59 @@
       </div>
     </section>
 
-    <!-- ============ 12. CREDIBILITY BANNER ============ -->
-    <section class="credibility-banner !py-12 md:!py-14" aria-labelledby="credibility-title">
-      <div class="container">
-        <div class="credibility-card">
-          <div class="credibility-media">
-            <img src="/images/group-trips-himalaya-hero.jpg" alt="A TravelEnfield group on a Himalayan departure" loading="lazy" />
-          </div>
-          <div class="credibility-copy">
-            <span class="section-kicker">Built on repeat travellers</span>
-            <h2 class="section-title" id="credibility-title">A travel community that keeps coming back</h2>
-            <p>More than half of our departures fill with travellers who have already been on a TravelEnfield trip — or were sent by someone who has.</p>
-            <div class="credibility-stats">
-              <div><strong>10K+</strong><small>Travellers hosted</small></div>
-              <div><strong>4.9/5</strong><small>Average trip rating</small></div>
-              <div><strong>60%</strong><small>Travel solo with us</small></div>
-            </div>
-            <a href="/about-us" class="btn btn-primary">Read our story <i data-lucide="arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ 13. TRAVELLER REVIEWS ============ -->
-    <section class="reviews section bg-brand-surface py-16 md:py-20" id="reviews">
+    <section class="reviews section bg-brand-surface py-12 md:py-16" id="reviews">
       <div class="container">
         <h2 class="section-title center">Reviews From Our Travellers</h2>
-        <p class="section-subtitle">Real words from travellers who booked, packed and went.</p>
         <div class="review-carousel">
-        <div class="review-track grid auto-cols-[calc((100%_-_40px)/3)] grid-flow-col gap-5 overflow-x-auto pb-5 [scroll-snap-type:x_mandatory] max-lg:auto-cols-[calc((100%_-_20px)/2)] max-md:auto-cols-[84vw] [&_.review-card]:grid [&_.review-card]:snap-start [&_.review-card]:grid-cols-[90px_1fr] [&_.review-card]:gap-4 [&_.review-card]:rounded-2xl [&_.review-card]:border [&_.review-card]:border-brand-purple/10 [&_.review-card]:bg-white [&_.review-card]:p-5 [&_.review-card]:shadow-sm [&_.review-avatar]:grid [&_.review-avatar]:size-[90px] [&_.review-avatar]:place-items-center [&_.review-avatar]:rounded-full [&_.review-avatar]:bg-gradient-to-br [&_.review-avatar]:from-brand-purple [&_.review-avatar]:to-brand-deep [&_.review-avatar]:font-heading [&_.review-avatar]:text-xl [&_.review-avatar]:font-extrabold [&_.review-avatar]:text-brand-yellow [&_.review-stars]:text-brand-yellow [&_.review-text]:my-2 [&_.review-text]:text-sm [&_.review-text]:leading-relaxed [&_.review-text]:text-gray-500 [&_.review-author]:font-extrabold [&_.review-author]:text-brand-deep [&_.review-trip]:text-xs [&_.review-trip]:text-gray-500 max-sm:[&_.review-card]:grid-cols-[70px_1fr] max-sm:[&_.review-avatar]:size-[70px]" id="review-track">
+        <div class="review-track" id="review-track">
           <div class="review-card">
             <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">RK</span>
+              <img src="/images/reviews/yash.webp" alt="Yash" loading="lazy">
             </div>
             <div class="review-body">
               <div class="review-stars">★★★★★</div>
-              <p class="review-text">The trip was incredibly well-planned. From the stays to the activities, everything was top-notch. The trip captain was amazing and made sure everyone was comfortable. <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Rahul K.</div>
-              <div class="review-trip">Spiti Valley Road Trip</div>
+              <p class="review-text">The trip was well-planned and perfectly executed. Great coordination, smooth travel, comfortable stay, and beautiful locations. Every moment was enjoyable and stress-free. Highly recommended for anyone looking for a professional and memorable travel experience. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Yash</div>
             </div>
           </div>
           <div class="review-card">
             <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">PS</span>
+              <img src="/images/reviews/dishant-soni.webp" alt="Dishant Soni" loading="lazy">
             </div>
             <div class="review-body">
               <div class="review-stars">★★★★★</div>
-              <p class="review-text">As a solo female traveller, I felt completely safe throughout the trip. Made some amazing friends and the landscapes of Ladakh took my breath away. Highly recommended! <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Priya S.</div>
-              <div class="review-trip">Leh Ladakh Bike Trip</div>
+              <p class="review-text">Breathtaking Spiti – A Journey to Remember. Just returned from an incredible trip to Spiti Valley, and it was everything I hoped for and more. The landscapes were absolutely surreal—from high mountain passes to ancient monasteries and serene villages, every moment felt like a postcard come to life. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Dishant Soni</div>
             </div>
           </div>
           <div class="review-card">
             <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">AD</span>
+              <img src="/images/reviews/suleman-ahmad.webp" alt="Suleman Ahmad" loading="lazy">
             </div>
             <div class="review-body">
               <div class="review-stars">★★★★★</div>
-              <p class="review-text">Best trip of my life! The Bali itinerary was perfect — from temple visits to beach parties. The team handled everything smoothly. Can't wait to book my next trip! <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Amit D.</div>
-              <div class="review-trip">Bali Adventure Tour</div>
+              <p class="review-text">An Unforgettable Experience! I recently went on a trip to Meghalaya and it was truly one of the best experiences I've ever had. The captain was incredibly welcoming and supportive, handled the trip very well, and the amenities provided were really comfortable. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Suleman Ahmad</div>
             </div>
           </div>
           <div class="review-card">
             <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">SM</span>
+              <img src="/images/reviews/virender-singh.webp" alt="Virender Singh" loading="lazy">
             </div>
             <div class="review-body">
               <div class="review-stars">★★★★★</div>
-              <p class="review-text">Kerala backwaters were magical! The houseboat experience was something else. TravelEnfield's team made this trip absolutely hassle-free. 10/10 would go again. <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Sneha M.</div>
-              <div class="review-trip">Kerala Backwater Bliss</div>
-            </div>
-          </div>
-          <div class="review-card">
-            <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">VG</span>
-            </div>
-            <div class="review-body">
-              <div class="review-stars">★★★★★</div>
-              <p class="review-text">Booked the Meghalaya trip on a whim and it turned out to be the smoothest holiday I have taken. Everything ran on time and the stays were genuinely good. <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Vikram G.</div>
-              <div class="review-trip">Meghalaya Explorer</div>
-            </div>
-          </div>
-          <div class="review-card">
-            <div class="review-img">
-              <span class="review-avatar" aria-hidden="true">NT</span>
-            </div>
-            <div class="review-body">
-              <div class="review-stars">★★★★★</div>
-              <p class="review-text">The pricing was exactly what was quoted, with no last-minute additions. That alone made me want to book my next trip with the same team. <a href="/reviews" class="read-more">Read more...</a></p>
-              <div class="review-author">Neha T.</div>
-              <div class="review-trip">Thailand Beach Getaway</div>
+              <p class="review-text">I recently booked my vacation through the team, and it was one of the best travel experiences I've had. They listened to all my preferences and curated an itinerary that perfectly matched what I was looking for, with comfortable stays, smooth transportation and a knowledgeable trip captain. <a href="/reviews" class="read-more">Read more...</a></p>
+              <div class="review-author">Virender Singh</div>
             </div>
           </div>
         </div>
-          <button class="carousel-btn carousel-btn-left" id="review-prev" aria-label="Previous reviews">‹</button>
-          <button class="carousel-btn carousel-btn-right" id="review-next" aria-label="Next reviews">›</button>
         </div>
       </div>
     </section>
 
     <!-- ============ 13. FAQs ============ -->
-    <section class="faq section relative overflow-hidden bg-gradient-to-b from-brand-surface to-white py-16 md:py-20" id="faq">
+    <section class="faq section relative overflow-hidden bg-gradient-to-b from-brand-surface to-white py-12 md:py-16" id="faq">
       <div class="container">
         <div class="faq-heading">
           <div>
@@ -790,15 +724,7 @@
           <span class="faq-count"><i data-lucide="message-circle"></i> 6 quick answers</span>
         </div>
         <div class="faq-layout grid grid-cols-[minmax(260px,.72fr)_minmax(0,1.55fr)] items-start gap-6 max-[900px]:grid-cols-1">
-          <aside class="faq-help-card sticky top-40 flex min-h-[430px] flex-col items-start rounded-[28px] bg-gradient-to-br from-[#2b073d] via-brand-purple to-[#762899] p-8 text-white shadow-2xl max-[900px]:relative max-[900px]:top-auto max-[900px]:min-h-0">
-            <span class="faq-help-icon"><i data-lucide="headphones"></i></span>
-            <span class="section-kicker">Still unsure?</span>
-            <h3>Talk to a real trip expert.</h3>
-            <p>Tell us where you want to go and we’ll help with dates, budget and the right travel style.</p>
-            <a href="/custom-trip" class="btn btn-primary">Plan my trip <i data-lucide="arrow-up-right"></i></a>
-            <div class="faq-help-proof"><i data-lucide="shield-check"></i><span><strong>No pressure, no spam</strong><small>Human help within one working day</small></span></div>
-          </aside>
-          <div class="faq-list grid gap-3 [&_.faq-item]:overflow-hidden [&_.faq-item]:rounded-2xl [&_.faq-item]:border [&_.faq-item]:border-brand-purple/10 [&_.faq-item]:bg-white [&_.faq-item]:shadow-sm [&_.faq-question]:min-h-20 [&_.faq-question]:w-full [&_.faq-question]:cursor-pointer [&_.faq-question]:px-5 [&_.faq-question]:py-4 [&_.faq-question]:font-heading [&_.faq-question]:font-bold [&_.faq-question]:text-brand-ink [&_.faq-item.open]:border-brand-purple/30 [&_.faq-item.open]:shadow-lg [&_.faq-toggle]:grid [&_.faq-toggle]:size-9 [&_.faq-toggle]:place-items-center [&_.faq-toggle]:rounded-full [&_.faq-toggle]:bg-brand-purple/10 [&_.faq-toggle]:text-brand-purple [&_.faq-item.open_.faq-toggle]:bg-brand-yellow [&_.faq-item.open_.faq-toggle]:text-brand-deep [&_.faq-answer_p]:px-5 [&_.faq-answer_p]:pb-5 [&_.faq-answer_p]:text-sm [&_.faq-answer_p]:leading-relaxed [&_.faq-answer_p]:text-gray-500" id="faq-list">
+          <div class="faq-list grid gap-2 [&_.faq-item]:overflow-hidden [&_.faq-item]:rounded-2xl [&_.faq-item]:border [&_.faq-item]:border-brand-purple/10 [&_.faq-item]:bg-white [&_.faq-item]:shadow-sm [&_.faq-question]:min-h-14 [&_.faq-question]:w-full [&_.faq-question]:cursor-pointer [&_.faq-question]:px-5 [&_.faq-question]:py-3 [&_.faq-question]:font-heading [&_.faq-question]:font-bold [&_.faq-question]:text-brand-ink [&_.faq-item.open]:border-brand-purple/30 [&_.faq-item.open]:shadow-lg [&_.faq-toggle]:grid [&_.faq-toggle]:size-9 [&_.faq-toggle]:place-items-center [&_.faq-toggle]:rounded-full [&_.faq-toggle]:bg-brand-purple/10 [&_.faq-toggle]:text-brand-purple [&_.faq-item.open_.faq-toggle]:bg-brand-yellow [&_.faq-item.open_.faq-toggle]:text-brand-deep [&_.faq-answer_p]:px-5 [&_.faq-answer_p]:pb-5 [&_.faq-answer_p]:text-sm [&_.faq-answer_p]:leading-relaxed [&_.faq-answer_p]:text-gray-500" id="faq-list">
           <div class="faq-item open">
             <button class="faq-question" aria-expanded="true">
               <span>What is the typical group size for TravelEnfield trips?</span>
@@ -859,7 +785,7 @@
     </section>
 
     <!-- ============ 16. RELATED BLOGS ============ -->
-    <section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title">
+    <section class="home-journal section bg-brand-surface py-12 md:py-16" aria-labelledby="journal-title">
       <div class="container">
         <div class="section-header journal-heading">
           <div><span class="section-kicker">Plan with local context</span><h2 class="section-title" id="journal-title">Related Blogs</h2></div>
@@ -1082,12 +1008,12 @@
   </footer>
 
   <!-- ============ MOBILE BOTTOM NAV ============ -->
-  <nav class="mobile-bottom-nav fixed inset-x-0 bottom-0 z-40 hidden grid-cols-5 border-t border-brand-purple/10 bg-white/95 px-1 py-1.5 [padding-bottom:calc(.375rem+env(safe-area-inset-bottom))] shadow-[0_-6px_20px_rgba(35,24,43,.1)] backdrop-blur-md max-md:grid [&_.bottom-nav-item]:grid [&_.bottom-nav-item]:min-h-12 [&_.bottom-nav-item]:place-items-center [&_.bottom-nav-item]:gap-0.5 [&_.bottom-nav-item]:rounded-xl [&_.bottom-nav-item]:text-[.68rem] [&_.bottom-nav-item]:font-bold [&_.bottom-nav-item]:text-brand-deep [&_.bottom-nav-item:hover]:bg-brand-surface [&_.bottom-nav-item:hover]:text-brand-purple" id="mobile-bottom-nav" aria-label="Quick navigation">
-    <a href="/" class="bottom-nav-item"><i data-lucide="home"></i><span>Home</span></a>
-    <button type="button" class="bottom-nav-item" data-drawer-trigger aria-controls="mobile-nav"><i data-lucide="search"></i><span>Search</span></button>
-    <a href="/trips" class="bottom-nav-item"><i data-lucide="luggage"></i><span>Trips</span></a>
-    <a href="https://wa.me/919876543210" class="bottom-nav-item" target="_blank" rel="noopener"><i data-lucide="message-circle"></i><span>Chat</span></a>
-    <button type="button" class="bottom-nav-item" id="back-to-top"><i data-lucide="arrow-up"></i><span>Top</span></button>
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Quick navigation">
+    <a href="/" class="bottom-nav-item is-active" aria-label="Home"><i data-lucide="home"></i></a>
+    <button type="button" class="bottom-nav-item" data-drawer-trigger aria-controls="mobile-nav" aria-label="Search and menu"><i data-lucide="search"></i></button>
+    <a href="/trips" class="bottom-nav-item bottom-nav-trips" aria-label="Explore trips"><span>TRIPS</span></a>
+    <a href="/custom-trip" class="bottom-nav-item" aria-label="Plan a custom trip"><i data-lucide="play"></i></a>
+    <a href="https://wa.me/919876543210" class="bottom-nav-item bottom-nav-whatsapp" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i data-lucide="message-circle"></i></a>
   </nav>
 
   <!-- ============ FLOATING WHATSAPP ============ -->

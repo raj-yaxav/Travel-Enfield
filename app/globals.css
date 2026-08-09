@@ -70,14 +70,20 @@
   #mobile-nav .mobile-nav-highlight:hover { @apply text-brand-ink hover:bg-brand-surface hover:text-brand-purple; }
   #mobile-nav .mobile-nav-highlight svg { @apply text-brand-purple; }
   .nav-new-badge { @apply ml-0.5 inline-flex min-h-5 items-center rounded-full bg-brand-orange px-2 font-heading text-[9px] font-extrabold tracking-[.08em] text-white shadow-[0_4px_10px_rgba(232,60,34,.25)]; }
-  .trust-strip { @apply min-h-[124px] content-center; }
-  .trust-items { @apply mx-auto max-w-[1680px]; }
-  .trust-item { @apply min-h-11 justify-self-center; }
-  .trust-icon svg { @apply size-6; }
+  .trust-strip { @apply relative min-h-[116px] content-center overflow-hidden bg-[#f7f0fa] text-brand-deep; }
+  .trust-strip::before { content: ''; @apply absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-purple via-brand-orange to-brand-yellow; }
+  .trust-items { @apply mx-auto max-w-[1320px] py-5; }
+  .trust-item { @apply flex min-h-14 min-w-0 items-center justify-center gap-2.5 justify-self-stretch px-4; }
+  .trust-social-logo { @apply size-10 shrink-0 object-contain; }
+  .trust-google-logo { @apply size-9; }
+  .trust-traveller-logo { @apply h-11 w-12; }
+  .trust-review-star { @apply size-6 shrink-0 fill-brand-yellow text-brand-yellow; }
+  .trust-value { @apply font-heading text-xl! font-extrabold leading-none text-brand-deep; }
+  .trust-label { @apply whitespace-nowrap text-sm! font-semibold text-brand-purple/80; }
 
   /* Homepage hero */
   .hero-seo .hero-overlay { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(26,4,39,.78),rgba(37,7,51,.4)_32%,rgba(37,7,51,.46)_68%,rgba(26,4,39,.8)),linear-gradient(0deg,rgba(22,3,32,.8),rgba(33,6,47,.08)_55%,rgba(24,4,36,.42))]; }
-  .hero-seo .hero-content { @apply flex flex-col items-center justify-start pt-[90px]; }
+  .hero-seo .hero-content { @apply flex flex-col items-center justify-center; }
   .hero-eyebrow { @apply mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-brand-deep/40 px-4 py-2 font-heading text-xs font-extrabold uppercase tracking-[.1em] text-brand-yellow backdrop-blur-md; }
   .hero-eyebrow svg { @apply size-4; }
   .hero-title { @apply mx-auto mb-5 max-w-[1050px] font-heading text-[clamp(3rem,5vw,6rem)] font-extrabold leading-[.98] tracking-[-.055em] text-white; }
@@ -107,6 +113,9 @@
   .destination-card:hover .destination-img-wrap { @apply border-brand-purple/30 shadow-xl; }
 
   /* Reusable image-led sections */
+  .luxury-intro-banner { @apply bg-white py-10 md:py-14; }
+  .luxury-intro-link { @apply block overflow-hidden rounded-[30px] bg-brand-deep shadow-[0_24px_65px_rgba(45,7,64,.18)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_75px_rgba(45,7,64,.25)] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-brand-yellow; }
+  .luxury-intro-link img { @apply aspect-[3/1] w-full object-cover; }
   .social-banner { @apply bg-white py-16 md:py-20; }
   .social-banner-card { @apply relative grid min-h-[430px] overflow-hidden rounded-[32px] bg-brand-deep text-white shadow-2xl md:grid-cols-[1.15fr_.85fr]; }
   .social-banner-media { @apply relative min-h-72 overflow-hidden; }
@@ -154,14 +163,19 @@
   .rail-promo:hover .rail-promo-cta svg { @apply translate-x-1; }
 
   /* Campaign slider */
-  .campaign-slide { @apply min-h-[430px] text-white; }
+  .campaign-slider { aspect-ratio: 3 / 1; }
+  .campaign-track { @apply h-full; }
+  .campaign-slide { @apply h-full min-h-0 text-white; }
   .campaign-slide > img { @apply absolute inset-0 size-full object-cover; }
+  .campaign-image-slide { @apply block cursor-pointer; }
+  .campaign-image-slide > img { @apply transition-transform duration-700; }
+  .campaign-image-slider:hover .campaign-image-slide[aria-hidden="false"] > img { @apply scale-[1.015]; }
   .campaign-scrim { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(34,5,48,.94)_0%,rgba(55,10,75,.72)_38%,rgba(31,6,43,.12)_72%)]; }
-  .campaign-copy { @apply relative z-10 flex min-h-[430px] max-w-[760px] flex-col items-start justify-center px-[clamp(32px,6vw,92px)] py-14; }
+  .campaign-copy { @apply relative z-10 flex h-full min-h-0 max-w-[720px] flex-col items-start justify-center px-[clamp(32px,5vw,76px)] py-7; }
   .campaign-tag { @apply mb-4 inline-flex rounded-full border border-brand-yellow/40 bg-brand-yellow/10 px-3 py-2 text-xs font-extrabold uppercase tracking-wider text-brand-yellow backdrop-blur; }
-  .campaign-copy h2 { @apply mb-4 font-heading text-[clamp(2.6rem,5vw,5rem)] font-extrabold leading-[.94] tracking-[-.05em] text-white; }
+  .campaign-copy h2 { @apply mb-3 font-heading text-[clamp(2rem,3.4vw,3.6rem)] font-extrabold leading-[.94] tracking-[-.05em] text-white; }
   .campaign-copy mark { @apply bg-transparent text-brand-yellow; }
-  .campaign-copy p { @apply mb-6 max-w-xl text-sm leading-7 text-white/80 md:text-base; }
+  .campaign-copy p { @apply mb-4 max-w-xl text-sm leading-6 text-white/80; }
   .campaign-copy .btn svg { @apply size-5; }
   .campaign-arrow { @apply absolute top-1/2 z-20 grid size-12 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-white/90 text-brand-purple shadow-xl transition hover:bg-brand-yellow; }
   .campaign-arrow svg { @apply size-5; }
@@ -574,16 +588,22 @@
 @media (max-width: 767px) {
   @layer components {
     .container { @apply w-[min(calc(100%_-_28px),1600px)]; }
-    .hero-seo { @apply min-h-[760px]; }
-    .hero-seo .hero-content { @apply justify-start pt-14; }
+    .hero-seo { @apply min-h-[680px]; }
+    .hero-seo .hero-content { @apply justify-center; }
     .hero-title { @apply text-[clamp(2.5rem,8vw,4.1rem)]; }
     .destination-actions { @apply justify-between; }
     .social-banner-card { @apply grid-cols-1; }
     .social-banner-media::after { @apply bg-gradient-to-t from-brand-deep to-transparent; }
     .faq-heading { @apply grid gap-4; }
     .trust-strip { @apply min-h-0; }
-    .trust-items { @apply gap-x-2; }
-    .trust-item { @apply justify-self-center! px-1; }
+    .trust-items { @apply gap-x-2 gap-y-3 py-4; }
+    .trust-item { @apply w-full justify-self-center! gap-1.5 px-1; }
+    .trust-social-logo { @apply size-8; }
+    .trust-google-logo { @apply size-7; }
+    .trust-traveller-logo { @apply h-9 w-10; }
+    .trust-review-star { @apply size-4; }
+    .trust-value { @apply text-base!; }
+    .trust-label { @apply text-[10px]!; }
   }
   .legacy-document-bridge .container { width: min(calc(100% - 48px), 1600px) !important; }
   .trip-stories .section-header { @apply flex; }
@@ -595,8 +615,8 @@
     .section-title { @apply text-[clamp(1.85rem,9vw,2.55rem)]; }
     .section-header { @apply items-start; }
     .btn-lg { @apply min-h-12 px-4 text-sm; }
-    .hero-seo { @apply min-h-[calc(100svh-64px)]; }
-    .hero-seo .hero-content { @apply px-0 pb-10 pt-9; }
+    .hero-seo { @apply min-h-[620px]; }
+    .hero-seo .hero-content { @apply px-0 py-9; }
     .hero-eyebrow { @apply px-3 py-1.5 text-[10px]; }
     .hero-title { @apply mb-4 text-[clamp(2.15rem,10.5vw,2.8rem)] leading-[1.04]; }
     .hero-subtitle { @apply mb-4 text-sm leading-6; }
@@ -604,7 +624,7 @@
     .hero-trust-typer strong { @apply text-sm; }
     .hero-ctas { @apply grid w-full grid-cols-2 gap-2; }
     .hero-micro-proof { @apply hidden; }
-    .trust-label { @apply hidden sm:inline; }
+    .trust-label { @apply inline; }
     .destination-heading { @apply gap-4; }
     .destination-actions { @apply w-full; }
     .destination-view-all { @apply text-sm; }
@@ -619,7 +639,7 @@
     .faq-help-card .section-kicker { @apply mt-0; }
     .faq-help-card h3 { @apply max-w-none text-2xl; }
     .footer-grid { @apply grid-cols-1 gap-8; }
-    .campaign-slider { @apply rounded-2xl; }
+    .campaign-slider { aspect-ratio: auto; @apply rounded-2xl; }
     .campaign-slide, .campaign-copy { @apply min-h-[470px]; }
     .campaign-slide > img { @apply object-[65%_center]; }
     .campaign-scrim { @apply bg-[linear-gradient(0deg,rgba(35,5,49,.97)_0%,rgba(50,9,70,.78)_52%,rgba(35,5,49,.14)_100%)]; }
@@ -629,6 +649,10 @@
     .campaign-arrow { @apply top-5 size-10 translate-y-0; }
     .campaign-prev { @apply left-auto right-16; }
     .campaign-next { @apply right-3; }
+    .campaign-image-slider { aspect-ratio: 3 / 1; }
+    .campaign-image-slider .campaign-track,
+    .campaign-image-slider .campaign-slide { @apply h-full min-h-0; }
+    .campaign-image-slider .campaign-slide > img { @apply object-center; }
   }
   .trip-stories { @apply py-12; }
   .trip-stories .section-header { @apply items-center; }
@@ -654,6 +678,687 @@
   .trip-date-grid button { @apply min-h-24 grid-cols-[24px_1fr] justify-items-start text-left; }
   .trip-date-grid button em { @apply col-span-2; }
   .trip-notes { @apply p-5; }
+}
+
+/* Reference-inspired mobile chrome: shown when scrolling up, hidden on down. */
+.mobile-bottom-nav { @apply fixed inset-x-0 bottom-0 z-50 hidden grid-cols-5 border-t border-brand-purple/10 bg-[#f7f0fa]/95 px-2 pt-2 shadow-[0_-8px_28px_rgba(35,24,43,.12)] backdrop-blur-xl transition-transform duration-300; padding-bottom: calc(.5rem + env(safe-area-inset-bottom)); }
+.mobile-bottom-nav .bottom-nav-item { @apply grid min-h-14 cursor-pointer place-items-center rounded-xl border-0 bg-transparent text-brand-ink transition hover:bg-white/70 hover:text-brand-purple; }
+.mobile-bottom-nav .bottom-nav-item svg { @apply size-7 stroke-[1.8]; }
+.mobile-bottom-nav .bottom-nav-item.is-active { @apply text-[#08a852]; }
+.mobile-bottom-nav .bottom-nav-trips { @apply font-heading text-[1.65rem] font-medium tracking-[-.05em]; }
+.mobile-bottom-nav .bottom-nav-whatsapp { @apply mx-auto size-12 min-h-12 rounded-full bg-[#10a64a] text-white shadow-[0_6px_16px_rgba(16,166,74,.3)] hover:bg-[#0b8f3e] hover:text-white; }
+.mobile-bottom-nav .bottom-nav-whatsapp svg { @apply size-7; }
+.mobile-bottom-nav.nav-hidden { @apply translate-y-[calc(100%+12px)]; }
+#header { transition: transform .28s ease, box-shadow .2s ease; }
+#header.nav-hidden { transform: translateY(-105%); }
+
+@media (max-width: 767px) {
+  .mobile-bottom-nav { @apply grid; }
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .whatsapp-float { @apply hidden!; }
+  .enquiry-orbit { @apply hidden!; }
+  .header-mobile { @apply min-h-[70px] grid-cols-[52px_1fr_52px] px-3; }
+  .header-logo-mobile img { @apply h-14 w-auto max-w-[190px] object-contain; }
+  .hamburger,.header-phone-mobile { @apply size-12 text-brand-ink; }
+  .hamburger span { @apply w-6 bg-brand-ink; }
+  .header-phone-mobile svg { @apply size-7; }
+  .trust-items { @apply grid-cols-3 gap-0; }
+  .trust-item { @apply flex-wrap content-center gap-x-1 gap-y-0; }
+  .trust-social-logo { @apply row-span-2 size-8; }
+  .trust-value { @apply text-sm!; }
+  .trust-label { @apply text-[9px]!; }
+}
+
+@media (max-width: 390px) {
+  .trust-item { @apply px-0; }
+  .trust-social-logo { @apply size-7; }
+  .trust-review-star { @apply size-3; }
+  .trust-value { @apply text-xs!; }
+  .trust-label { @apply text-[8px]!; }
+}
+
+@media (max-width: 767px) {
+  .luxury-intro-banner { @apply py-7; }
+  .luxury-intro-banner .container { width: min(calc(100% - 20px), 1600px) !important; }
+  .luxury-intro-link { @apply rounded-2xl; }
+}
+
+/* Capture A Trip dimensional calibration — geometry and type only. */
+.legacy-document-bridge .container {
+  width: calc(100% - 160px) !important;
+  max-width: none !important;
+}
+.legacy-document-bridge .section-title {
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.legacy-document-bridge :is(.destinations, .upcoming, .confidence, .why-us, .trending, .reviews, .faq, .home-journal, .corporate-banner) {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+}
+.legacy-document-bridge .section-header { margin-bottom: 24px; }
+.legacy-document-bridge .section-subtitle { margin-top: 8px; margin-bottom: 24px; }
+
+/* Destination rail: two compact horizontal rows, matching the reference. */
+.legacy-document-bridge #destinations .destination-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.legacy-document-bridge #destinations .destination-heading .section-kicker,
+.legacy-document-bridge #destinations .destination-heading p,
+.legacy-document-bridge #destinations .destination-scroll-controls {
+  display: none;
+}
+.legacy-document-bridge #destinations .destination-actions { margin-left: auto; }
+.legacy-document-bridge #destinations .destination-view-all {
+  min-height: 44px;
+  padding-inline: 24px;
+  border-width: 1px;
+  border-radius: 9999px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+.legacy-document-bridge #destinations .destination-tabs {
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.legacy-document-bridge #destinations .destination-tabs::-webkit-scrollbar { display: none; }
+.legacy-document-bridge #destinations .destination-tabs .tab-btn {
+  min-height: 46px;
+  flex: 0 0 auto;
+  padding-inline: 20px;
+  border-width: 1px;
+  border-radius: 9999px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+.legacy-document-bridge #destination-grid {
+  grid-auto-columns: 160px !important;
+  grid-template-rows: repeat(2, 240px) !important;
+  column-gap: 24px !important;
+  row-gap: 24px !important;
+  padding-bottom: 0;
+}
+.legacy-document-bridge #destination-grid .destination-card {
+  width: 160px;
+  height: 240px !important;
+  grid-template-rows: 200px 24px !important;
+  gap: 8px;
+}
+.legacy-document-bridge #destination-grid .destination-img-wrap {
+  width: 160px;
+  height: 200px !important;
+}
+.legacy-document-bridge #destination-grid .destination-name {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+/* Reference trip cards use a fixed 296 × 329 frame and 296 × 204 media. */
+.legacy-document-bridge #upcoming > .container {
+  width: calc(100% - 80px) !important;
+  margin-left: 80px !important;
+  margin-right: 0 !important;
+}
+.legacy-document-bridge #upcoming .trip-carousel-track {
+  grid-auto-columns: 296px !important;
+  grid-auto-rows: 329px !important;
+  gap: 24px !important;
+  width: 100%;
+  box-sizing: border-box;
+  margin-right: 0;
+  padding-top: 12px;
+  padding-right: 4px;
+  padding-bottom: 24px;
+  scrollbar-width: none;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+}
+.legacy-document-bridge #upcoming .trip-carousel-track::-webkit-scrollbar { display: none; }
+.legacy-document-bridge #upcoming .trip-carousel { border: 0; outline: 0; box-shadow: none; }
+.legacy-document-bridge #upcoming .carousel-btn { display: none; }
+.legacy-document-bridge #upcoming .see-all-link {
+  min-height: 44px;
+  padding-inline: 24px;
+  border-width: 1px;
+  border-radius: 9999px;
+  font-size: 16px;
+  line-height: 24px;
+}
+.legacy-document-bridge #upcoming .trip-filters { gap: 10px; margin-bottom: 32px; scrollbar-width: none; }
+.legacy-document-bridge #upcoming .trip-filters::-webkit-scrollbar { display: none; }
+.legacy-document-bridge #upcoming .filter-pill {
+  min-height: 46px;
+  padding-inline: 22px;
+  border-width: 1px;
+  border-radius: 9999px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+}
+.legacy-document-bridge #upcoming .trip-card { width: 296px; height: 329px; border-width: 0; border-radius: 16px; }
+.legacy-document-bridge #upcoming .rail-promo {
+  width: 296px;
+  height: 329px;
+  min-height: 329px;
+  align-self: start;
+  border-width: 0;
+  border-radius: 16px;
+}
+.legacy-document-bridge #upcoming .trip-card-img { width: 100%; height: 204px; flex-basis: 204px; }
+.legacy-document-bridge #upcoming .trip-card-body { padding: 0 14px 12px !important; }
+.legacy-document-bridge #upcoming .trip-duration { min-height: 32px; margin-top: -16px; margin-bottom: 5px; padding: 6px 10px; }
+.legacy-document-bridge #upcoming .trip-title { min-height: 40px; font-size: 16px; line-height: 20px; }
+.legacy-document-bridge #upcoming .trip-dates { margin-top: 5px; padding-bottom: 6px; }
+
+.legacy-document-bridge .campaign-slider { border-radius: 16px; }
+.legacy-document-bridge #confidence {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  overflow: hidden;
+  background: #f7f0ff;
+  color: #1f1f1f;
+}
+.legacy-document-bridge #confidence .section-title {
+  margin: 0 0 32px;
+  color: #09090b;
+  text-align: center;
+}
+.legacy-document-bridge #confidence .confidence-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 40px;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.legacy-document-bridge #confidence .confidence-card {
+  display: flex;
+  flex: 0 0 calc((100% - 80px) / 3);
+  align-items: center;
+  gap: 16px;
+  width: calc((100% - 80px) / 3);
+  min-height: 80px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #1f1f1f;
+  transform: none;
+}
+.legacy-document-bridge #confidence .confidence-icon {
+  display: block;
+  flex: 0 0 80px;
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+.legacy-document-bridge #confidence .confidence-card h3 {
+  margin: 0;
+  color: #1f1f1f;
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+}
+.legacy-document-bridge #confidence .confidence-note {
+  margin: 24px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+.legacy-document-bridge .why-cards { display: flex; flex-wrap: nowrap; gap: 24px; overflow-x: auto; padding-bottom: 8px; }
+.legacy-document-bridge .why-card { flex: 0 0 280px; min-height: 158px; padding: 16px !important; border-radius: 16px !important; }
+
+/* Destination, review, blog and video groups remain horizontal rails. */
+.legacy-document-bridge .trending-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 302px;
+  grid-template-columns: none;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 0;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.legacy-document-bridge .trending-grid::-webkit-scrollbar { display: none; }
+.legacy-document-bridge #trending {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  overflow: hidden;
+  background: #fff;
+}
+.legacy-document-bridge #trending .section-header {
+  display: block;
+  margin-bottom: 24px;
+}
+.legacy-document-bridge #trending .section-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: 0;
+}
+.legacy-document-bridge #trending .see-all-link { display: none; }
+.legacy-document-bridge #trending .trending-card {
+  position: relative;
+  width: 302px;
+  height: 302px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0 !important;
+  box-shadow: none;
+  scroll-snap-align: start;
+}
+.legacy-document-bridge #trending .trending-card > img {
+  display: block;
+  width: 302px;
+  height: 302px;
+  object-fit: cover;
+  object-position: center;
+}
+.legacy-document-bridge #trending .trending-info {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 64px 16px 16px;
+  background: linear-gradient(to top, rgba(9, 9, 11, .92), transparent);
+}
+.legacy-document-bridge #trending .trending-info h3 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.legacy-document-bridge #trending .trending-info p {
+  margin: 2px 0 0;
+  color: #ffcf00;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+.legacy-document-bridge #reviews {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background: #fff;
+}
+.legacy-document-bridge #reviews .section-title {
+  margin: 0 0 24px;
+  color: #09090b;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 36px;
+  text-align: left;
+}
+.legacy-document-bridge #reviews .review-track {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row;
+  gap: 24px !important;
+  width: calc(100% - 4px);
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+.legacy-document-bridge #reviews .review-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  height: auto;
+  min-height: 176px;
+  aspect-ratio: 3.76 / 1;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 0;
+  border-radius: 16px !important;
+  background: #fff;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+}
+.legacy-document-bridge #reviews .review-img {
+  position: relative;
+  flex: 0 0 30%;
+  width: 30%;
+  height: 100%;
+  overflow: hidden;
+}
+.legacy-document-bridge #reviews .review-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.legacy-document-bridge #reviews .review-body {
+  display: flex;
+  flex: 0 0 70%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 70%;
+  min-width: 0;
+  padding: 16px;
+  text-align: left;
+}
+.legacy-document-bridge #reviews .review-stars {
+  height: 20px;
+  color: #ffb43f;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 1px;
+}
+.legacy-document-bridge #reviews .review-text {
+  display: -webkit-box;
+  margin: 8px 0 0;
+  overflow: hidden;
+  color: #5a5a5a;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+.legacy-document-bridge #reviews .read-more {
+  color: #0065d9;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.legacy-document-bridge #reviews .review-author {
+  margin-top: 8px;
+  color: #5a5a5a;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+.legacy-document-bridge #faq .faq-layout {
+  display: block;
+  grid-template-columns: none;
+  overflow: visible;
+}
+.legacy-document-bridge #faq .faq-list {
+  width: 100%;
+  max-width: none;
+}
+.legacy-document-bridge .journal-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 409px;
+  grid-template-columns: none;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.legacy-document-bridge .journal-card { width: 100%; border-radius: 0 !important; }
+.legacy-document-bridge .journal-img { aspect-ratio: 2.02 / 1 !important; }
+.legacy-document-bridge .story-reel { grid-auto-columns: 409px !important; gap: 24px !important; }
+.legacy-document-bridge .story-frame { aspect-ratio: 16 / 9 !important; border-radius: 0 !important; }
+
+@media (max-width: 767px) {
+  .legacy-document-bridge .container { width: calc(100% - 24px) !important; }
+  .legacy-document-bridge .section-title { font-size: 20px; line-height: 28px; font-weight: 500; letter-spacing: 0; }
+  .legacy-document-bridge :is(.destinations, .upcoming, .confidence, .why-us, .trending, .reviews, .faq, .home-journal, .corporate-banner, .trip-stories) {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+  .legacy-document-bridge .hero-seo { min-height: 520px; }
+  .legacy-document-bridge .hero-title { font-size: 36px; line-height: 40px; font-weight: 500; letter-spacing: 0; }
+  .legacy-document-bridge .trust-strip { height: 56px; padding-top: 0 !important; padding-bottom: 0 !important; }
+  .legacy-document-bridge .trust-items { height: 56px; padding: 0; }
+  .legacy-document-bridge #destinations .destination-heading { margin-bottom: 20px; }
+  .legacy-document-bridge #destinations .destination-actions { display: none; }
+  .legacy-document-bridge #destinations .destination-tabs { gap: 8px; margin-bottom: 24px; }
+  .legacy-document-bridge #destinations .destination-tabs .tab-btn {
+    min-height: 40px;
+    padding-inline: 16px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+  .legacy-document-bridge #destination-grid {
+    grid-auto-columns: 60px !important;
+    grid-template-rows: repeat(2, 116px) !important;
+    column-gap: 16px !important;
+    row-gap: 16px !important;
+    height: 248px;
+  }
+  .legacy-document-bridge #destination-grid .destination-card {
+    width: 60px;
+    height: 116px !important;
+    grid-template-rows: 72px 36px !important;
+    gap: 8px;
+  }
+  .legacy-document-bridge #destination-grid .destination-img-wrap { width: 60px; height: 72px !important; }
+  .legacy-document-bridge #destination-grid .destination-name { font-size: 12px; line-height: 14px; font-weight: 500; }
+  .legacy-document-bridge .luxury-intro-banner { padding-top: 28px; padding-bottom: 28px; }
+  .legacy-document-bridge .luxury-intro-banner .container,
+  .legacy-document-bridge #deals .container { width: calc(100% - 40px) !important; }
+  .legacy-document-bridge #upcoming .section-header { margin-bottom: 20px; }
+  .legacy-document-bridge #upcoming .trip-filters { margin-bottom: 24px; }
+  .legacy-document-bridge #upcoming .trip-carousel-track {
+    grid-auto-columns: 73.333vw !important;
+    grid-auto-rows: calc(73.333vw * 1.17) !important;
+    gap: 16px !important;
+    margin-right: 0;
+    padding-right: 4px;
+  }
+  .legacy-document-bridge #upcoming .trip-filters { margin-right: 0; padding-right: 4px; }
+  .legacy-document-bridge #upcoming .trip-card { width: 73.333vw; height: calc(73.333vw * 1.17); border-width: 0; }
+  .legacy-document-bridge #upcoming > .container {
+    width: calc(100% - 12px) !important;
+    margin-left: 12px !important;
+    margin-right: 0 !important;
+  }
+  .legacy-document-bridge #upcoming .rail-promo {
+    width: 73.333vw;
+    height: calc(73.333vw * 1.17);
+    min-height: calc(73.333vw * 1.17);
+  }
+  .legacy-document-bridge #upcoming .trip-card-img { height: calc(73.333vw / 1.375); flex-basis: calc(73.333vw / 1.375); }
+  .legacy-document-bridge #deals { padding-top: 28px !important; padding-bottom: 28px !important; }
+  .legacy-document-bridge #deals .campaign-slider { width: 100%; aspect-ratio: 3 / 1; border-radius: 16px; }
+  .legacy-document-bridge #confidence { padding-top: 28px !important; padding-bottom: 28px !important; }
+  .legacy-document-bridge #confidence .section-title { margin-bottom: 20px; }
+  .legacy-document-bridge #confidence .confidence-grid {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    gap: 16px;
+    overflow: visible;
+  }
+  .legacy-document-bridge #confidence .confidence-card {
+    flex: 0 0 112px;
+    width: min(336px, 100%);
+    min-height: 112px;
+    padding: 0 12px;
+    border-radius: 16px;
+  }
+  .legacy-document-bridge #confidence .confidence-icon {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
+  .legacy-document-bridge #confidence .confidence-card h3 {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .legacy-document-bridge #confidence .confidence-note { margin-top: 16px; }
+  .legacy-document-bridge .why-cards { gap: 16px; }
+  .legacy-document-bridge .why-card { flex-basis: 280px; }
+  .legacy-document-bridge #trending { padding-top: 28px !important; padding-bottom: 28px !important; }
+  .legacy-document-bridge #trending .section-header { margin-bottom: 20px; }
+  .legacy-document-bridge #trending .section-title { font-size: 20px; line-height: 28px; }
+  .legacy-document-bridge #trending .trending-grid { grid-auto-columns: 264px; gap: 16px; }
+  .legacy-document-bridge #trending .trending-card,
+  .legacy-document-bridge #trending .trending-card > img { width: 264px; height: 264px; }
+  .legacy-document-bridge #trending .trending-info { padding: 56px 12px 12px; }
+  .legacy-document-bridge #trending .trending-info h3 { font-size: 14px; line-height: 20px; }
+  .legacy-document-bridge #trending .trending-info p { font-size: 12px; line-height: 16px; }
+  .legacy-document-bridge #reviews { padding-top: 28px !important; padding-bottom: 28px !important; }
+  .legacy-document-bridge #reviews .section-title {
+    margin-bottom: 20px;
+    padding-left: 8px;
+    font-size: 20px;
+    line-height: 28px;
+  }
+  .legacy-document-bridge #reviews .review-track {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px !important;
+    width: 100%;
+    margin: 0;
+    overflow: visible;
+  }
+  .legacy-document-bridge #reviews .review-card {
+    flex-direction: column;
+    justify-self: center;
+    width: calc(100vw - 40px);
+    height: calc((100vw - 40px) / .9);
+    min-height: 0;
+    aspect-ratio: .9 / 1;
+    padding: 0 !important;
+  }
+  .legacy-document-bridge #reviews .review-img {
+    flex: 0 0 45%;
+    width: 100%;
+    height: 45%;
+  }
+  .legacy-document-bridge #reviews .review-body {
+    flex: 0 0 55%;
+    align-items: center;
+    width: 100%;
+    height: 55%;
+    padding: 16px;
+    text-align: center;
+  }
+  .legacy-document-bridge #reviews .review-text { -webkit-line-clamp: 5; }
+  .legacy-document-bridge .journal-grid { grid-auto-columns: 280px; gap: 16px; }
+  .legacy-document-bridge .journal-card { width: 280px; min-height: 226px; }
+  .legacy-document-bridge .journal-img { width: 280px; height: 116px; aspect-ratio: auto !important; }
+  .legacy-document-bridge .story-reel { grid-auto-columns: 280px !important; gap: 16px !important; }
+  .legacy-document-bridge .story-frame { width: 280px; height: 158px; aspect-ratio: auto !important; }
+  .legacy-document-bridge .faq-heading { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 24px; }
+  .legacy-document-bridge .faq-heading > div { min-width: 0; }
+  .legacy-document-bridge .faq-heading p { margin-top: 8px; font-size: 14px; line-height: 20px; }
+  .legacy-document-bridge .faq-count { min-height: 40px; padding-inline: 10px; }
+  .legacy-document-bridge .faq-layout { display: block; grid-template-columns: none; overflow: visible; }
+  .legacy-document-bridge .faq-list { width: calc(100vw - 24px); }
+  .legacy-document-bridge .footer { padding-top: 32px; padding-bottom: 80px; }
+  .legacy-document-bridge .footer-body { padding-top: 24px; }
+  .legacy-document-bridge .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+  .legacy-document-bridge .footer-brand { grid-column: 1 / -1; }
+  .legacy-document-bridge .footer-col > a { margin-block: 2px !important; line-height: 20px !important; }
+  .legacy-document-bridge .footer-logo { height: 64px; margin-bottom: 8px; }
+  .legacy-document-bridge .footer-payments { margin-top: 24px; padding-top: 16px; }
+  .legacy-document-bridge .footer-bottom { padding-top: 16px; }
+}
+
+@media (min-width: 1536px) {
+  .legacy-document-bridge .review-track { grid-auto-rows: 230px; }
+  .legacy-document-bridge .review-card { height: 230px; min-height: 230px; }
+}
+
+/* Reference-matched Upcoming Group Trip cards */
+#upcoming .section-header { margin-bottom: 28px; }
+#upcoming .section-title { color: #17131a; }
+#upcoming .trip-filters { margin-bottom: 34px; flex-wrap: nowrap; scrollbar-width: none; }
+#upcoming .trip-filters::-webkit-scrollbar { display: none; }
+#upcoming .trip-carousel-track {
+  grid-auto-columns: calc((100% - 40px) / 3) !important;
+  grid-auto-rows: 420px !important;
+  gap: 20px;
+  align-items: stretch;
+}
+#upcoming .trip-card {
+  height: 100%;
+  border: 1px solid rgba(85,22,123,.09);
+  border-radius: 22px;
+  box-shadow: 0 8px 22px rgba(35,24,43,.1);
+}
+#upcoming .trip-card-img { aspect-ratio: auto !important; height: 255px; flex: 0 0 255px; }
+#upcoming .trip-card-img::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg,rgba(15,5,20,.12),transparent 42%); }
+#upcoming .trip-badge {
+  top: 12px;
+  left: 12px;
+  padding: 7px 12px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(20,18,23,.72) !important;
+  backdrop-filter: blur(9px);
+  font-size: .72rem;
+}
+#upcoming .trip-wishlist { display: none; }
+#upcoming .trip-card-body { position: relative; gap: 0 !important; padding: 0 16px 15px !important; }
+#upcoming .trip-duration {
+  order: 0;
+  align-self: flex-start;
+  min-height: 36px;
+  margin: -18px 0 8px -1px;
+  padding: 8px 13px;
+  border-radius: 0 18px 0 0;
+  color: #655d68;
+  background: #fff;
+  font-size: .77rem;
+  font-weight: 650;
+  z-index: 2;
+}
+#upcoming .trip-duration svg { color: var(--purple); }
+#upcoming .trip-title {
+  order: 1;
+  min-height: 44px;
+  margin: 0 0 5px;
+  color: #262128;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+#upcoming .trip-pricing { order: 2; margin: 0; padding: 0 0 10px; gap: 7px; }
+#upcoming .trip-price { order: -1; color: #211c23; font-size: 1.1rem; }
+#upcoming .trip-price-old { color: #766e79; font-size: .72rem; }
+#upcoming .trip-discount { color: var(--brand-orange); font-size: .72rem; }
+#upcoming .trip-dates {
+  order: 3;
+  margin: auto 0 0;
+  padding: 11px 0 0;
+  border-top: 1px solid rgba(85,22,123,.09);
+  border-bottom: 0;
+  color: #6f6872;
+  font-size: .75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#upcoming .trip-dates svg { color: var(--purple); }
+#upcoming .rail-promo { height: 420px; border-radius: 22px; }
+
+@media (max-width: 1100px) {
+  #upcoming .trip-carousel-track { grid-auto-columns: calc((100% - 20px) / 2) !important; }
+}
+@media (max-width: 767px) {
+  #upcoming { @apply py-10; }
+  #upcoming .section-header { margin-bottom: 20px; }
+  #upcoming .trip-filters { margin-right: -14px; margin-bottom: 22px; padding-right: 14px; }
+  #upcoming .trip-carousel-track { grid-auto-columns: 88% !important; grid-auto-rows: 410px !important; margin-right: -14px; padding-right: 14px; }
+  #upcoming .trip-card-img { height: 245px; flex-basis: 245px; }
+  #upcoming .rail-promo { height: 410px; }
 }
 
 @media (min-width: 1280px) {
