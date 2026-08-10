@@ -52,6 +52,9 @@ import {
   Headphones,
   CalendarSync,
   Hotel,
+  Volume2,
+  VolumeX,
+  X,
 } from 'lucide';
 
 createIcons({
@@ -107,6 +110,9 @@ createIcons({
     Headphones,
     CalendarSync,
     Hotel,
+    Volume2,
+    VolumeX,
+    X,
   },
 });
 
@@ -280,6 +286,124 @@ function wireRail(trackSelector, prevSelector, nextSelector, itemSelector, fallb
 
 wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
 wireRail('#story-reel', '#story-prev', '#story-next', '.story-frame', 240);
+wireRail('#vibe-reel-track', '#vibe-prev', '#vibe-next', '.vibe-reel-card', 240);
+
+// Instagram reels shown in the homepage "Travel Vibes" rail and the
+// full-screen mobile reels viewer. Source: reels.txt. Third-party reels
+// (not the client's own account) carry a "View on Instagram" fallback link
+// since those embeds break if the source account goes private or deletes
+// the post.
+const REELS = [
+  { id: 'Da2Qjpji2Nt', kind: 'reel' },
+  { id: 'Da2ILbdiYnn', kind: 'reel' },
+  { id: 'C5tIhf8S1Uh', kind: 'reel' },
+  { id: 'C0ojfJKJX5P', kind: 'reel' },
+  { id: 'C2JSUlzIZFn', kind: 'reel' },
+  { id: 'C1yTD4DJ0Lj', kind: 'reel' },
+  { id: 'C1mRHYAJ8X6', kind: 'reel' },
+  { id: 'C5WN4HMRgrs', kind: 'reel' },
+  { id: 'C0rfnHIoI0m', kind: 'post' },
+];
+const instagramPath = item => (item.kind === 'post' ? 'p' : 'reel');
+const instagramEmbedSrc = item => `https://www.instagram.com/${instagramPath(item)}/${item.id}/embed`;
+
+// Instagram's embed iframe always renders its own header (avatar/username/
+// "View profile") and footer (caption link, like/comment icons, comment
+// box) around the video — there is no official parameter to hide them
+// without the oEmbed API. Since we're told not to use that, we crop it
+// instead: render the iframe at Instagram's natural width, shift it up to
+// hide the header, clip everything below the video with overflow:hidden,
+// then scale the whole cropped window down to fit the actual card size.
+const IG_NATIVE_WIDTH = 340;
+const IG_HEADER_HEIGHT = 54;
+const IG_VISIBLE_HEIGHT = 424;
+
+function reelCardHtml(item, { full = false } = {}) {
+  const postClass = item.kind === 'post' ? ' is-post' : '';
+  const embed = `<div class="ig-crop"><iframe src="${instagramEmbedSrc(item)}" loading="lazy" allowtransparency="true" scrolling="no" title="Traveller reel"></iframe></div>`;
+  if (full) {
+    // .reels-slide spans the full viewport width (for vertical centering);
+    // .reels-slide-frame is the fixed-width card the crop is scaled against.
+    return `<div class="reels-slide"><div class="reels-slide-frame${postClass}">${embed}</div></div>`;
+  }
+  return `<div class="vibe-reel-card${postClass}">${embed}</div>`;
+}
+
+function cropInstagramEmbed(frame) {
+  const crop = frame.querySelector('.ig-crop');
+  const iframe = crop?.querySelector('iframe');
+  if (!crop || !iframe) return;
+  iframe.style.width = `${IG_NATIVE_WIDTH}px`;
+  iframe.style.height = `${IG_HEADER_HEIGHT + IG_VISIBLE_HEIGHT + 300}px`;
+  iframe.style.marginTop = `-${IG_HEADER_HEIGHT}px`;
+  iframe.style.border = '0';
+  // Center the native-size crop window over the frame, then scale it up by
+  // whichever factor is larger so it fully covers the frame in both
+  // dimensions (like object-fit:cover) — no letterboxing, whatever the
+  // card's aspect ratio is.
+  crop.style.width = `${IG_NATIVE_WIDTH}px`;
+  crop.style.height = `${IG_VISIBLE_HEIGHT}px`;
+  crop.style.marginLeft = `${-IG_NATIVE_WIDTH / 2}px`;
+  crop.style.marginTop = `${-IG_VISIBLE_HEIGHT / 2}px`;
+  const resize = () => {
+    const scale = Math.max(frame.clientWidth / IG_NATIVE_WIDTH, frame.clientHeight / IG_VISIBLE_HEIGHT);
+    crop.style.transform = `scale(${scale})`;
+  };
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+}
+
+$$('[data-reels-embed-target]').forEach(target => {
+  const full = target.hasAttribute('data-reels-full');
+  target.innerHTML = REELS.map(item => reelCardHtml(item, { full })).join('');
+  $$(full ? '.reels-slide-frame' : '.vibe-reel-card', target).forEach(cropInstagramEmbed);
+});
+
+const reelsViewer = $('#reels-viewer');
+const reelsTrigger = $('[data-reels-trigger]');
+const reelsClose = $('#reels-viewer-close');
+const openReelsViewer = () => {
+  if (!reelsViewer) return;
+  reelsViewer.classList.add('open');
+  reelsViewer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+};
+const closeReelsViewer = () => {
+  if (!reelsViewer) return;
+  reelsViewer.classList.remove('open');
+  reelsViewer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+};
+reelsTrigger?.addEventListener('click', openReelsViewer);
+reelsClose?.addEventListener('click', closeReelsViewer);
+reelsViewer?.addEventListener('click', event => { if (event.target === reelsViewer) closeReelsViewer(); });
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && reelsViewer?.classList.contains('open')) closeReelsViewer();
+});
+
+const mobileSearchPanel = $('#mobile-search-panel');
+const mobileSearchTrigger = $('[data-mobile-search-trigger]');
+const mobileSearchClose = $('#mobile-search-close');
+const mobileSearchInput = $('#mobile-search-input');
+const openMobileSearch = () => {
+  if (!mobileSearchPanel) return;
+  mobileSearchPanel.classList.add('open');
+  mobileSearchPanel.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => mobileSearchInput?.focus());
+};
+const closeMobileSearch = () => {
+  if (!mobileSearchPanel) return;
+  mobileSearchPanel.classList.remove('open');
+  mobileSearchPanel.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+};
+mobileSearchTrigger?.addEventListener('click', openMobileSearch);
+mobileSearchClose?.addEventListener('click', closeMobileSearch);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && mobileSearchPanel?.classList.contains('open')) closeMobileSearch();
+});
+handleSearch(mobileSearchInput);
 
 $('#back-to-top')?.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -356,6 +480,13 @@ heroSearchInput?.addEventListener('input',()=>{const query=heroSearchInput.value
 $$('[data-hero-query]').forEach(item=>item.addEventListener('click',()=>{heroSearchInput.value=item.dataset.heroQuery;setHeroSuggestions(false);$('.hero-search-btn')?.click()}));
 document.addEventListener('click',event=>{if(!event.target.closest('.hero-search-wrap')&&!event.target.closest('.hero-quick-picks'))setHeroSuggestions(false)});
 heroSearchInput?.addEventListener('keydown',event=>{if(event.key==='Escape'){setHeroSuggestions(false);heroSearchInput.blur()}});
+
+const headerSearchInput=$('#search-input'),headerSearchPanel=$('#search-suggestions');
+const setHeaderSearchOpen=open=>{headerSearchPanel?.classList.toggle('open',open);headerSearchInput?.setAttribute('aria-expanded',String(open))};
+headerSearchInput?.addEventListener('focus',()=>setHeaderSearchOpen(true));
+headerSearchInput?.addEventListener('click',()=>setHeaderSearchOpen(true));
+document.addEventListener('click',event=>{if(!event.target.closest('.header-search'))setHeaderSearchOpen(false)});
+headerSearchInput?.addEventListener('keydown',event=>{if(event.key==='Escape'){setHeaderSearchOpen(false);headerSearchInput.blur()}});
 
 $('#login-btn')?.addEventListener('click', () => {
   window.location.href = '/login';
