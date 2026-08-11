@@ -9,29 +9,29 @@ document.body.insertAdjacentHTML('beforeend', `
 
   <div class="enquiry-modal invisible fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-brand-ink/70 p-4 opacity-0 backdrop-blur-md transition-opacity duration-300 [&.open]:visible [&.open]:opacity-100 [&.open_.enquiry-dialog]:translate-y-0 [&.open_.enquiry-dialog]:scale-100" id="enquiry-modal" aria-hidden="true">
     <button class="enquiry-backdrop absolute inset-0 cursor-default" type="button" data-popup-close aria-label="Close trip planning form"></button>
-    <section class="enquiry-dialog relative z-10 max-h-[calc(100dvh-32px)] w-[min(400px,calc(100%-32px))] translate-y-5 scale-[.98] overflow-y-auto rounded-[28px] bg-white p-7 shadow-[0_32px_100px_rgba(22,5,31,.5)] transition duration-300" role="dialog" aria-modal="true" aria-labelledby="enquiry-title" aria-describedby="enquiry-description">
-      <button class="enquiry-close absolute right-4 top-4 z-30 grid size-9 place-items-center rounded-full border border-brand-purple/10 bg-white text-brand-purple shadow-sm transition hover:rotate-90 hover:bg-brand-yellow focus-visible:outline-4 focus-visible:outline-brand-purple/20" type="button" data-popup-close aria-label="Close enquiry form">${closeIcon}</button>
+    <section class="enquiry-dialog relative z-10 max-h-[calc(100dvh-32px)] w-[min(320px,calc(100%-32px))] translate-y-5 scale-[.98] overflow-y-auto rounded-3xl bg-white p-5 shadow-[0_32px_100px_rgba(22,5,31,.5)] transition duration-300" role="dialog" aria-modal="true" aria-labelledby="enquiry-title" aria-describedby="enquiry-description">
+      <button class="enquiry-close absolute right-3 top-3 z-30 grid size-8 place-items-center rounded-full border border-brand-purple/10 bg-white text-brand-purple shadow-sm transition hover:rotate-90 hover:bg-brand-yellow focus-visible:outline-4 focus-visible:outline-brand-purple/20" type="button" data-popup-close aria-label="Close enquiry form">${closeIcon}</button>
 
-      <h2 class="max-w-[85%] font-heading text-xl font-extrabold leading-tight text-brand-deep outline-none" id="enquiry-title" tabindex="-1">Let's plan your dream trip!</h2>
-      <p class="mt-2 max-w-[90%] text-sm leading-6 text-slate-500" id="enquiry-description">Drop a few details, and we'll craft an unforgettable adventure just for you!</p>
+      <h2 class="max-w-[85%] font-heading text-lg font-extrabold leading-tight text-brand-deep outline-none" id="enquiry-title" tabindex="-1">Let's plan your dream trip!</h2>
+      <p class="mt-1.5 max-w-[90%] text-xs leading-5 text-slate-500" id="enquiry-description">Drop a few details, and we'll craft an unforgettable adventure just for you!</p>
 
-      <form class="enquiry-quick-form mt-5 grid gap-3" id="enquiry-quick-form" novalidate>
+      <form class="enquiry-quick-form mt-4 grid gap-2.5" id="enquiry-quick-form" novalidate>
         <label class="sr-only" for="quick-name">Full name</label>
-        <input class="min-h-13 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-5 text-base outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-name" name="name" required autocomplete="name" placeholder="Name">
+        <input class="min-h-11 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-4 text-sm outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-name" name="name" required autocomplete="name" placeholder="Name">
 
         <label class="sr-only" for="quick-destination">Destination</label>
-        <input class="min-h-13 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-5 text-base outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-destination" name="destination" required placeholder="Choose your destination...">
+        <input class="min-h-11 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-4 text-sm outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-destination" name="destination" required placeholder="Choose your destination...">
 
         <label class="sr-only" for="quick-phone">Mobile number</label>
-        <div class="flex min-h-13 w-full items-center gap-2 rounded-full border border-brand-purple/15 bg-brand-surface/70 pl-5 pr-2 transition focus-within:border-brand-purple focus-within:ring-4 focus-within:ring-brand-purple/10">
-          <span class="shrink-0 text-base text-brand-ink">+91</span>
-          <input class="min-h-13 w-full bg-transparent text-base outline-none placeholder:text-gray-400" id="quick-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9 ]{10,}" placeholder="Enter mobile number">
+        <div class="flex min-h-11 w-full items-center gap-1.5 rounded-full border border-brand-purple/15 bg-brand-surface/70 pl-4 pr-2 transition focus-within:border-brand-purple focus-within:ring-4 focus-within:ring-brand-purple/10">
+          <span class="shrink-0 text-sm text-brand-ink">+91</span>
+          <input class="min-h-11 w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-gray-400" id="quick-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9 ]{10,}" placeholder="Enter mobile number">
         </div>
 
         <label class="sr-only" for="quick-email">Email</label>
-        <input class="min-h-13 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-5 text-base outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-email" name="email" type="email" autocomplete="email" placeholder="Email">
+        <input class="min-h-11 w-full rounded-full border border-brand-purple/15 bg-brand-surface/70 px-4 text-sm outline-none transition placeholder:text-gray-400 focus:border-brand-purple focus:ring-4 focus:ring-brand-purple/10" id="quick-email" name="email" type="email" autocomplete="email" placeholder="Email">
 
-        <button class="btn btn-primary btn-block mt-1 min-h-13" type="submit">Talk to our Experts</button>
+        <button class="btn btn-primary btn-block mt-1 min-h-11 text-sm" type="submit">Talk to our Experts</button>
         <p class="quick-form-status min-h-4 text-center text-xs font-bold [&.success]:text-green-700 [&.error]:text-red-600" role="status" aria-live="polite"></p>
       </form>
     </section>

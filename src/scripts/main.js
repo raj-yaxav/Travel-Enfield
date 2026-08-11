@@ -21,6 +21,7 @@ import {
   CircleCheckBig,
   CircleUserRound,
   ChevronDown,
+  ChevronUp,
   Clock3,
   Earth,
   Footprints,
@@ -79,6 +80,7 @@ createIcons({
     CircleCheckBig,
     CircleUserRound,
     ChevronDown,
+    ChevronUp,
     Clock3,
     Earth,
     Footprints,
@@ -359,6 +361,24 @@ $$('[data-reels-embed-target]').forEach(target => {
   $$(full ? '.reels-slide-frame' : '.vibe-reel-card', target).forEach(cropInstagramEmbed);
 });
 
+// Instagram's embed has no postMessage API to pause/mute it remotely, so the
+// only way to stop a playing reel's audio once it scrolls off-screen is to
+// force its iframe to reload — that tears down whatever was playing inside.
+function stopReelAudio(card) {
+  const iframe = card.querySelector('.ig-crop iframe');
+  const src = iframe?.getAttribute('src');
+  if (!iframe || !src) return;
+  iframe.setAttribute('src', 'about:blank');
+  requestAnimationFrame(() => iframe.setAttribute('src', src));
+}
+
+if ('IntersectionObserver' in window) {
+  const reelAudioObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (!entry.isIntersecting) stopReelAudio(entry.target); });
+  }, { threshold: 0.5 });
+  $$('.vibe-reel-card, .reels-slide').forEach(card => reelAudioObserver.observe(card));
+}
+
 const reelsViewer = $('#reels-viewer');
 const reelsTrigger = $('[data-reels-trigger]');
 const reelsClose = $('#reels-viewer-close');
@@ -373,6 +393,7 @@ const closeReelsViewer = () => {
   reelsViewer.classList.remove('open');
   reelsViewer.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
+  $$('.reels-slide', reelsViewer).forEach(stopReelAudio);
 };
 reelsTrigger?.addEventListener('click', openReelsViewer);
 reelsClose?.addEventListener('click', closeReelsViewer);
@@ -380,6 +401,15 @@ reelsViewer?.addEventListener('click', event => { if (event.target === reelsView
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && reelsViewer?.classList.contains('open')) closeReelsViewer();
 });
+
+function wireMobileSearchFilter(panel, input) {
+  if (!panel || !input) return;
+  const cards = $$('.search-dest-card', panel);
+  input.addEventListener('input', () => {
+    const query = input.value.trim().toLowerCase();
+    cards.forEach(card => { card.hidden = query.length > 0 && !card.textContent.toLowerCase().includes(query); });
+  });
+}
 
 const mobileSearchPanel = $('#mobile-search-panel');
 const mobileSearchTrigger = $('[data-mobile-search-trigger]');
@@ -403,10 +433,22 @@ mobileSearchClose?.addEventListener('click', closeMobileSearch);
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && mobileSearchPanel?.classList.contains('open')) closeMobileSearch();
 });
-handleSearch(mobileSearchInput);
+wireMobileSearchFilter(mobileSearchPanel, mobileSearchInput);
 
-$('#back-to-top')?.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+const backToTop = $('#back-to-top');
+if (backToTop) {
+  backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  const toggleBackToTop = () => backToTop.classList.toggle('show', window.scrollY > 480);
+  window.addEventListener('scroll', toggleBackToTop, { passive: true });
+  toggleBackToTop();
+}
+
+$$('.footer-col').forEach(col => {
+  const toggle = $('.footer-col-toggle', col);
+  toggle?.addEventListener('click', () => {
+    const open = col.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
 });
 
 $$('.faq-item').forEach((item, index) => {

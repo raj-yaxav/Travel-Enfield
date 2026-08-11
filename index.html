@@ -45,7 +45,7 @@
   <!-- ============ 2. STICKY HEADER ============ -->
   <header class="header sticky top-0 z-40 bg-white shadow-[0_1px_0_rgba(69,13,105,.09)]" id="header">
     <!-- Mobile Header -->
-    <div class="header-mobile grid min-h-16 grid-cols-[48px_1fr_48px] items-center px-3.5 md:hidden">
+    <div class="header-mobile grid min-h-16 grid-cols-[48px_1fr_48px] items-center px-3.5 min-[1100px]:hidden">
       <button class="hamburger relative z-10 grid size-11 place-content-center gap-1.5 rounded-xl border-0 bg-transparent text-brand-purple hover:bg-brand-surface focus-visible:outline-2 focus-visible:outline-brand-purple/30" id="hamburger" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
@@ -58,7 +58,7 @@
     </div>
 
     <!-- Desktop Header -->
-    <div class="header-desktop hidden md:block">
+    <div class="header-desktop hidden min-[1100px]:block">
       <div class="header-top mx-auto grid min-h-20 w-[min(calc(100%_-_48px),1740px)] grid-cols-[140px_minmax(160px,1fr)_auto] items-center gap-3 lg:grid-cols-[250px_minmax(320px,540px)_1fr] lg:gap-7">
         <a href="/" class="header-logo flex w-32 items-center lg:w-52">
           <img src="/images/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img h-12 w-32 object-contain object-left lg:h-[76px] lg:w-[205px]" />
@@ -116,8 +116,8 @@
     </div>
 
     <!-- Mobile Navigation Drawer -->
-    <div class="mobile-nav-overlay invisible fixed inset-0 z-50 block bg-brand-ink/60 opacity-0 transition [&.open]:visible [&.open]:opacity-100 md:hidden" id="mobile-nav-overlay"></div>
-    <nav class="mobile-nav fixed inset-y-0 left-0 z-[60] grid h-dvh w-[min(88vw,380px)] -translate-x-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-white shadow-2xl transition-transform duration-300 [&.open]:translate-x-0 md:hidden" id="mobile-nav">
+    <div class="mobile-nav-overlay invisible fixed inset-0 z-50 block bg-brand-ink/60 opacity-0 transition [&.open]:visible [&.open]:opacity-100 min-[1100px]:hidden" id="mobile-nav-overlay"></div>
+    <nav class="mobile-nav fixed inset-y-0 left-0 z-[60] grid h-dvh w-[min(88vw,380px)] -translate-x-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-white shadow-2xl transition-transform duration-300 [&.open]:translate-x-0 min-[1100px]:hidden" id="mobile-nav">
       <div class="mobile-nav-header flex min-h-18 items-center justify-between border-b border-brand-purple/10 px-3.5 py-2">
         <img src="/images/brand/logo-navbar.png" alt="TravelEnfield" class="mobile-nav-logo h-14 w-44 object-contain" />
         <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
@@ -564,38 +564,38 @@
     </section>
 
     <!-- ============ 9. BOOK WITH CONFIDENCE ============ -->
-    <section class="confidence section" id="confidence">
-      <div class="container">
-        <h2 class="section-title center">Book with Confidence</h2>
-        <div class="confidence-grid">
-          <div class="confidence-card">
-            <img class="confidence-icon" src="/home-page/confidence/secure-deposit.png" alt="Secure advance booking" width="80" height="80" loading="lazy">
-            <h3>Secure Your Spot by Paying 20% of the Trip</h3>
-          </div>
-          <div class="confidence-card">
-            <img class="confidence-icon" src="/home-page/confidence/zero-cost-emi.png" alt="Zero-cost EMI" width="80" height="80" loading="lazy">
-            <h3>Book Your Trip on Easy Zero-Cost EMI</h3>
-          </div>
-          <div class="confidence-card">
-            <img class="confidence-icon" src="/home-page/confidence/free-cancellation.png" alt="Free cancellation" width="80" height="80" loading="lazy">
-            <h3>Free Cancellation on Group Trips</h3>
-          </div>
-          <div class="confidence-card">
-            <img class="confidence-icon" src="/home-page/confidence/free-reschedule.png" alt="Free rescheduling" width="80" height="80" loading="lazy">
-            <h3>Reschedule at No Extra Charges</h3>
-          </div>
-          <div class="confidence-card">
-            <img class="confidence-icon" src="/home-page/confidence/support-24-7.png" alt="24/7 travel support" width="80" height="80" loading="lazy">
-            <h3>24*7 Support &amp; Trained Trip Captains</h3>
-          </div>
+    <section class="confidence h-fit w-full bg-brand-surface px-5 py-7 md:px-20 md:py-14" id="confidence">
+      <h2 class="mb-8 text-center font-heading text-xl font-medium text-brand-deep md:mb-10 md:text-3xl">Book with Confidence</h2>
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        <div class="flex h-10 w-full items-center gap-4 sm:w-[calc(50%-0.75rem)] md:h-20 md:w-[calc(33.333%-1.667rem)]">
+          <img class="h-10 w-10 flex-shrink-0 rounded-2xl object-cover md:h-16 md:w-16" src="/home-page/confidence/secure-deposit.png" alt="Secure advance booking" width="64" height="64" loading="lazy">
+          <h3 class="text-sm font-medium text-brand-deep md:text-base">Secure Your Spot by Paying 20% of the Trip</h3>
         </div>
-        <p class="confidence-note">T&amp;C applied*</p>
+        <div class="flex h-10 w-full items-center gap-4 sm:w-[calc(50%-0.75rem)] md:h-20 md:w-[calc(33.333%-1.667rem)]">
+          <img class="h-10 w-10 flex-shrink-0 rounded-2xl object-cover md:h-16 md:w-16" src="/home-page/confidence/zero-cost-emi.png" alt="Zero-cost EMI" width="64" height="64" loading="lazy">
+          <h3 class="text-sm font-medium text-brand-deep md:text-base">Book Your Trip on Easy Zero-Cost EMI</h3>
+        </div>
+        <div class="flex h-10 w-full items-center gap-4 sm:w-[calc(50%-0.75rem)] md:h-20 md:w-[calc(33.333%-1.667rem)]">
+          <img class="h-10 w-10 flex-shrink-0 rounded-2xl object-cover md:h-16 md:w-16" src="/home-page/confidence/free-cancellation.png" alt="Free cancellation" width="64" height="64" loading="lazy">
+          <h3 class="text-sm font-medium text-brand-deep md:text-base">Free Cancellation on Group Trips</h3>
+        </div>
+        <div class="flex h-10 w-full items-center gap-4 sm:w-[calc(50%-0.75rem)] md:h-20 md:w-[calc(33.333%-1.667rem)]">
+          <img class="h-10 w-10 flex-shrink-0 rounded-2xl object-cover md:h-16 md:w-16" src="/home-page/confidence/free-reschedule.png" alt="Free rescheduling" width="64" height="64" loading="lazy">
+          <h3 class="text-sm font-medium text-brand-deep md:text-base">Reschedule at No Extra Charges</h3>
+        </div>
+        <div class="flex h-10 w-full items-center gap-4 sm:w-[calc(50%-0.75rem)] md:h-20 md:w-[calc(33.333%-1.667rem)]">
+          <img class="h-10 w-10 flex-shrink-0 rounded-2xl object-cover md:h-16 md:w-16" src="/home-page/confidence/support-24-7.png" alt="24/7 travel support" width="64" height="64" loading="lazy">
+          <h3 class="text-sm font-medium text-brand-deep md:text-base">24*7 Support &amp; Trained Trip Captains</h3>
+        </div>
+      </div>
+      <div class="mt-3 flex w-full items-center justify-end md:mt-5">
+        <p class="text-sm font-medium text-gray-500 md:text-base">T&amp;C applied*</p>
       </div>
     </section>
 
     <!-- ============ VIBE WITH US (REELS) ============ -->
-    <section class="vibe-reels section overflow-hidden bg-white py-12 md:py-16" id="vibe-with-us" aria-labelledby="vibe-title">
-      <div class="container">
+    <section class="vibe-reels relative w-full overflow-hidden bg-white py-12 md:py-16" id="vibe-with-us" aria-labelledby="vibe-title">
+      <div class="mb-5 px-5 md:mb-6 md:px-20">
         <div class="section-header">
           <div><span class="section-kicker">Straight from the road</span><h2 class="section-title" id="vibe-title">Travel Vibes</h2></div>
           <div class="destination-scroll-controls">
@@ -603,12 +603,14 @@
             <button type="button" id="vibe-next" aria-label="Next reels"><i data-lucide="chevron-right"></i></button>
           </div>
         </div>
+      </div>
+      <div class="overflow-hidden px-5 md:px-20">
         <div class="vibe-reel-track grid auto-cols-[260px] grid-flow-col gap-4 overflow-x-auto pb-2 [scroll-snap-type:x_mandatory] md:auto-cols-[340px] md:gap-6 [&_.vibe-reel-card]:relative [&_.vibe-reel-card]:aspect-[9/16] [&_.vibe-reel-card]:overflow-hidden [&_.vibe-reel-card]:rounded-2xl [&_.vibe-reel-card]:bg-brand-ink [&_.vibe-reel-card]:shadow-lg [&_.vibe-reel-card]:[scroll-snap-align:start]" id="vibe-reel-track" data-reels-embed-target aria-label="Traveller reels"></div>
       </div>
     </section>
 
     <!-- ============ 10. REASONS TO TRAVEL WITH US ============ -->
-    <section class="h-fit w-full bg-brand-surface px-8 py-14 md:px-0 md:py-16">
+    <section class="reasons-section h-fit w-full bg-brand-surface px-8 py-14 md:px-0 md:py-16">
       <h2 class="mb-6 text-center font-heading text-xl font-medium text-brand-deep md:text-3xl">Reasons To Make Us Your Travel Bestie</h2>
       <div class="flex flex-wrap justify-center gap-4 md:gap-6">
         <div class="flex aspect-[3/1] h-28 items-center rounded-2xl bg-white px-3 md:h-40 md:min-w-96 md:basis-1/4 md:items-start md:px-6">
@@ -705,7 +707,13 @@
     <!-- ============ 13. TRAVELLER REVIEWS ============ -->
     <section class="reviews section bg-brand-surface py-12 md:py-16" id="reviews">
       <div class="container">
-        <h2 class="section-title center">Reviews From Our Travellers</h2>
+        <div class="section-header">
+          <h2 class="section-title">Reviews From Our Travellers</h2>
+          <div class="destination-scroll-controls">
+            <button type="button" id="review-prev" aria-label="Previous reviews"><i data-lucide="chevron-left"></i></button>
+            <button type="button" id="review-next" aria-label="Next reviews"><i data-lucide="chevron-right"></i></button>
+          </div>
+        </div>
         <div class="review-carousel">
         <div class="review-track" id="review-track">
           <div class="review-card">
@@ -951,9 +959,10 @@
     </div>
     <div class="footer-body px-0 pb-5 pt-11">
       <div class="container">
-        <div class="footer-grid grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(4,minmax(0,1fr))_1.15fr] [&_.footer-col_h4]:mb-3.5 [&_.footer-col_h4]:font-heading [&_.footer-col_h4]:font-bold [&_.footer-col_h4]:text-white [&_.footer-col>a]:my-2 [&_.footer-col>a]:flex [&_.footer-col>a]:w-fit [&_.footer-col>a]:items-center [&_.footer-col>a]:gap-2 [&_.footer-col>a]:text-sm [&_.footer-col>a]:leading-relaxed [&_.footer-col>a]:text-white/70 [&_.footer-col>a:hover]:text-brand-yellow">
+        <div class="footer-grid grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[repeat(4,minmax(0,1fr))_1.15fr] [&_.footer-col_h4]:mb-3.5 [&_.footer-col_h4]:font-heading [&_.footer-col_h4]:font-bold [&_.footer-col_h4]:text-white [&_.footer-col-links>a]:my-2 [&_.footer-col-links>a]:flex [&_.footer-col-links>a]:w-fit [&_.footer-col-links>a]:items-center [&_.footer-col-links>a]:gap-2 [&_.footer-col-links>a]:text-sm [&_.footer-col-links>a]:leading-relaxed [&_.footer-col-links>a]:text-white/70 [&_.footer-col-links>a:hover]:text-brand-yellow">
           <div class="footer-col">
-            <h4>Domestic Trips</h4>
+            <button type="button" class="footer-col-toggle" aria-expanded="false"><h4>Domestic Trips</h4><i data-lucide="chevron-down" class="footer-col-chevron"></i></button>
+            <div class="footer-col-links">
             <a href="/destinations/ladakh">Ladakh</a>
             <a href="/destinations/spiti">Spiti Valley</a>
             <a href="/destinations/manali">Manali</a>
@@ -964,9 +973,11 @@
             <a href="/destinations/uttarakhand">Uttarakhand</a>
             <a href="/destinations/rajasthan">Rajasthan</a>
             <a href="/destinations/andaman">Andaman</a>
+            </div>
           </div>
           <div class="footer-col">
-            <h4>International Trips</h4>
+            <button type="button" class="footer-col-toggle" aria-expanded="false"><h4>International Trips</h4><i data-lucide="chevron-down" class="footer-col-chevron"></i></button>
+            <div class="footer-col-links">
             <a href="/destinations/bali">Bali</a>
             <a href="/destinations/thailand">Thailand</a>
             <a href="/destinations/nepal">Nepal</a>
@@ -976,9 +987,11 @@
             <a href="/destinations/dubai">Dubai</a>
             <a href="/destinations/maldives">Maldives</a>
             <a href="/destinations/singapore">Singapore</a>
+            </div>
           </div>
           <div class="footer-col">
-            <h4>Quick Links</h4>
+            <button type="button" class="footer-col-toggle" aria-expanded="false"><h4>Quick Links</h4><i data-lucide="chevron-down" class="footer-col-chevron"></i></button>
+            <div class="footer-col-links">
             <a href="/hotels">Hotels</a>
             <a href="/about-us">About Us</a>
             <a href="/blog">Blogs</a>
@@ -989,9 +1002,11 @@
             <a href="/cancellation-policy">Cancellation Policy</a>
             <a href="/terms-and-conditions">Terms &amp; Conditions</a>
             <a href="/custom-trip">Corporate Tours</a>
+            </div>
           </div>
           <div class="footer-col footer-col-contact">
-            <h4>Talk to Us</h4>
+            <button type="button" class="footer-col-toggle" aria-expanded="false"><h4>Talk to Us</h4><i data-lucide="chevron-down" class="footer-col-chevron"></i></button>
+            <div class="footer-col-links">
             <a href="tel:+919876543210"><i data-lucide="phone"></i> +91 98765 43210</a>
             <a href="mailto:hello@travelenfield.in"><i data-lucide="mail"></i> hello@travelenfield.in</a>
             <a href="https://wa.me/919876543210"><i data-lucide="message-circle"></i> WhatsApp Us</a>
@@ -1003,11 +1018,13 @@
               <h5>Operations</h5>
               <p>Gurugram, Haryana, India</p>
             </div>
+            </div>
           </div>
           <div class="footer-brand min-w-0">
             <img src="/images/brand/logo-footer.png" alt="TravelEnfield" class="footer-logo h-24 w-full max-w-[275px] object-contain object-left" />
             <p class="footer-tagline max-w-[280px] leading-relaxed">Trips that feel unforgettable, not complicated.</p>
-            <div class="footer-socials mt-4 flex flex-wrap gap-2.5 [&_.social-icon]:grid [&_.social-icon]:size-11 [&_.social-icon]:place-items-center [&_.social-icon]:rounded-full [&_.social-icon]:border [&_.social-icon]:border-white/20 [&_.social-icon]:bg-white/5 [&_.social-icon]:text-white [&_.social-icon]:transition [&_.social-icon:hover]:-translate-y-1 [&_.social-icon:hover]:border-brand-yellow [&_.social-icon:hover]:bg-brand-yellow [&_.social-icon:hover]:text-brand-deep">
+            <p class="mt-5 text-xs font-bold uppercase tracking-[.1em] text-white/50">Follow us on</p>
+            <div class="footer-socials mt-3 flex flex-wrap gap-2.5 [&_.social-icon]:grid [&_.social-icon]:size-11 [&_.social-icon]:place-items-center [&_.social-icon]:rounded-full [&_.social-icon]:border [&_.social-icon]:border-white/20 [&_.social-icon]:bg-white/5 [&_.social-icon]:text-white [&_.social-icon]:transition [&_.social-icon:hover]:-translate-y-1 [&_.social-icon:hover]:border-brand-yellow [&_.social-icon:hover]:bg-brand-yellow [&_.social-icon:hover]:text-brand-deep">
               <a href="https://www.instagram.com/travelenfield.in" target="_blank" rel="noopener" aria-label="Instagram" class="social-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
               <a href="https://www.facebook.com/share/1U6md2aqrC/" target="_blank" rel="noopener" aria-label="Facebook" class="social-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.125-5.864 10.125-11.854z"/></svg></a>
               <a href="https://wa.me/919876543210" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
@@ -1038,6 +1055,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- ============ BACK TO TOP ============ -->
+  <button type="button" class="back-to-top fixed bottom-24 right-4 z-40 grid size-11 -translate-y-2 place-items-center rounded-full bg-brand-ink text-white opacity-0 shadow-xl pointer-events-none transition duration-200 [&.show]:translate-y-0 [&.show]:opacity-100 [&.show]:pointer-events-auto md:bottom-8" id="back-to-top" aria-label="Back to top"><i data-lucide="chevron-up"></i></button>
 
   <!-- ============ MOBILE BOTTOM NAV ============ -->
   <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Quick navigation">
