@@ -60,8 +60,15 @@ import {
   X,
 } from 'lucide';
 
-createIcons({
-  icons: {
+// Lucide keeps `data-lucide` on the SVG it creates. Before a later render,
+// clear that marker from completed SVGs so only the original <i> placeholders
+// are considered; otherwise Lucide attempts to create an icon named "svg".
+const renderIcons = (icons, root = document) => {
+  root.querySelectorAll('svg[data-lucide]').forEach(svg => svg.removeAttribute('data-lucide'));
+  createIcons({ icons, root });
+};
+
+renderIcons({
     Backpack,
     ArrowDown,
     ArrowRight,
@@ -118,7 +125,6 @@ createIcons({
     Volume2,
     VolumeX,
     X,
-  },
 });
 
 const dropdowns = [...document.querySelectorAll('.nav-dropdown')];
@@ -153,7 +159,7 @@ heroIntroMute?.addEventListener('click', () => {
   const icon = document.createElement('i');
   icon.setAttribute('data-lucide', muted ? 'volume-x' : 'volume-2');
   heroIntroMute.append(icon);
-  createIcons({ icons: { Volume2, VolumeX } });
+  renderIcons({ Volume2, VolumeX }, heroIntroMute);
 });
 if (heroIntro) {
   const headerEl = $('#header');
@@ -240,6 +246,30 @@ mobileDropdowns.forEach(dropdown => {
     if (!wasOpen) dropdown.classList.add('open');
   });
 });
+
+$$('.mobile-profile-trigger', menu).forEach(button => button.addEventListener('click', () => {
+  setMenu(false);
+  setLoginPopup(true);
+}));
+
+function syncMobileProfile() {
+  const loggedOut = $('#mobile-profile-logged-out');
+  const loggedIn = $('#mobile-profile-logged-in');
+  const nameEl = $('#mobile-profile-name');
+  const avatarEl = $('#mobile-profile-avatar');
+  if (!loggedIn || !loggedOut) return;
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem('travelenfield-user') || 'null'); } catch {}
+  const authed = Boolean(user);
+  loggedIn.classList.toggle('hidden', !authed);
+  loggedOut.classList.toggle('hidden', authed);
+  if (authed) {
+    if (nameEl) nameEl.textContent = (user.name || 'Traveller').split(' ')[0];
+    if (avatarEl) avatarEl.textContent = (user.name || 'T').charAt(0).toUpperCase();
+  }
+}
+syncMobileProfile();
+document.addEventListener('travelenfield:login', syncMobileProfile);
 
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && menu?.classList.contains('open')) setMenu(false);
@@ -357,7 +387,7 @@ function setReelIcon(button, name) {
   const icon = document.createElement('i');
   icon.setAttribute('data-lucide', name);
   button.append(icon);
-  createIcons({ icons: { Play, Pause, Volume2, VolumeX } });
+  renderIcons({ Play, Pause, Volume2, VolumeX }, button);
 }
 
 function wireReelControls(card) {
@@ -569,6 +599,21 @@ function syncAuthButton() {
 }
 syncAuthButton();
 document.addEventListener('travelenfield:login', syncAuthButton);
+
+async function restoreSession() {
+  try {
+    const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
+    if (response.ok) {
+      const result = await response.json();
+      if (result.user) localStorage.setItem('travelenfield-user', JSON.stringify(result.user));
+    } else {
+      localStorage.removeItem('travelenfield-user');
+    }
+  } catch { /* Server unreachable — keep cached session for display. */ }
+  syncAuthButton();
+  syncMobileProfile();
+}
+restoreSession();
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

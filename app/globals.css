@@ -159,8 +159,21 @@
      autoplay-muted <video> elements — see main.js reelCardHtml). The cards
      are 9:16, the full-screen viewer is edge-to-edge; the video covers
      either box with object-fit:cover. */
-  .vibe-reel-track { scrollbar-width: none; }
+  .vibe-reels { padding: 28px 0; }
+  .vibe-reels-title { margin: 0 20px 20px; color: #1f1f1f; font-family: var(--font-heading); font-size: 20px; font-weight: 500; line-height: 28px; }
+  .vibe-reels-viewport { overflow: hidden; padding: 0 20px; }
+  .vibe-reel-track { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .vibe-reel-card { position: relative; flex: 0 0 208px; width: 208px; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 16px; background: #000; scroll-snap-align: start; }
+  .vibe-reel-card > video { width: 100%; height: 100%; object-fit: cover; }
   .vibe-reel-track::-webkit-scrollbar { display: none; }
+
+  @media (min-width: 768px) {
+    .vibe-reels { padding: 40px 0; }
+    .vibe-reels-title { margin: 0 80px 24px; font-size: 30px; line-height: 36px; text-align: center; }
+    .vibe-reels-viewport { padding: 0 80px; }
+    .vibe-reel-track { gap: 24px; }
+    .vibe-reel-card { flex-basis: 302px; width: 302px; }
+  }
 
   /* Full-screen mobile reels viewer — edge-to-edge, cover-fit video */
   .reels-viewer { @apply invisible fixed inset-0 z-[200] bg-black opacity-0 transition-opacity duration-200; }
@@ -382,6 +395,33 @@
   .legacy-document-bridge #header-nav .nav-dropdown:hover .nav-menu-right {
     transform: translate(0, 0);
   }
+}
+
+.legacy-document-bridge .back-to-top {
+  position: fixed;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: #4d4d43;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+@media (max-width: 1099px) {
+  .legacy-document-bridge .back-to-top {
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    left: 50%;
+    min-height: 36px;
+    padding: 0 16px;
+  }
+  .legacy-document-bridge .back-to-top.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+  .legacy-document-bridge .back-to-top svg { width: 19px; height: 19px; }
 }
 
 /* Capture-style category listings: fixed filter rail plus a dense two-column

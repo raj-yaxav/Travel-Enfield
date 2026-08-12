@@ -6,6 +6,7 @@ import { connectDatabase } from '../../../lib/mongodb';
 import { Destination, Trip, Category, Blog, Page, Enquiry, User, Hotel } from '../../../server/models';
 import { destinations, trips, categoryData, blogs, pageData, hotels } from '../../../server/seed';
 import { sendOtpEmail } from '../../../server/mailer';
+import { USER_SESSION_COOKIE, createUserSessionToken, getCurrentUserId } from '../../../lib/user-auth';
 
 const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
@@ -62,7 +63,8 @@ export async function GET(request, context) {
       || pathname === 'pages'
       || pathname === 'hotels'
       || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]))
-      || (route[0] === 'profile' && Boolean(route[1]));
+      || (route[0] === 'profile' && Boolean(route[1]))
+      || pathname === 'auth/me';
     if (!knownReadRoute) return json({ error: 'API route not found' }, 404);
     await connectDatabase();
     const url = new URL(request.url);
@@ -99,6 +101,13 @@ export async function GET(request, context) {
       const item = await Page.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Page not found' }, 404);
     }
+    if (pathname === 'auth/me') {
+      const userId = getCurrentUserId(request);
+      if (!userId) return json({ error: 'Not authenticated' }, 401);
+      const user = await User.findById(userId).lean().catch(() => null);
+      if (!user) return json({ error: 'User not found' }, 404);
+      return json({ user: { id: user._id, name: user.name, email: user.email, phone: user.phone } });
+    }
     if (pathname === 'hotels') {
       const query = {};
       const destination = url.searchParams.get('destination');
@@ -110,6 +119,9 @@ export async function GET(request, context) {
       return item ? json(item) : json({ error: 'Hotel not found' }, 404);
     }
     if (route[0] === 'profile' && route[1]) {
+      const userId = getCurrentUserId(request);
+      if (!userId) return json({ error: 'Not authenticated' }, 401);
+      if (userId !== route[1]) return json({ error: 'Forbidden' }, 403);
       const user = await User.findById(route[1]).lean().catch(() => null);
       if (!user) return json({ error: 'Profile not found' }, 404);
       const enquiries = await Enquiry.find({
@@ -150,9 +162,22 @@ export async function POST(request, context) {
     if (pathname === 'auth/login') {
       const user = await User.findOne({ email: body.email });
       const valid = user && await bcrypt.compare(body.password || '', user.passwordHash);
-      return valid
-        ? json({ ok: true, user: { id: user.id, name: user.name, email: user.email } })
-        : json({ error: 'Invalid email or password' }, 401);
+      if (!valid) return json({ error: 'Invalid email or password' }, 401);
+      const { token, maxAge } = createUserSessionToken(user.id);
+      const response = json({ ok: true, user: { id: user.id, name: user.name, email: user.email } });
+      response.cookies.set(USER_SESSION_COOKIE, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge,
+      });
+      return response;
+    }
+    if (pathname === 'auth/logout') {
+      const response = json({ ok: true });
+      response.cookies.delete(USER_SESSION_COOKIE);
+      return response;
     }
     if (pathname === 'auth/request-otp') {
       const cleanName = (body.name || '').trim();
@@ -209,7 +234,16 @@ export async function POST(request, context) {
       user.passwordHash = await bcrypt.hash(password, 10);
       user.otpVerifiedAt = undefined;
       await user.save();
-      return json({ ok: true, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
+      const { token, maxAge } = createUserSessionToken(user.id);
+      const response = json({ ok: true, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
+      response.cookies.set(USER_SESSION_COOKIE, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge,
+      });
+      return response;
     }
     return json({ error: 'API route not found' }, 404);
   } catch (error) {
