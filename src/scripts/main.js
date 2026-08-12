@@ -1,4 +1,5 @@
 import './enquiry-popup.js';
+import { setLoginPopup } from './login-popup.js';
 import {
   createIcons,
   Backpack,
@@ -39,6 +40,7 @@ import {
   Plane,
   PlaneTakeoff,
   Play,
+  Pause,
   ReceiptText,
   RefreshCcw,
   ShieldCheck,
@@ -98,6 +100,7 @@ createIcons({
     Plane,
     PlaneTakeoff,
     Play,
+    Pause,
     ReceiptText,
     RefreshCcw,
     ShieldCheck,
@@ -134,6 +137,35 @@ const announcement = $('#announcement-bar');
 $('#announcement-close')?.addEventListener('click', () => {
   announcement?.remove();
 });
+
+// Video intro hero: mute toggle, and header switches from a transparent
+// overlay to its normal solid styling once scrolled past the video.
+const heroIntro = $('.hero-intro-video');
+const heroIntroVideo = $('video', heroIntro);
+const heroIntroMute = $('#hero-intro-mute');
+heroIntroMute?.addEventListener('click', () => {
+  if (!heroIntroVideo) return;
+  const muted = !heroIntroVideo.muted;
+  heroIntroVideo.muted = muted;
+  heroIntroMute.setAttribute('aria-pressed', String(!muted));
+  heroIntroMute.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+  heroIntroMute.replaceChildren();
+  const icon = document.createElement('i');
+  icon.setAttribute('data-lucide', muted ? 'volume-x' : 'volume-2');
+  heroIntroMute.append(icon);
+  createIcons({ icons: { Volume2, VolumeX } });
+});
+if (heroIntro) {
+  const headerEl = $('#header');
+  const toggleHeaderSolid = () => {
+    if (!headerEl) return;
+    const rect = heroIntro.getBoundingClientRect();
+    headerEl.classList.toggle('header-solid', rect.bottom <= headerEl.offsetHeight);
+  };
+  window.addEventListener('scroll', toggleHeaderSolid, { passive: true });
+  window.addEventListener('resize', toggleHeaderSolid, { passive: true });
+  toggleHeaderSolid();
+}
 
 // Mobile navigation chrome follows reading direction: hide while moving down,
 // return immediately when the traveller scrolls up or reaches the page top.
@@ -287,113 +319,105 @@ function wireRail(trackSelector, prevSelector, nextSelector, itemSelector, fallb
 }
 
 wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
-wireRail('#story-reel', '#story-prev', '#story-next', '.story-frame', 240);
+wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
 wireRail('#vibe-reel-track', '#vibe-prev', '#vibe-next', '.vibe-reel-card', 240);
 
-// Instagram reels shown in the homepage "Travel Vibes" rail and the
-// full-screen mobile reels viewer. Source: reels.txt. Third-party reels
-// (not the client's own account) carry a "View on Instagram" fallback link
-// since those embeds break if the source account goes private or deletes
-// the post.
+// Self-hosted reels shown in the homepage "Travel Vibes" rail and the
+// full-screen mobile reels viewer. Order matches the Cloudinary upload
+// result (reels-upload-result.json); each slot's public id points to the
+// renamed Cloudinary URL.
 const REELS = [
-  { id: 'Da2Qjpji2Nt', kind: 'reel' },
-  { id: 'Da2ILbdiYnn', kind: 'reel' },
-  { id: 'C5tIhf8S1Uh', kind: 'reel' },
-  { id: 'C0ojfJKJX5P', kind: 'reel' },
-  { id: 'C2JSUlzIZFn', kind: 'reel' },
-  { id: 'C1yTD4DJ0Lj', kind: 'reel' },
-  { id: 'C1mRHYAJ8X6', kind: 'reel' },
-  { id: 'C5WN4HMRgrs', kind: 'reel' },
-  { id: 'C0rfnHIoI0m', kind: 'post' },
+  { name: 'manali-snowfall', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532497/travelenfield/reels/travel-reel-1.mp4' },
+  { name: 'goa-beach', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532479/travelenfield/reels/manali-snowfall.mp4' },
+  { name: 'singapore-cruise', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532481/travelenfield/reels/goa-beach.mp4' },
+  { name: 'spiti-valley', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532491/travelenfield/reels/singapore-city.mp4' },
+  { name: 'nightlife-beach-party', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532486/travelenfield/reels/spiti-valley.mp4' },
+  { name: 'singapore-city', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532488/travelenfield/reels/nightlife-beach-party.mp4' },
+  { name: 'travel-reel-1', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532483/travelenfield/reels/singapore-cruise.mp4' },
 ];
-const instagramPath = item => (item.kind === 'post' ? 'p' : 'reel');
-const instagramEmbedSrc = item => `https://www.instagram.com/${instagramPath(item)}/${item.id}/embed`;
 
-// Instagram's embed iframe always renders its own header (avatar/username/
-// "View profile") and footer (caption link, like/comment icons, comment
-// box) around the video — there is no official parameter to hide them
-// without the oEmbed API. Since we're told not to use that, we crop it
-// instead: render the iframe at Instagram's natural width, shift it up to
-// hide the header, clip everything below the video with overflow:hidden,
-// then scale the whole cropped window down to fit the actual card size.
-const IG_NATIVE_WIDTH = 340;
-const IG_HEADER_HEIGHT = 54;
-const IG_VISIBLE_HEIGHT = 424;
+const reelVideoHtml = url => `<video class="block size-full object-cover" src="${url}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="Travel reel"></video>`;
+
+const reelControlsHtml = () => `
+  <div class="reel-controls">
+    <button type="button" class="reel-btn" data-reel-play aria-label="Pause video"><i data-lucide="pause"></i></button>
+    <button type="button" class="reel-btn" data-reel-mute aria-label="Unmute video"><i data-lucide="volume-x"></i></button>
+  </div>`;
 
 function reelCardHtml(item, { full = false } = {}) {
-  const postClass = item.kind === 'post' ? ' is-post' : '';
-  const embed = `<div class="ig-crop"><iframe src="${instagramEmbedSrc(item)}" loading="lazy" allowtransparency="true" scrolling="no" title="Traveller reel"></iframe></div>`;
+  const video = reelVideoHtml(item.url);
   if (full) {
-    // .reels-slide spans the full viewport width (for vertical centering);
-    // .reels-slide-frame is the fixed-width card the crop is scaled against.
-    return `<div class="reels-slide"><div class="reels-slide-frame${postClass}">${embed}</div></div>`;
+    return `<div class="reels-slide"><div class="reels-slide-frame">${video}</div>${reelControlsHtml()}</div>`;
   }
-  return `<div class="vibe-reel-card${postClass}">${embed}</div>`;
+  return `<div class="vibe-reel-card">${video}${reelControlsHtml()}</div>`;
 }
 
-function cropInstagramEmbed(frame) {
-  const crop = frame.querySelector('.ig-crop');
-  const iframe = crop?.querySelector('iframe');
-  if (!crop || !iframe) return;
-  iframe.style.width = `${IG_NATIVE_WIDTH}px`;
-  iframe.style.height = `${IG_HEADER_HEIGHT + IG_VISIBLE_HEIGHT + 300}px`;
-  iframe.style.marginTop = `-${IG_HEADER_HEIGHT}px`;
-  iframe.style.border = '0';
-  // Center the native-size crop window over the frame, then scale it up by
-  // whichever factor is larger so it fully covers the frame in both
-  // dimensions (like object-fit:cover) — no letterboxing, whatever the
-  // card's aspect ratio is.
-  crop.style.width = `${IG_NATIVE_WIDTH}px`;
-  crop.style.height = `${IG_VISIBLE_HEIGHT}px`;
-  crop.style.marginLeft = `${-IG_NATIVE_WIDTH / 2}px`;
-  crop.style.marginTop = `${-IG_VISIBLE_HEIGHT / 2}px`;
-  const resize = () => {
-    const scale = Math.max(frame.clientWidth / IG_NATIVE_WIDTH, frame.clientHeight / IG_VISIBLE_HEIGHT);
-    crop.style.transform = `scale(${scale})`;
+function setReelIcon(button, name) {
+  button.replaceChildren();
+  const icon = document.createElement('i');
+  icon.setAttribute('data-lucide', name);
+  button.append(icon);
+  createIcons({ icons: { Play, Pause, Volume2, VolumeX } });
+}
+
+function wireReelControls(card) {
+  const video = card.querySelector('video');
+  const playBtn = card.querySelector('[data-reel-play]');
+  const muteBtn = card.querySelector('[data-reel-mute]');
+  if (!video || !playBtn || !muteBtn) return;
+  playBtn.addEventListener('click', () => { if (video.paused) video.play()?.catch(() => {}); else video.pause(); });
+  muteBtn.addEventListener('click', () => { video.muted = !video.muted; });
+  const sync = () => {
+    setReelIcon(playBtn, video.paused ? 'play' : 'pause');
+    playBtn.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+    setReelIcon(muteBtn, video.muted ? 'volume-x' : 'volume-2');
+    muteBtn.setAttribute('aria-label', video.muted ? 'Unmute video' : 'Mute video');
   };
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
+  video.addEventListener('play', sync);
+  video.addEventListener('pause', sync);
+  video.addEventListener('volumechange', sync);
+  video.addEventListener('loadeddata', sync);
+  sync();
 }
 
 $$('[data-reels-embed-target]').forEach(target => {
   const full = target.hasAttribute('data-reels-full');
   target.innerHTML = REELS.map(item => reelCardHtml(item, { full })).join('');
-  $$(full ? '.reels-slide-frame' : '.vibe-reel-card', target).forEach(cropInstagramEmbed);
+  $$(full ? '.reels-slide' : '.vibe-reel-card', target).forEach(wireReelControls);
 });
 
-// Instagram's embed has no postMessage API to pause/mute it remotely, so the
-// only way to stop a playing reel's audio once it scrolls off-screen is to
-// force its iframe to reload — that tears down whatever was playing inside.
-function stopReelAudio(card) {
-  const iframe = card.querySelector('.ig-crop iframe');
-  const src = iframe?.getAttribute('src');
-  if (!iframe || !src) return;
-  iframe.setAttribute('src', 'about:blank');
-  requestAnimationFrame(() => iframe.setAttribute('src', src));
-}
-
+// Muted autoplay is allowed by browsers, so every reel starts on its own.
+// Only the on-screen videos keep playing; off-screen ones pause to save
+// bandwidth (rail is horizontal, viewer is vertical full-screen).
 if ('IntersectionObserver' in window) {
-  const reelAudioObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => { if (!entry.isIntersecting) stopReelAudio(entry.target); });
-  }, { threshold: 0.5 });
-  $$('.vibe-reel-card, .reels-slide').forEach(card => reelAudioObserver.observe(card));
+  const reelPlayObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const video = entry.target.querySelector('video');
+      if (!video) return;
+      if (entry.isIntersecting) video.play()?.catch(() => {});
+      else video.pause();
+    });
+  }, { threshold: 0.4 });
+  $$('.vibe-reel-card, .reels-slide').forEach(card => reelPlayObserver.observe(card));
 }
 
 const reelsViewer = $('#reels-viewer');
 const reelsTrigger = $('[data-reels-trigger]');
 const reelsClose = $('#reels-viewer-close');
+const pauseAllReels = () => $$('video', reelsViewer || document).forEach(video => { video.pause(); video.currentTime = 0; });
 const openReelsViewer = () => {
   if (!reelsViewer) return;
   reelsViewer.classList.add('open');
   reelsViewer.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  reelsViewer.querySelector('video')?.play()?.catch(() => {});
 };
 const closeReelsViewer = () => {
   if (!reelsViewer) return;
   reelsViewer.classList.remove('open');
   reelsViewer.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  $$('.reels-slide', reelsViewer).forEach(stopReelAudio);
+  pauseAllReels();
 };
 reelsTrigger?.addEventListener('click', openReelsViewer);
 reelsClose?.addEventListener('click', closeReelsViewer);
@@ -530,9 +554,21 @@ headerSearchInput?.addEventListener('click',()=>setHeaderSearchOpen(true));
 document.addEventListener('click',event=>{if(!event.target.closest('.header-search'))setHeaderSearchOpen(false)});
 headerSearchInput?.addEventListener('keydown',event=>{if(event.key==='Escape'){setHeaderSearchOpen(false);headerSearchInput.blur()}});
 
-$('#login-btn')?.addEventListener('click', () => {
-  window.location.href = '/login';
-});
+function syncAuthButton() {
+  const btn = $('#login-btn');
+  if (!btn) return;
+  let user = null;
+  try { user = JSON.parse(localStorage.getItem('travelenfield-user') || 'null'); } catch {}
+  if (user) {
+    btn.textContent = 'My Profile';
+    btn.onclick = () => { window.location.href = '/profile'; };
+  } else {
+    btn.textContent = 'Login';
+    btn.onclick = () => setLoginPopup(true);
+  }
+}
+syncAuthButton();
+document.addEventListener('travelenfield:login', syncAuthButton);
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

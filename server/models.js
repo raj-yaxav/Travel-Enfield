@@ -44,6 +44,7 @@ const Enquiry = mongoose.models.Enquiry || mongoose.model('Enquiry', new mongoos
 }, options));
 const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema({
   name: String, email: { type: String, unique: true, lowercase: true }, phone: String, passwordHash: String,
+  otpHash: String, otpExpiresAt: Date, otpAttempts: { type: Number, default: 0 }, otpVerifiedAt: Date,
 }, options));
 
 export { Destination, Trip, Category, Hotel, Blog, Page, Enquiry, User };

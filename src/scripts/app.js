@@ -1,7 +1,8 @@
 import './enquiry-popup.js';
-import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Hotel, IndianRupee, KeyRound, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
+import { setLoginPopup } from './login-popup.js';
+import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
 
-const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Hotel, IndianRupee, KeyRound, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
+const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
 const mount = document.querySelector('#page-content');
 document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = '/images/brand/logo-navbar.png'; });
 const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
@@ -88,18 +89,13 @@ const tailwindMap = {
   '.review-trip': 'text-xs text-gray-500',
   '.read-more': 'font-extrabold text-brand-purple',
   '.journal-grid': 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
-  '.journal-card': 'overflow-hidden rounded-2xl border border-brand-purple/10 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg',
+  '.journal-card': 'overflow-hidden rounded-2xl border border-brand-purple/10 bg-white shadow-sm scale-95 transition-transform duration-150 ease-out hover:scale-100 focus-within:scale-100',
   '.journal-img': 'aspect-[1.35] overflow-hidden',
   '.journal-img img': 'size-full object-cover',
   '.journal-body': 'p-4',
   '.journal-body h3': 'mb-2 font-heading text-sm font-extrabold text-brand-deep',
   '.journal-body small': 'text-xs text-gray-500',
   '.journal-cta': 'mt-3 inline-flex items-center gap-1 text-sm font-extrabold text-brand-purple',
-  '.story-reel': 'grid auto-cols-[calc((100%_-_64px)/5)] grid-flow-col gap-4 overflow-x-auto pb-4 [scroll-snap-type:x_mandatory] max-lg:auto-cols-[calc((100%_-_32px)/3)] max-md:auto-cols-[62vw]',
-  '.story-frame': 'relative aspect-[.74] snap-start overflow-hidden rounded-3xl border border-white/20 bg-brand-deep shadow-2xl',
-  '.story-frame img': 'absolute inset-0 size-full object-cover',
-  '.story-play': 'absolute left-1/2 top-1/2 z-10 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-brand-yellow text-brand-purple',
-  '.story-frame small': 'absolute inset-x-5 bottom-5 z-10 font-extrabold text-white',
   '.side-card,.trip-enquiry-card,.form-card,.custom-form-wrap': 'rounded-2xl border border-brand-purple/10 bg-white p-6 shadow-xl',
   '.form-grid': 'grid grid-cols-2 gap-4 max-sm:grid-cols-1',
   '.field': 'grid gap-1.5',
@@ -210,7 +206,16 @@ const tailwindMap = {
   '.about-close': 'absolute right-3 top-3 grid size-11 place-items-center rounded-full border border-brand-purple/10 bg-white text-brand-purple',
   '.about-kicker': 'inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-brand-purple',
   '.about-dialog h2': 'mb-4 mt-3 font-heading text-2xl font-extrabold text-brand-deep',
-  '.about-dialog p': 'mb-3.5 text-sm leading-relaxed text-gray-600'
+  '.about-dialog p': 'mb-3.5 text-sm leading-relaxed text-gray-600',
+  '.profile-hero': 'bg-brand-surface py-12 md:py-16',
+  '.profile-hero-row': 'flex flex-wrap items-center gap-5',
+  '.profile-avatar': 'grid size-16 shrink-0 place-items-center rounded-full bg-brand-purple font-heading text-2xl font-extrabold text-white md:size-20 md:text-3xl',
+  '.profile-hero-copy': 'min-w-0 flex-1',
+  '.profile-hero-copy h1': 'font-heading text-2xl font-extrabold text-brand-deep md:text-3xl',
+  '.profile-hero-copy p': 'mt-1 text-sm text-gray-500',
+  '.profile-trips': 'py-12 md:py-16',
+  '.profile-trip-grid': 'mt-6',
+  '.profile-trip-status': 'rounded-full bg-brand-purple/10 px-3 py-1 text-xs font-bold capitalize text-brand-purple'
 };
 function applyTailwindStyles(root = document) {
   for (const [selector, classes] of Object.entries(tailwindMap)) {
@@ -259,6 +264,17 @@ if(backToTop){
   toggleBackToTop();
 }
 
+function syncAuthButton(){
+  const btn=document.querySelector('#login-btn');
+  if(!btn)return;
+  let user=null;
+  try{user=JSON.parse(localStorage.getItem('travelenfield-user')||'null')}catch{}
+  if(user){btn.textContent='My Profile';btn.onclick=()=>{window.location.href='/profile'};}
+  else{btn.textContent='Login';btn.onclick=()=>setLoginPopup(true);}
+}
+syncAuthButton();
+document.addEventListener('travelenfield:login',syncAuthButton);
+
 document.querySelectorAll('.footer-col').forEach(col=>{
   const toggle=col.querySelector('.footer-col-toggle');
   toggle?.addEventListener('click',()=>{
@@ -271,7 +287,7 @@ function hero({ title, description, image = '/images/hero.jpg', eyebrow = 'Trave
   return `<section class="page-hero"><img src="${esc(image)}" alt="" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
 }
 function categoryBanner(image, title, description, crumbLabel) {
-  return `<section class="relative aspect-[2.25/1] w-full max-w-full overflow-hidden md:aspect-[4.8/1]"><img src="${esc(image)}" alt="${esc(title)}" class="absolute inset-0 h-full w-full object-cover" /></section>
+  return `<section class="w-full max-w-full overflow-hidden"><img src="${esc(image)}" alt="${esc(title)}" class="block h-auto w-full object-contain max-sm:min-h-[150px] max-sm:object-cover max-sm:object-[43%_center]" /></section>
   <div class="mb-4 px-5 md:px-20"><nav class="flex items-center gap-2 text-xs font-normal text-[#5A5A5A]" aria-label="Breadcrumb"><a href="/" class="hover:text-brand-purple">Home</a><span>/</span><span>${esc(crumbLabel)}</span></nav></div>
   <div class="relative w-full px-5 md:px-20"><h1 class="font-heading text-2xl font-extrabold text-brand-deep md:text-3xl">${esc(title)}</h1><p class="mt-1 text-sm font-normal leading-relaxed text-[#5A5A5A] md:text-base">${esc(description)}</p></div>`;
 }
@@ -380,6 +396,17 @@ function reasonsSection() {
   return `<section class="reasons-section h-fit w-full bg-brand-surface px-8 py-14 md:px-0 md:py-16"><h2 class="mb-6 text-center font-heading text-xl font-medium text-brand-deep md:text-3xl">Reasons To Make Us Your Travel Bestie</h2><div class="flex flex-wrap justify-center gap-4 md:gap-6">${REASONS_CARDS.map(([iconName, title, body]) => `<div class="flex aspect-[3/1] h-28 items-center rounded-2xl bg-white px-3 md:h-40 md:min-w-96 md:basis-1/4 md:items-start md:px-6"><div class="my-auto flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-2xl bg-brand-purple/10 text-brand-purple md:h-[70px] md:w-[70px]">${icon(iconName, 'size-6 md:size-8')}</div><div class="flex flex-col gap-3 p-3 md:gap-4 md:p-6"><h3 class="text-sm font-medium text-brand-deep md:text-base">${esc(title)}</h3><p class="text-xs font-normal leading-relaxed text-gray-500 md:text-sm">${esc(body)}</p></div></div>`).join('')}</div></section>`;
 }
 
+const ACTIVITY_CARDS = [
+  ['/images/woman-adventure-traveller.jpg', 'mountain-snow', 'Mountain Diaries', 'Trek through stunning trails and embrace the beauty of nature.'],
+  ['/images/bike-trip-captain.jpg', 'bike', 'Meet The Captains', 'Ride with our expert captains and feel the thrill of the road.'],
+  ['/images/destinations/spiti.jpg', 'footprints', 'Spiti, Day By Day', 'Experience the raw beauty and culture of Spiti valley.'],
+  ['/images/social-banner.jpg', 'sparkles', 'First Timers Friendly', 'Perfect experiences for first-time travellers, crafted with care.'],
+];
+
+function activitiesSection() {
+  return `<section class="activities py-16 md:py-20" id="activities" aria-labelledby="activities-title"><div class="container"><div class="section-header"><div><span class="section-kicker normal-case italic text-base font-medium tracking-normal text-brand-purple">Explore. Experience. Enrich.</span><h2 class="section-title" id="activities-title">Our <span class="text-brand-purple">Activities</span></h2></div><div class="destination-scroll-controls"><button type="button" id="activities-prev" aria-label="Previous activities">${icon('chevron-left')}</button><button type="button" id="activities-next" aria-label="Next activities">${icon('chevron-right')}</button></div></div><p class="section-subtitle">From breathtaking landscapes to thrilling adventures, discover the experiences that make every journey unforgettable.</p><div class="activities-track" id="activities-track">${ACTIVITY_CARDS.map(([image, iconName, title, body]) => `<a href="/reviews" class="activity-card"><div class="activity-media"><img src="${esc(image)}" alt="${esc(title)}" loading="lazy" /><span class="activity-play">${icon('play')}</span></div><div class="activity-body"><span class="activity-icon">${icon(iconName)}</span><div><h3>${esc(title)}</h3><p>${esc(body)}</p></div>${icon('arrow-right', 'activity-arrow')}</div></a>`).join('')}</div><div class="mt-9 text-center"><a href="/reviews" class="btn btn-outline-purple">View All Activities ${icon('arrow-right')}</a></div></div></section>`;
+}
+
 function bikeDestinationsStrip(destinations) {
   const domestic = (destinations || []).filter(d => d.category === 'domestic').slice(0, 6);
   const international = (destinations || []).filter(d => d.category === 'international').slice(0, 6);
@@ -449,6 +476,108 @@ function wireBtFilters() {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * Hotels listing (/hotels) reuses the exact same banner + sticky chips
+ * + filter panel + two-column card grid layout as the trip category
+ * pages above (categoryBanner/bikeChips/bikeTripCard family), just with
+ * hotel data and hotel-relevant filters (star rating, nightly budget).
+ * ------------------------------------------------------------------ */
+const HOTEL_FILTER_ROWS = [
+  ['star', 'Star Rating', 'star'],
+  ['indian-rupee', 'Budget', 'budget'],
+];
+
+function hotelListingCard(hotel) {
+  const off = hotel.oldPricePerNight ? Math.max(0, hotel.oldPricePerNight - hotel.pricePerNight) : 0;
+  return `<a class="h-fit cursor-pointer" href="/hotels/${esc(hotel.slug)}"><div class="relative flex min-h-[7.75rem] w-full flex-row rounded-2xl shadow-md transition-transform duration-300 hover:scale-105 md:min-h-[9.125rem]"><div class="relative w-[35%] shrink-0 overflow-hidden rounded-l-2xl"><img src="${esc(hotel.image)}" alt="${esc(hotel.name)}" loading="lazy" class="absolute inset-0 h-full w-full object-cover"></div><div class="flex w-[65%] flex-col justify-center gap-1 rounded-r-2xl bg-white px-2 py-2 md:py-4"><div class="hidden text-xs font-normal text-[#5A5A5A] md:block">${icon('map-pin')} ${esc(hotel.location)}</div><div class="line-clamp-2 font-heading text-base font-medium leading-tight text-[#0f2417]">${esc(hotel.name)}</div><div class="flex items-center gap-2"><div class="text-sm font-medium text-[#0f2417] md:text-base">${money(hotel.pricePerNight)}</div>${hotel.oldPricePerNight ? `<div class="relative text-[0.625rem] font-medium text-[#0f2417] md:text-xs"><div class="absolute top-1.5 h-[2px] w-full bg-[#f61b00]"></div>${money(hotel.oldPricePerNight)}</div>` : ''}${off ? `<div class="relative text-[0.625rem] font-medium text-[#f61b00] md:text-xs">${money(off)} Off</div>` : ''}</div><div class="block text-xs font-normal text-[#5A5A5A] md:hidden">${icon('map-pin')} ${esc(hotel.location)}</div><div class="line-clamp-1 text-xs font-normal text-[#5A5A5A] md:text-sm">${icon('star')} ${esc(hotel.rating)} rating · ${esc(hotel.star)}★ hotel</div></div></div></a>`;
+}
+
+function hotelFilterOptions(stays) {
+  const stars = [...new Set((stays || []).map(h => Math.round(h.star || 4)))].sort((a, b) => b - a).map(s => [String(s), `${s} Star`]);
+  const budgets = [
+    ['under-8000', 'Under ₹8,000'],
+    ['8000-15000', '₹8,000 – ₹15,000'],
+    ['above-15000', 'Above ₹15,000'],
+  ];
+  return { stars, budgets };
+}
+
+function hotelFilterPanel(stays, mobile = false) {
+  const { stars, budgets } = hotelFilterOptions(stays);
+  const optionsFor = { star: stars, budget: budgets };
+  const chip = (group, value, label) => `<button type="button" class="bt-filter-chip h-8 flex-shrink-0 rounded-full border border-[#D8D8D8] bg-white px-4 text-sm font-medium text-black transition-colors hover:bg-[#ECFFF5]" data-filter-group="${esc(group)}" data-filter-value="${esc(value)}">${esc(label)}</button>`;
+  const rows = HOTEL_FILTER_ROWS.map(([iconName, label, group]) => {
+    const options = optionsFor[group] || [];
+    return `<div class="border-b border-[#EAEAEA] last:border-0">
+      <button type="button" class="bt-filter-toggle flex w-full cursor-pointer items-center justify-between py-4 text-sm font-normal text-[#1F1F1F]" aria-expanded="false"><span class="inline-flex items-center gap-2">${icon(iconName, 'size-4 text-brand-purple')} ${esc(label)}</span>${icon('chevron-down', 'bt-filter-chevron size-4 text-[#1F1F1F] transition-transform')}</button>
+      <div class="bt-filter-options hidden flex-wrap gap-2 pb-4">${options.length ? options.map(([v, l]) => chip(group, v, l)).join('') : '<span class="text-xs text-[#5A5A5A]">No options available.</span>'}</div>
+    </div>`;
+  }).join('');
+  const body = `<div class="flex items-center justify-between"><div class="flex items-center gap-2">${icon('sliders-horizontal', 'size-4 text-brand-purple')}<strong class="font-heading text-base font-extrabold text-brand-deep">Filters</strong></div><button type="button" class="bt-clear-filters text-xs font-medium text-brand-purple">Clear</button></div><div class="my-auto mt-3 h-px bg-gradient-to-r from-[#FDFDFD] via-[#EAEAEA] to-[#FDFDFD]"></div><div>${rows}</div>`;
+  if (mobile) return `<div class="bt-mobile-filter-panel hidden rounded-2xl border px-6 py-5 shadow-md">${body}</div>`;
+  return `<aside class="sticky top-52 ml-20 hidden h-fit w-1/4 rounded-2xl border px-6 py-5 shadow-md min-[1100px]:block">${body}</aside>`;
+}
+
+function wireHotelFilters() {
+  const cards = Array.from(document.querySelectorAll('.bt-hotel-card-wrap'));
+  const chips = Array.from(document.querySelectorAll('.bt-dest-chip'));
+  const filterChips = Array.from(document.querySelectorAll('.bt-filter-chip'));
+  const state = { dest: 'all', star: null, budget: null };
+  const setChip = (chip, on) => {
+    chip.classList.toggle('border-[#008342]', on);
+    chip.classList.toggle('bg-[#ECFFF5]', on);
+    chip.classList.toggle('border-[#D8D8D8]', !on);
+    chip.classList.toggle('bg-white', !on);
+  };
+  const inBudget = (key, price) => {
+    if (key === 'under-8000') return price < 8000;
+    if (key === '8000-15000') return price >= 8000 && price <= 15000;
+    if (key === 'above-15000') return price > 15000;
+    return true;
+  };
+  const applyFilters = () => {
+    cards.forEach(card => {
+      let visible = true;
+      if (state.dest !== 'all' && card.dataset.dest !== state.dest) visible = false;
+      if (state.star && card.dataset.star !== state.star) visible = false;
+      if (state.budget && !inBudget(state.budget, Number(card.dataset.price || 0))) visible = false;
+      card.hidden = !visible;
+    });
+  };
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    chips.forEach(c => setChip(c, c === chip));
+    state.dest = chip.dataset.btDest;
+    applyFilters();
+  }));
+  filterChips.forEach(chip => chip.addEventListener('click', () => {
+    const group = chip.dataset.filterGroup;
+    const value = chip.dataset.filterValue;
+    state[group] = state[group] === value ? null : value;
+    document.querySelectorAll(`.bt-filter-chip[data-filter-group="${group}"]`).forEach(c => setChip(c, c.dataset.filterValue === state[group]));
+    applyFilters();
+  }));
+  document.querySelectorAll('.bt-filter-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const options = toggle.nextElementSibling;
+      const nowHidden = options.classList.toggle('hidden');
+      options.classList.toggle('flex', !nowHidden);
+      toggle.setAttribute('aria-expanded', String(!nowHidden));
+      toggle.querySelector('.bt-filter-chevron')?.classList.toggle('rotate-180', !nowHidden);
+    });
+  });
+  document.querySelectorAll('.bt-clear-filters').forEach(btn => btn.addEventListener('click', () => {
+    state.dest = 'all'; state.star = null; state.budget = null;
+    chips.forEach(c => setChip(c, c.dataset.btDest === 'all'));
+    filterChips.forEach(c => setChip(c, false));
+    applyFilters();
+  }));
+  const hotelMobileToggle = document.querySelector('.bt-mobile-filter-toggle');
+  const hotelMobilePanel = document.querySelector('.bt-mobile-filter-panel');
+  if (hotelMobileToggle && hotelMobilePanel) {
+    hotelMobileToggle.addEventListener('click', () => { const open = hotelMobilePanel.classList.toggle('hidden'); hotelMobileToggle.setAttribute('aria-expanded', String(!open)); });
+  }
+}
+
 const REVIEW_POOL = [
   { image: '/images/reviews/yash.webp', name: 'Yash', text: 'The trip was well-planned and perfectly executed. Great coordination, smooth travel, comfortable stay, and beautiful locations. Every moment was enjoyable and stress-free. Highly recommended for anyone looking for a professional and memorable travel experience.', trips: ['leh-ladakh-bike-trip'] },
   { image: '/images/reviews/dishant-soni.webp', name: 'Dishant Soni', text: 'Breathtaking Spiti – A Journey to Remember. Just returned from an incredible trip to Spiti Valley, and it was everything I hoped for and more. The landscapes were absolutely surreal—from high mountain passes to ancient monasteries and serene villages, every moment felt like a postcard come to life.', trips: ['spiti-valley-road-trip'] },
@@ -461,14 +590,6 @@ const reviewsForTrips = trips => {
   const matched = REVIEW_POOL.filter(r => r.trips.some(s => slugs.has(s)));
   return (matched.length ? matched : REVIEW_POOL).map(r => [r.image, r.name, r.text]);
 };
-
-const HOMEPAGE_STORIES = [
-  ['/images/woman-adventure-traveller.jpg', 'Mountain diaries', 'TravelEnfield traveller on a mountain journey'],
-  ['/images/bike-trip-captain.jpg', 'Meet the captains', 'TravelEnfield bike trip captain on a Himalayan route'],
-  ['/images/destinations/spiti.jpg', 'Spiti, day by day', 'Group crossing a high mountain pass in Spiti'],
-  ['/images/destinations/bali.jpg', 'First time abroad', 'Travellers on a Bali island departure'],
-  ['/images/social-banner.jpg', 'Campfire nights', 'Travellers around a Himalayan campsite at night'],
-];
 
 const GENERIC_FAQ = [
   { question: 'What is the typical group size for TravelEnfield trips?', answer: 'Our group trips typically have 15–25 travellers. We keep the groups intimate enough for meaningful connections but large enough for a vibrant community experience.' },
@@ -486,9 +607,6 @@ function reviewsSection(reviews = HOMEPAGE_REVIEWS) {
   return `<section class="reviews section bg-brand-surface py-12 md:py-16" id="reviews"><div class="container"><div class="section-header"><h2 class="section-title">Reviews From Our Travellers</h2><div class="destination-scroll-controls"><button type="button" id="review-prev" aria-label="Previous reviews">${icon('chevron-left')}</button><button type="button" id="review-next" aria-label="Next reviews">${icon('chevron-right')}</button></div></div><div class="review-carousel"><div class="review-track" id="review-track">${reviews.map(r => `<article class="review-card"><div class="review-img"><img src="${esc(r[0])}" alt="${esc(r[1])}" loading="lazy"></div><div class="review-body"><div class="review-stars">★★★★★</div><p class="review-text">${esc(r[2])} <a href="/reviews" class="read-more">Read more...</a></p><div class="review-author">${esc(r[1])}</div></div></article>`).join('')}</div></div></div></section>`;
 }
 
-function storiesSection() {
-  return `<section class="trip-stories section bg-gradient-to-br from-[#2b073d] via-brand-purple to-[#762899] py-16 text-white md:py-20" aria-labelledby="trip-stories-title"><div class="container"><div class="section-header"><div><span class="section-kicker">Unfiltered travel moments</span><h2 class="section-title" id="trip-stories-title">The Reality Of A Trip</h2></div><div class="destination-scroll-controls"><button id="story-prev" aria-label="Previous videos">${icon('chevron-left')}</button><button id="story-next" aria-label="Next videos">${icon('chevron-right')}</button></div></div><p class="section-subtitle">Watch what our trips actually look like, in the words of travellers who were there.</p><div class="story-reel" id="story-reel" aria-label="Traveller story previews">${HOMEPAGE_STORIES.map(s => `<a href="/reviews" class="story-frame"><img src="${esc(s[0])}" alt="${esc(s[2])}" loading="lazy" /><span class="story-play">${icon('play')}</span><small>${esc(s[1])}</small></a>`).join('')}</div></div></section>`;
-}
 
 function journalSection(blogs) {
   return `<section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title"><div class="container"><div class="section-header journal-heading"><div><span class="section-kicker">Plan with local context</span><h2 class="section-title" id="journal-title">Related Blogs</h2></div><a href="/blog" class="see-all-link">Read All <span>&rarr;</span></a></div><div class="journal-grid">${blogs.map(b => `<article class="journal-card"><a href="/blog/${esc(b.slug)}"><div class="journal-img"><img src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy" /></div><div class="journal-body"><h3>${esc(b.title)}</h3><small>${esc(b.category)} | ${esc(b.readTime)}</small><span class="journal-cta">Read Now ${icon('arrow-right')}</span></div></a></article>`).join('')}</div></div></section>`;
@@ -519,10 +637,11 @@ function wireCampaignSlider(root = mount) {
 
 async function appendSharedTravelSections() {
   const first = location.pathname.split('/').filter(Boolean)[0] || '';
-  if (['login', 'signup'].includes(first)) return;
+  if (['login', 'signup', 'profile'].includes(first)) return;
   if (!mount.querySelector('.campaign-slider')) mount.insertAdjacentHTML('beforeend', offersSliderSection());
   if (!mount.querySelector('.reasons-section')) mount.insertAdjacentHTML('beforeend', reasonsSection());
   if (!mount.querySelector('.review-track')) mount.insertAdjacentHTML('beforeend', reviewsSection());
+  if (!mount.querySelector('.activities')) mount.insertAdjacentHTML('beforeend', activitiesSection());
   if (!mount.querySelector('.journal-grid')) {
     const blogs = await api('/blogs').catch(() => []);
     if (blogs.length) mount.insertAdjacentHTML('beforeend', journalSection(blogs.slice(0, 5)));
@@ -541,7 +660,7 @@ function wireRails() {
     track.addEventListener('scroll', update, { passive: true }); window.addEventListener('resize', update, { passive: true }); update();
   };
   wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
-  wireRail('#story-reel', '#story-prev', '#story-next', '.story-frame', 240);
+  wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
 }
 
 async function renderDestination(slug) {
@@ -553,7 +672,6 @@ async function renderDestination(slug) {
     + `<section class="destination-intro" aria-labelledby="destination-about-title"><div class="container"><div class="destination-fact-bar"><div>${icon('calendar-days')}<span><small>Best season</small><strong>${esc(item.bestTime)}</strong></span></div><div>${icon('map-pinned')}<span><small>Signature stops</small><strong>${esc(item.highlights.slice(0, 2).join(' · '))}</strong></span></div><div>${icon('indian-rupee')}<span><small>Packages from</small><strong>${money(item.startingPrice)}</strong></span></div><a href="#destination-trips">View trips ${icon('chevron-down')}</a></div><div class="destination-guide-grid"><main class="destination-guide"><span class="section-kicker">Know before you go</span><h2 id="destination-about-title">The best of ${esc(item.name)}, thoughtfully planned.</h2><p class="destination-lead">${esc(item.summary)}</p><section class="destination-guide-block" aria-labelledby="destination-highlights-title"><div class="destination-block-heading"><span>${icon('sparkles')}</span><div><small>Worth the journey</small><h3 id="destination-highlights-title">Top highlights</h3></div></div><div class="destination-highlight-grid">${item.highlights.map((x, i) => `<article><span>0${i + 1}</span><h4>${esc(x)}</h4><p>${i === 0 ? 'A defining landscape and an essential stop on your route.' : i === 1 ? 'Raw Himalayan beauty, planned at a comfortable pace.' : 'A high-altitude experience you will remember long after.'}</p></article>`).join('')}</div></section><section class="destination-guide-block"><div class="destination-block-heading"><span>${icon('backpack')}</span><div><small>Make it memorable</small><h3>Things to do</h3></div></div><ul class="destination-check-list">${item.thingsToDo.map(x => `<li>${icon('circle-check-big')}<span>${esc(x)}</span></li>`).join('')}</ul></section><section class="destination-guide-block destination-essentials"><div class="destination-block-heading"><span>${icon('shield-check')}</span><div><small>Travel prepared</small><h3>Essentials for ${esc(item.name)}</h3></div></div><ul>${item.travelTips.map(x => `<li>${icon('check')}<span>${esc(x)}</span></li>`).join('')}</ul></section></main><aside class="destination-plan-card"><span class="destination-plan-label">Customise your journey</span><h3>Your ${esc(item.name)} trip, your way.</h3><p>Pick your dates, preferred stays and travel pace. Our destination expert will turn it into one clear plan.</p><div class="destination-plan-price"><small>Packages start from</small><strong>${money(item.startingPrice)}</strong><span>per person</span></div><a class="btn btn-primary btn-block" href="/custom-trip?destination=${esc(item.slug)}">Plan my ${esc(item.name)} trip ${icon('arrow-right')}</a><div class="destination-plan-proof"><span>${icon('phone')} Expert callback</span><span>${icon('shield-check')} No hidden costs</span></div></aside></div></div></section>`
     + `<section class="destination-trips" id="destination-trips"><div class="container"><div class="section-header"><div><span class="section-kicker">Handpicked departures</span><h2 class="section-title">Explore ${esc(item.name)} trips</h2><p>Transparent itineraries, trusted stays and experienced trip captains.</p></div><a class="see-all-link" href="/trips">View all trips ${icon('arrow-right')}</a></div><div class="cards-grid">${trips.length ? trips.map(tripCard).join('') : '<div class="empty-state"><h3>Private dates are open</h3><p>New group departures are being planned. Tell us your dates and we will create a route for you.</p><a class="btn btn-primary" href="/custom-trip">Plan private dates</a></div>'}</div></div></section>`
     + reviewsSection(reviewsForTrips(trips))
-    + storiesSection()
     + (blogsToShow.length ? journalSection(blogsToShow) : '')
     + homeFaqSection(item.faq);
   applyTailwindStyles(mount); activateIcons(); wireFaq(); wireRails();
@@ -587,9 +705,6 @@ function starRow(hotel, cls = 'hotel-card-stars') {
   const filled = Math.min(5, Math.max(1, Math.round(hotel.star || 4)));
   return `<span class="${cls}" role="img" aria-label="${hotel.star} star hotel">${Array.from({ length: filled }, () => icon('star')).join('')}${Array.from({ length: 5 - filled }, () => `<span class="hotel-star-empty">${icon('star')}</span>`).join('')}</span>`;
 }
-function hotelCard(hotel) {
-  return `<article class="hotel-card" data-search="${esc(`${hotel.name} ${hotel.location} ${hotel.area || ''} ${hotel.destinationSlug}`.toLowerCase())}" data-price="${hotel.pricePerNight}" data-rating="${hotel.rating}" data-stars="${hotel.star}" data-destination="${esc(hotel.destinationSlug)}"><a class="hotel-card-media" href="/hotels/${esc(hotel.slug)}"><img src="${esc(hotel.image)}" alt="${esc(hotel.name)}" loading="lazy" /><span class="hotel-card-badge">${esc(hotel.badge || 'Handpicked Stay')}</span><span class="hotel-rating-badge">${icon('star')} ${esc(hotel.rating)}</span></a><div class="hotel-card-body">${starRow(hotel)}<p class="hotel-card-location">${icon('map-pin')} ${esc(hotel.location)}</p><h2 class="hotel-card-name"><a href="/hotels/${esc(hotel.slug)}">${esc(hotel.name)}</a></h2><p class="hotel-card-desc">${esc(hotel.tagline)}</p><div class="hotel-amenity-chips">${(hotel.amenities || []).slice(0, 3).map(a => `<span>${icon(amenityIcon(a))} ${esc(a)}</span>`).join('')}</div><div class="hotel-card-price"><div><small>${esc(hotel.roomType || 'Room')} · per night</small><strong>${money(hotel.pricePerNight)}</strong><del>${money(hotel.oldPricePerNight)}</del></div><a class="hotel-card-cta" href="/hotels/${esc(hotel.slug)}">View stay ${icon('arrow-right')}</a></div></div></article>`;
-}
 function hotelRoomCard(hotel, room) {
   return `<article class="hotel-room-card"><div class="hotel-room-media"><img src="${esc(hotel.image)}" alt="${esc(room.name)}" loading="lazy" /><span>${icon('mountain')} ${esc(room.view || 'Comfortable stay')}</span></div><div class="hotel-room-body"><h3>${esc(room.name)}</h3><p>Comfort designed around restful nights and an easy stay.</p><div class="hotel-room-meta"><span>${icon('bed')} ${esc(room.bed)}</span><span>${icon('users')} ${esc(room.occupancy)}</span><span>${icon('maximize')} ${esc(room.size)}</span></div><div class="hotel-room-perks">${(room.perks || []).map(p => `<span>${icon('check')} ${esc(p)}</span>`).join('')}</div></div><div class="hotel-room-price"><small>Price for one night</small><strong>${money(room.price)}</strong><del>${money(room.oldPrice)}</del><span class="hotel-tax-note">+ taxes · free cancellation</span><button class="btn" type="button" data-room="${esc(room.name)}" data-price="${room.price}">${icon('calendar-clock')} Choose room</button></div></article>`;
 }
@@ -604,56 +719,25 @@ function ratingDistribution(rating) {
 const isoDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 async function renderHotels() {
-  const [stays, dests] = await Promise.all([api('/hotels'), api('/destinations')]);
-  const tabs = [...new Set(stays.map(h => h.destinationSlug))];
-  const destNames = Object.fromEntries((dests || []).map(d => [d.slug, d.name]));
-  const label = slug => (destNames[slug] || slug || '').replaceAll('-', ' ');
+  const [stays, dests, blogs] = await Promise.all([
+    api('/hotels'),
+    api('/destinations').catch(() => []),
+    api('/blogs').catch(() => []),
+  ]);
+  const tabs = [...new Set(stays.map(h => h.destinationSlug).filter(Boolean))];
   setMeta('Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.');
-  const today = new Date(); const later = new Date(); later.setDate(later.getDate() + 2);
-  mount.innerHTML = `<section class="hotel-discovery-hero"><img src="/images/hotels/hotel-discovery-hero-v2.png" alt="Boutique Himalayan resort overlooking mountains at blue hour" /><div class="hotel-discovery-scrim"></div><div class="container hotel-discovery-copy"><div class="breadcrumbs"><a href="/">Home</a><span>/</span><span>Hotels</span></div><span class="hotel-discovery-kicker">${icon('badge-check')} Personally verified stays</span><h1>Find a stay worth<br><em>remembering.</em></h1><p>Handpicked hotels near our favourite routes—with honest rates, flexible cancellation and human support.</p><form class="hotel-search-fields hotel-search-inline" id="hotel-search"><label>${icon('map-pin')} Where to<select id="hotel-destination"><option value="all">Explore everywhere</option>${tabs.map(x => `<option value="${esc(x)}">${esc(label(x))}</option>`).join('')}</select></label><label>${icon('calendar-days')} Check-in<input type="date" id="hotel-checkin" value="${isoDate(today)}"></label><label>${icon('calendar-days')} Check-out<input type="date" id="hotel-checkout" value="${isoDate(later)}"></label><label>${icon('users')} Guests<select id="hotel-guests">${[1, 2, 3, 4, 5, 6].map(g => `<option>${g} ${g === 1 ? 'guest' : 'guests'}</option>`).join('')}</select></label><button class="btn btn-primary" type="submit">${icon('search')} Find my stay</button></form><div class="hotel-hero-trust"><span>${icon('shield-check')} No prepayment</span><span>${icon('calendar-clock')} Flexible cancellation</span><span>${icon('thumbs-up')} Verified guest ratings</span></div></div></section>`
-    + `<section class="hotel-results-shell"><div class="container"><div class="hotel-results-head"><div><span class="section-kicker">Chosen for the whole experience</span><h2 class="section-title">Stays we would book ourselves</h2><p>Compare the details that matter—location, guest feedback, inclusions and the real nightly rate.</p></div><div class="hotel-result-summary"><strong id="hotel-result-count">${stays.length}</strong><span>verified stays</span></div></div><div class="hotel-destination-tabs"><button class="active" data-hotel-tab="all">All destinations</button>${tabs.map(x => `<button data-hotel-tab="${esc(x)}">${esc(label(x))}</button>`).join('')}</div><div class="hotel-filter-dock"><label>${icon('search')}<span class="sr-only">Search hotels</span><input id="hotel-search-input" type="search" placeholder="Search by hotel, city or destination" /></label><div class="hotel-quick-filters" aria-label="Quick filters"><button class="active" data-hotel-quick="all">All stays</button><button data-hotel-quick="top">${icon('star')} Top rated</button><button data-hotel-quick="luxury">5 star</button><button data-hotel-quick="value">Under ₹8,000</button></div><select id="hotel-sort" aria-label="Sort stays"><option value="featured">Recommended</option><option value="priceLow">Price: low to high</option><option value="priceHigh">Price: high to low</option><option value="rating">Top rated</option><option value="stars">Star rating</option></select></div><div class="cards-grid hotel-results-grid" id="hotel-grid">${stays.length ? stays.map(hotelCard).join('') : '<div class="empty-state"><h2>More stays coming soon</h2><p>Tell us where you are headed and we will find a verified stay for you.</p><a class="btn btn-primary" href="/custom-trip">Plan a custom trip</a></div>'}</div><div class="hotel-confidence-panel"><div>${icon('shield-check')}<span><strong>Verified, not scraped</strong><small>Each stay is reviewed by our travel team.</small></span></div><div>${icon('indian-rupee')}<span><strong>Clear nightly price</strong><small>Compare the room rate before enquiring.</small></span></div><div>${icon('headphones')}<span><strong>Humans when you need them</strong><small>Real support before and during your stay.</small></span></div></div></div></section>`;
-  applyTailwindStyles(mount); activateIcons();
-  const input = document.querySelector('#hotel-search-input');
-  const sort = document.querySelector('#hotel-sort');
-  const grid = document.querySelector('#hotel-grid');
-  const count = document.querySelector('#hotel-result-count');
-  const cards = [...grid.children];
-  let activeTab = 'all';
-  let quickFilter = 'all';
-  const update = () => {
-    const query = input?.value.trim().toLowerCase() || '';
-    let visible = cards.filter(card => (activeTab === 'all' || card.dataset.destination === activeTab) && card.dataset.search.includes(query) && (quickFilter === 'all' || quickFilter === 'top' && Number(card.dataset.rating) >= 4.8 || quickFilter === 'luxury' && Number(card.dataset.stars) === 5 || quickFilter === 'value' && Number(card.dataset.price) < 8000));
-    if (sort) {
-      const key = sort.value;
-      visible.sort((a, b) => key === 'priceLow' ? a.dataset.price - b.dataset.price : key === 'priceHigh' ? b.dataset.price - a.dataset.price : key === 'rating' ? b.dataset.rating - a.dataset.rating : key === 'stars' ? b.dataset.stars - a.dataset.stars : 0);
-    }
-    visible.forEach(card => grid.append(card));
-    cards.forEach(card => card.hidden = !visible.includes(card));
-    if (count) count.textContent = visible.length;
-  };
-  input?.addEventListener('input', update);
-  sort?.addEventListener('change', update);
-  document.querySelectorAll('[data-hotel-tab]').forEach(button => button.addEventListener('click', () => {
-    document.querySelectorAll('[data-hotel-tab]').forEach(x => x.classList.remove('active'));
-    button.classList.add('active');
-    activeTab = button.dataset.hotelTab;
-    update();
-  }));
-  document.querySelectorAll('[data-hotel-quick]').forEach(button => button.addEventListener('click', () => {
-    document.querySelectorAll('[data-hotel-quick]').forEach(x => x.classList.remove('active'));
-    button.classList.add('active'); quickFilter = button.dataset.hotelQuick; update();
-  }));
-  const form = document.querySelector('#hotel-search');
-  form?.addEventListener('submit', event => {
-    event.preventDefault();
-    const destination = document.querySelector('#hotel-destination')?.value || 'all';
-    document.querySelectorAll('[data-hotel-tab]').forEach(x => x.classList.toggle('active', x.dataset.hotelTab === destination));
-    activeTab = destination;
-    if (input) input.value = '';
-    update();
-    grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-  update();
+  mount.innerHTML = categoryBanner('/images/hotels/hotel-discovery-hero-v2.png', 'Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.', 'Hotels')
+    + `<div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
+    <div class="sticky top-[66px] z-30 block w-full bg-white py-2 min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(tabs)}</div>${hotelFilterPanel(stays, true)}</div>
+    <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
+    ${hotelFilterPanel(stays)}
+    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${stays.length ? stays.map(h => `<div class="bt-hotel-card-wrap w-full" data-dest="${esc(h.destinationSlug || '')}" data-star="${esc(String(Math.round(h.star || 4)))}" data-price="${Number(h.pricePerNight) || 0}">${hotelListingCard(h)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">More stays are being verified.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>`
+    + reviewsSection()
+    + reasonsSection()
+    + homeFaqSection()
+    + (blogs.length ? journalSection(blogs.slice(0, 5)) : '')
+    + bikeDestinationsStrip(dests);
+  wireHotelFilters(); wireFaq();
 }
 
 function wireHotelBooking(hotel) {
@@ -864,8 +948,26 @@ async function renderPage(slug){const p=await api(`/pages/${slug}`);setMeta(p.ti
 function authForm(){return `<form class="form-card" id="auth-form"><div class="form-grid"><div class="field full signup-only"><label for="auth-name">Name</label><input id="auth-name" name="name" autocomplete="name" /></div><div class="field full"><label for="auth-email">Email</label><input id="auth-email" name="email" type="email" required autocomplete="email" /></div><div class="field full"><label for="auth-password">Password</label><input id="auth-password" name="password" type="password" minlength="6" required autocomplete="current-password" /></div><div class="field full"><button class="btn btn-primary" type="submit">Continue</button></div></div><p class="form-status" role="status"></p></form>`}
 function renderAuth(mode){setMeta(mode==='signup'?'Create Account':'Login','Access your saved trips and enquiries.');mount.innerHTML=hero({title:mode==='signup'?'Create your account':'Welcome back',description:'Save favourites and keep your TravelEnfield journey details together.',eyebrow:'Traveller account'})+`<section class="page-shell"><div class="container">${authForm()}<p class="center">${mode==='signup'?'Already registered? <a href="/login">Login</a>':'New here? <a href="/signup">Create an account</a>'}</p></div></section>`;if(mode==='login')document.querySelector('.signup-only').remove();const form=document.querySelector('#auth-form');form.addEventListener('submit',async e=>{e.preventDefault();const status=form.querySelector('.form-status');try{const response=await fetch(`/api/auth/${mode}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const result=await response.json();if(!response.ok)throw new Error(result.error);localStorage.setItem('travelenfield-user',JSON.stringify(result.user));status.className='form-status success';status.textContent=`Welcome, ${result.user.name}!`; }catch(error){status.className='form-status error';status.textContent=error.message;}})}
 
+async function renderProfile(){
+  let user=null;
+  try{user=JSON.parse(localStorage.getItem('travelenfield-user')||'null')}catch{}
+  if(!user){
+    setMeta('My Profile','Login to view your TravelEnfield profile and trips.');
+    mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>You're not logged in</h1><p>Login to see your saved details and trip enquiries.</p><button class="btn btn-primary" type="button" id="profile-login-trigger">${icon('log-in')} Login</button></div></section>`;
+    document.querySelector('#profile-login-trigger')?.addEventListener('click',()=>setLoginPopup(true));
+    document.addEventListener('travelenfield:login',()=>renderProfile(),{once:true});
+    return;
+  }
+  let enquiries=[];
+  try{const data=await api(`/profile/${user.id}`);enquiries=data.enquiries||[];if(data.user)user=data.user;}catch{}
+  setMeta(`${user.name || 'My'} Profile`,'Your TravelEnfield account and trip enquiries.');
+  mount.innerHTML=`<section class="profile-hero"><div class="container profile-hero-row"><div class="profile-avatar">${esc((user.name||'U').charAt(0).toUpperCase())}</div><div class="profile-hero-copy"><h1>${esc(user.name||'Traveller')}</h1><p>${esc(user.email||'')}${user.phone?' · '+esc(user.phone):''}</p></div><button class="btn btn-outline-purple" type="button" id="logout-btn">${icon('log-out')} Log out</button></div></section>
+  <section class="profile-trips"><div class="container"><h2 class="section-title">Your trip enquiries</h2>${enquiries.length?`<div class="cards-grid profile-trip-grid">${enquiries.map(e=>`<article class="listing-card profile-trip-card"><div class="listing-card-body"><div class="card-meta"><span>${icon('calendar-days')} ${esc(e.travelDate||'Flexible dates')}</span><span class="profile-trip-status">${esc(e.status||'new')}</span></div><h2>${esc(e.destination||e.type||'Trip enquiry')}</h2><p>${esc(e.message||'No additional notes.')}</p><div class="price-row"><span>${icon('users')} ${e.travellers||1} traveller${(e.travellers||1)>1?'s':''}</span></div></div></article>`).join('')}</div>`:`<div class="empty-state"><h3>No enquiries yet</h3><p>Once you send a trip enquiry, it will show up here.</p><a class="btn btn-primary" href="/trips">Explore trips</a></div>`}</div></section>`;
+  document.querySelector('#logout-btn')?.addEventListener('click',()=>{localStorage.removeItem('travelenfield-user');window.location.href='/';});
+}
+
 function renderRouteLoader(){mount.innerHTML=`<div class="page-loader"><span aria-hidden="true"></span><p>Preparing your next adventure…</p></div>`;}
 
-async function router(){try{renderRouteLoader();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');await appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);}}
+async function router(){try{renderRouteLoader();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');await appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);}}
 
 router();

@@ -36,8 +36,8 @@
   <!-- ============ 1. ANNOUNCEMENT BAR ============ -->
   <div class="announcement-bar relative z-50 grid min-h-10 place-items-center overflow-hidden bg-brand-deep text-brand-yellow" id="announcement-bar">
     <div class="announcement-shimmer"></div>
-    <a href="#deals" class="announcement-link block w-full px-12 py-2 text-center text-xs font-extrabold sm:text-sm">
-      <p><i data-lucide="gift"></i> Monsoon Sale is LIVE — Flat ₹5,000 Off on All Group Trips! <span class="announcement-arrow">→</span></p>
+    <a href="#deals" class="announcement-link block w-full px-4 py-2 text-center text-xs font-extrabold sm:text-sm">
+      <p><i data-lucide="gift"></i> Monsoon Sale is LIVE — Flat ₹5,000 Off </p>
     </a>
     <button class="announcement-close absolute right-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full text-brand-yellow transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-brand-yellow" id="announcement-close" aria-label="Close announcement">✕</button>
   </div>
@@ -169,44 +169,28 @@
     </nav>
   </header>
 
-  <main id="main-content">
-    <!-- ============ 3. HERO SECTION ============ -->
-    <section class="hero hero-seo relative isolate grid min-h-[clamp(620px,70vh,720px)] w-full overflow-hidden bg-[#260735] text-white" id="hero" aria-labelledby="hero-heading">
-      <div class="hero-bg absolute inset-0 overflow-hidden bg-[url('/images/group-trips-himalaya-hero.jpg')] bg-cover bg-[center_48%]">
-        <div class="hero-overlay"></div>
-      </div>
-      <div class="hero-content relative z-10 mx-auto w-[min(calc(100%_-_40px),1100px)] py-12 text-center max-sm:w-[calc(100%_-_28px)] max-sm:py-9">
-        <span class="hero-eyebrow"><i data-lucide="sparkles"></i> Curated journeys. Real human support.</span>
-        <h1 class="hero-title" id="hero-heading">Curated Group Trips &amp; <br/><span class="hero-highlight">Custom Tour Packages</span></h1>
-        <p class="hero-subtitle">Explore fixed departures, bike trips, weekend getaways and personalised holidays across India and beyond—with transparent pricing and expert support.</p>
-        <div class="hero-trust-typer" aria-live="polite"><span class="hero-trust-label"><i data-lucide="shield-check"></i> Why travellers choose us</span><strong id="hero-trust-text">Transparent prices. No hidden surprises.</strong></div>
-        <div class="hero-search-wrap" hidden>
-          <div class="hero-search-box">
-            <svg class="hero-search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <input type="search" class="hero-search-input" placeholder="Try Ladakh, Bali or a weekend trip" aria-label="Search destinations and trips" autocomplete="off" aria-controls="hero-suggestions" aria-expanded="false" />
-            <button class="btn btn-primary hero-search-btn">Explore</button>
-          </div>
-          <div class="hero-suggestions" id="hero-suggestions" role="listbox" aria-label="Popular searches"><button type="button" data-hero-query="Ladakh"><img src="/images/destinations/ladakh.jpg" alt=""><span><strong>Ladakh</strong><small>Bike trips · High passes</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Bali"><img src="/images/destinations/bali.jpg" alt=""><span><strong>Bali</strong><small>Island escape · International</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Spiti"><img src="/images/destinations/spiti.jpg" alt=""><span><strong>Spiti Valley</strong><small>Road trips · Mountains</small></span><i data-lucide="arrow-up-right"></i></button><button type="button" data-hero-query="Manali"><img src="/images/destinations/manali.jpg" alt=""><span><strong>Manali</strong><small>Weekend · Snow adventure</small></span><i data-lucide="arrow-up-right"></i></button></div>
-        </div>
-        <div class="hero-quick-picks" hidden><span>Trending</span><button type="button" data-hero-query="Ladakh">Ladakh</button><button type="button" data-hero-query="Bali">Bali</button><button type="button" data-hero-query="Weekend">Weekend trips</button></div>
-        <div class="hero-ctas">
-          <a href="/upcoming-trips" class="btn btn-primary btn-lg">Explore Group Trips <i data-lucide="arrow-right"></i></a>
-          <a href="/custom-trip" class="btn btn-outline-light btn-lg">Plan a Custom Trip</a>
-        </div>
-        <div class="hero-micro-proof" aria-label="TravelEnfield service highlights"><span><i data-lucide="bed-double"></i> Verified stays</span><span><i data-lucide="headphones"></i> 24/7 trip support</span><span><i data-lucide="receipt-text"></i> Clear inclusions</span></div>
-      </div>
-      <aside class="hero-proof-card" aria-label="TravelEnfield traveller rating"><div class="hero-proof-avatars"><span>RK</span><span>AS</span><span>NM</span></div><div><strong>4.9 traveller rating</strong><small><i data-lucide="star"></i> Built around real travellers</small></div></aside>
-    </section>
+  <section class="hero-intro-video relative -mt-[70px] w-full overflow-hidden bg-brand-ink min-[1100px]:mt-0" aria-label="TravelEnfield intro">
+    <video class="block h-auto min-h-[180px] w-full max-h-[58vh] object-cover md:min-h-[240px] md:max-h-[64vh]" src="/socialmedia/travel-enfield-intro.mp4" autoplay muted loop playsinline aria-hidden="true"></video>
+    <button type="button" class="hero-intro-mute absolute bottom-4 right-4 z-10 grid size-11 place-items-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60" id="hero-intro-mute" aria-pressed="false" aria-label="Unmute video">
+      <i data-lucide="volume-x"></i>
+    </button>
+  </section>
 
+  <main id="main-content">
     <!-- ============ 4. COMMUNITY STATS STRIP ============ -->
-    <section class="trust-strip py-3" id="trust-strip" aria-label="TravelEnfield community proof">
+    <section class="trust-strip py-1" id="trust-strip" aria-label="TravelEnfield community proof">
       <div class="container">
         <div class="trust-items grid grid-cols-1 items-center gap-x-8 gap-y-3 py-1 sm:grid-cols-3">
-          <div class="trust-item"><img class="trust-social-logo" src="/socialmedia/instagram.svg" alt="Instagram" /><span class="trust-value">573K+</span><span class="trust-label">Community</span></div>
-          <div class="trust-item"><img class="trust-social-logo trust-google-logo" src="/socialmedia/google.svg" alt="Google" /><i class="trust-review-star" data-lucide="star" aria-hidden="true"></i><span class="trust-value">4.9</span><span class="trust-label">(8.5K+ Reviews)</span></div>
-          <div class="trust-item"><img class="trust-social-logo trust-traveller-logo" src="/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
+          <div class="trust-item"><img class="h-5 w-6 md:h-7 md:w-7" src="/socialmedia/instagram.svg" alt="Instagram"  /><span class="trust-value">573K+</span><span class="trust-label">Community</span></div>
+          <div class="trust-item"><img class="h-5 w-6 md:h-7 md:w-7 trust-google-logo" src="/socialmedia/google.svg" alt="Google" /><i class="trust-review-star" data-lucide="star" aria-hidden="true"></i><span class="trust-value">4.9</span><span class="trust-label">(8.5K+ Reviews)</span></div>
+          <div class="trust-item"><img class="h-5 w-6 md:h-7 md:w-7 trust-traveller-logo" src="/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
         </div>
       </div>
+    </section>
+
+    <!-- ============ HERO POSTER BANNER ============ -->
+    <section class="hero-poster-banner w-full overflow-hidden leading-none" aria-label="TravelEnfield — Explore. Experience. Enfield.">
+      <img class="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent" src="/home-page/hero-poster.png" alt="TravelEnfield — Explore. Experience. Enfield." loading="lazy" decoding="async" />
     </section>
 
     <!-- ============ 5. EXPLORE DESTINATIONS ============ -->
@@ -906,50 +890,42 @@
       </div>
     </section>
 
-    <!-- ============ 18. THE REALITY OF A TRIP ============ -->
-    <section class="trip-stories section bg-gradient-to-br from-[#2b073d] via-brand-purple to-[#762899] py-16 text-white md:py-20" aria-labelledby="trip-stories-title">
+    <!-- ============ 18. OUR ACTIVITIES ============ -->
+    <section class="activities py-16 md:py-20" id="activities" aria-labelledby="activities-title">
       <div class="container">
         <div class="section-header">
-          <div><span class="section-kicker">Unfiltered travel moments</span><h2 class="section-title" id="trip-stories-title">The Reality Of A Trip</h2></div>
+          <div><span class="section-kicker normal-case italic text-base font-medium tracking-normal text-brand-purple">Explore. Experience. Enrich.</span><h2 class="section-title" id="activities-title">Our <span class="text-brand-purple">Activities</span></h2></div>
           <div class="destination-scroll-controls">
-            <button id="story-prev" aria-label="Previous videos"><i data-lucide="chevron-left"></i></button>
-            <button id="story-next" aria-label="Next videos"><i data-lucide="chevron-right"></i></button>
+            <button type="button" id="activities-prev" aria-label="Previous activities"><i data-lucide="chevron-left"></i></button>
+            <button type="button" id="activities-next" aria-label="Next activities"><i data-lucide="chevron-right"></i></button>
           </div>
         </div>
-        <p class="section-subtitle">Watch what our trips actually look like, in the words of travellers who were there.</p>
-        <div class="story-reel grid auto-cols-[calc((100%_-_64px)/5)] grid-flow-col gap-4 overflow-x-auto pb-4 [scroll-snap-type:x_mandatory] max-lg:auto-cols-[calc((100%_-_32px)/3)] max-md:auto-cols-[62vw] [&_.story-frame]:relative [&_.story-frame]:aspect-[.74] [&_.story-frame]:snap-start [&_.story-frame]:overflow-hidden [&_.story-frame]:rounded-3xl [&_.story-frame]:border [&_.story-frame]:border-white/20 [&_.story-frame]:bg-brand-deep [&_.story-frame]:shadow-2xl [&_.story-frame_img]:absolute [&_.story-frame_img]:inset-0 [&_.story-frame_img]:size-full [&_.story-frame_img]:object-cover [&_.story-play]:absolute [&_.story-play]:left-1/2 [&_.story-play]:top-1/2 [&_.story-play]:z-10 [&_.story-play]:grid [&_.story-play]:size-14 [&_.story-play]:-translate-x-1/2 [&_.story-play]:-translate-y-1/2 [&_.story-play]:place-items-center [&_.story-play]:rounded-full [&_.story-play]:bg-brand-yellow [&_.story-play]:text-brand-purple [&_.story-frame_small]:absolute [&_.story-frame_small]:inset-x-5 [&_.story-frame_small]:bottom-5 [&_.story-frame_small]:z-10 [&_.story-frame_small]:font-extrabold [&_.story-frame_small]:text-white" id="story-reel" aria-label="Traveller story previews">
-          <a href="/reviews" class="story-frame">
-            <img src="/images/woman-adventure-traveller.jpg" alt="TravelEnfield traveller on a mountain journey" loading="lazy" />
-            <span class="story-play"><i data-lucide="play"></i></span>
-            <small>Mountain diaries</small>
+        <p class="section-subtitle">From breathtaking landscapes to thrilling adventures, discover the experiences that make every journey unforgettable.</p>
+        <div class="activities-track" id="activities-track">
+          <a href="/reviews" class="activity-card">
+            <div class="activity-media"><img src="/images/woman-adventure-traveller.jpg" alt="Mountain diaries" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
+            <div class="activity-body"><span class="activity-icon"><i data-lucide="mountain-snow"></i></span><div><h3>Mountain Diaries</h3><p>Trek through stunning trails and embrace the beauty of nature.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
           </a>
-          <a href="/reviews" class="story-frame">
-            <img src="/images/bike-trip-captain.jpg" alt="TravelEnfield bike trip captain on a Himalayan route" loading="lazy" />
-            <span class="story-play"><i data-lucide="play"></i></span>
-            <small>Meet the captains</small>
+          <a href="/reviews" class="activity-card">
+            <div class="activity-media"><img src="/images/bike-trip-captain.jpg" alt="Meet the captains" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
+            <div class="activity-body"><span class="activity-icon"><i data-lucide="bike"></i></span><div><h3>Meet The Captains</h3><p>Ride with our expert captains and feel the thrill of the road.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
           </a>
-          <a href="/reviews" class="story-frame">
-            <img src="/images/destinations/spiti.jpg" alt="Group crossing a high mountain pass in Spiti" loading="lazy" />
-            <span class="story-play"><i data-lucide="play"></i></span>
-            <small>Spiti, day by day</small>
+          <a href="/reviews" class="activity-card">
+            <div class="activity-media"><img src="/images/destinations/spiti.jpg" alt="Spiti, day by day" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
+            <div class="activity-body"><span class="activity-icon"><i data-lucide="footprints"></i></span><div><h3>Spiti, Day By Day</h3><p>Experience the raw beauty and culture of Spiti valley.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
           </a>
-          <a href="/reviews" class="story-frame">
-            <img src="/images/destinations/bali.jpg" alt="Travellers on a Bali island departure" loading="lazy" />
-            <span class="story-play"><i data-lucide="play"></i></span>
-            <small>First time abroad</small>
-          </a>
-          <a href="/reviews" class="story-frame">
-            <img src="/images/social-banner.jpg" alt="Travellers around a Himalayan campsite at night" loading="lazy" />
-            <span class="story-play"><i data-lucide="play"></i></span>
-            <small>Campfire nights</small>
+          <a href="/reviews" class="activity-card">
+            <div class="activity-media"><img src="/images/social-banner.jpg" alt="First timers friendly" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
+            <div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>First Timers Friendly</h3><p>Perfect experiences for first-time travellers, crafted with care.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
           </a>
         </div>
+        <div class="mt-9 text-center"><a href="/reviews" class="btn btn-outline-purple">View All Activities <i data-lucide="arrow-right"></i></a></div>
       </div>
     </section>
   </main>
 
   <section class="footer-exciting w-full overflow-hidden bg-brand-deep leading-none" aria-label="Travel should feel exciting">
-    <img class="block h-auto w-full object-contain max-sm:min-h-[150px] max-sm:object-cover max-sm:object-[43%_center]" src="/images/travel-exciting-footer.png" alt="Travel should feel exciting. Fresh journeys, playful routes, unforgettable moments." width="2172" height="724" loading="lazy" decoding="async" />
+    <img class="block h-auto w-full object-contain max-sm:min-h-[150px] max-sm:object-cover max-sm:object-[43%_center]" src="/home-page/footer-top.png" alt="Travel should feel exciting. Fresh journeys, playful routes, unforgettable moments." width="2172" height="724" loading="lazy" decoding="async" />
   </section>
 
   <!-- ============ 19. FOOTER ============ -->

@@ -1,0 +1,51 @@
+[
+  {
+    "index": 0,
+    "publicId": "manali-snowfall",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532479/travelenfield/reels/manali-snowfall.mp4",
+    "duration": 18.131927,
+    "bytes": 1458106
+  },
+  {
+    "index": 1,
+    "publicId": "goa-beach",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532481/travelenfield/reels/goa-beach.mp4",
+    "duration": 11.631791,
+    "bytes": 772428
+  },
+  {
+    "index": 2,
+    "publicId": "singapore-cruise",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532483/travelenfield/reels/singapore-cruise.mp4",
+    "duration": 14.882585,
+    "bytes": 3620386
+  },
+  {
+    "index": 3,
+    "publicId": "spiti-valley",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532486/travelenfield/reels/spiti-valley.mp4",
+    "duration": 61.716042,
+    "bytes": 14599268
+  },
+  {
+    "index": 4,
+    "publicId": "nightlife-beach-party",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532488/travelenfield/reels/nightlife-beach-party.mp4",
+    "duration": 19.108617,
+    "bytes": 2899288
+  },
+  {
+    "index": 5,
+    "publicId": "singapore-city",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532491/travelenfield/reels/singapore-city.mp4",
+    "duration": 24.518866,
+    "bytes": 6610022
+  },
+  {
+    "index": 6,
+    "publicId": "travel-reel-1",
+    "url": "https://res.cloudinary.com/dq3typk9u/video/upload/v1786532497/travelenfield/reels/travel-reel-1.mp4",
+    "duration": 110.313375,
+    "bytes": 23595641
+  }
+]

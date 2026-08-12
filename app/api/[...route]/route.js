@@ -5,6 +5,12 @@ import { NextResponse } from 'next/server';
 import { connectDatabase } from '../../../lib/mongodb';
 import { Destination, Trip, Category, Blog, Page, Enquiry, User, Hotel } from '../../../server/models';
 import { destinations, trips, categoryData, blogs, pageData, hotels } from '../../../server/seed';
+import { sendOtpEmail } from '../../../server/mailer';
+
+const OTP_TTL_MS = 10 * 60 * 1000;
+const OTP_MAX_ATTEMPTS = 5;
+const OTP_VERIFIED_TTL_MS = 15 * 60 * 1000;
+const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -55,7 +61,8 @@ export async function GET(request, context) {
       || pathname === 'blogs'
       || pathname === 'pages'
       || pathname === 'hotels'
-      || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]));
+      || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]))
+      || (route[0] === 'profile' && Boolean(route[1]));
     if (!knownReadRoute) return json({ error: 'API route not found' }, 404);
     await connectDatabase();
     const url = new URL(request.url);
@@ -102,6 +109,20 @@ export async function GET(request, context) {
       const item = await Hotel.findOne({ slug: route[1] }).lean();
       return item ? json(item) : json({ error: 'Hotel not found' }, 404);
     }
+    if (route[0] === 'profile' && route[1]) {
+      const user = await User.findById(route[1]).lean().catch(() => null);
+      if (!user) return json({ error: 'Profile not found' }, 404);
+      const enquiries = await Enquiry.find({
+        $or: [
+          ...(user.email ? [{ email: user.email }] : []),
+          ...(user.phone ? [{ phone: user.phone }] : []),
+        ],
+      }).sort({ createdAt: -1 }).lean();
+      return json({
+        user: { id: user._id, name: user.name, email: user.email, phone: user.phone },
+        enquiries,
+      });
+    }
     return json({ error: 'API route not found' }, 404);
   } catch (error) {
     const { route = [] } = await context.params;
@@ -126,24 +147,69 @@ export async function POST(request, context) {
       const enquiry = await Enquiry.create(body);
       return json({ ok: true, id: enquiry.id }, 201);
     }
-    if (pathname === 'auth/signup') {
-      const { name, email, phone, password } = body;
-      if (!name || !email || !password || password.length < 6) return json({ error: 'Name, email and a 6+ character password are required' }, 400);
-      const passwordHash = await bcrypt.hash(password, 10);
-      try {
-        const user = await User.create({ name, email, phone, passwordHash });
-        return json({ ok: true, user: { id: user.id, name: user.name, email: user.email } }, 201);
-      } catch (error) {
-        if (error.code === 11000) return json({ error: 'Email already registered' }, 409);
-        throw error;
-      }
-    }
     if (pathname === 'auth/login') {
       const user = await User.findOne({ email: body.email });
       const valid = user && await bcrypt.compare(body.password || '', user.passwordHash);
       return valid
         ? json({ ok: true, user: { id: user.id, name: user.name, email: user.email } })
         : json({ error: 'Invalid email or password' }, 401);
+    }
+    if (pathname === 'auth/request-otp') {
+      const cleanName = (body.name || '').trim();
+      const cleanEmail = (body.email || '').trim().toLowerCase();
+      const cleanPhone = (body.phone || '').trim();
+      if (!cleanName || !cleanEmail || !cleanPhone) return json({ error: 'Name, email and phone number are required' }, 400);
+      if (!/^\S+@\S+\.\S+$/.test(cleanEmail)) return json({ error: 'Enter a valid email address' }, 400);
+      if (!body.agree) return json({ error: 'Please accept the Terms & Privacy Policy to continue' }, 400);
+      const code = generateOtp();
+      const otpHash = await bcrypt.hash(code, 10);
+      const otpExpiresAt = new Date(Date.now() + OTP_TTL_MS);
+      await User.findOneAndUpdate(
+        { email: cleanEmail },
+        { name: cleanName, email: cleanEmail, phone: cleanPhone, otpHash, otpExpiresAt, otpAttempts: 0 },
+        { upsert: true, setDefaultsOnInsert: true }
+      );
+      try {
+        await sendOtpEmail(cleanEmail, cleanName, code);
+      } catch (mailError) {
+        console.error('Failed to send OTP email:', mailError);
+        return json({ error: mailError.message || 'Could not send the OTP email. Please try again shortly.' }, 502);
+      }
+      return json({ ok: true, email: cleanEmail });
+    }
+    if (pathname === 'auth/verify-signup-otp') {
+      const cleanEmail = (body.email || '').trim().toLowerCase();
+      const cleanCode = (body.code || '').trim();
+      if (!cleanEmail || !cleanCode) return json({ error: 'Email and OTP code are required' }, 400);
+      const user = await User.findOne({ email: cleanEmail });
+      if (!user || !user.otpHash || !user.otpExpiresAt) return json({ error: 'Request a new OTP first' }, 400);
+      if (user.otpExpiresAt.getTime() < Date.now()) return json({ error: 'This OTP has expired. Please request a new one.' }, 400);
+      if (user.otpAttempts >= OTP_MAX_ATTEMPTS) return json({ error: 'Too many incorrect attempts. Please request a new OTP.' }, 429);
+      const valid = await bcrypt.compare(cleanCode, user.otpHash);
+      if (!valid) {
+        user.otpAttempts += 1;
+        await user.save();
+        return json({ error: 'Incorrect code. Please try again.' }, 401);
+      }
+      user.otpHash = undefined;
+      user.otpExpiresAt = undefined;
+      user.otpAttempts = 0;
+      user.otpVerifiedAt = new Date();
+      await user.save();
+      return json({ ok: true });
+    }
+    if (pathname === 'auth/set-password') {
+      const cleanEmail = (body.email || '').trim().toLowerCase();
+      const { password } = body;
+      if (!cleanEmail || !password || password.length < 6) return json({ error: 'A 6+ character password is required' }, 400);
+      const user = await User.findOne({ email: cleanEmail });
+      if (!user || !user.otpVerifiedAt || Date.now() - user.otpVerifiedAt.getTime() > OTP_VERIFIED_TTL_MS) {
+        return json({ error: 'Your verification has expired. Please verify your email again.' }, 400);
+      }
+      user.passwordHash = await bcrypt.hash(password, 10);
+      user.otpVerifiedAt = undefined;
+      await user.save();
+      return json({ ok: true, user: { id: user.id, name: user.name, email: user.email, phone: user.phone } });
     }
     return json({ error: 'API route not found' }, 404);
   } catch (error) {

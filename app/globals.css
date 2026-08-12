@@ -4,6 +4,7 @@
 @source "../components/**/*.{js,jsx}";
 @source "../lib/**/*.{js,jsx}";
 @source "../src/scripts/**/*.js";
+@source "../app/admin/**/*.{js,jsx}";
 
 @theme {
   --color-brand-purple: #55167b;
@@ -42,6 +43,24 @@
   .btn { @apply inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full border border-transparent px-6 py-3 font-heading text-sm font-extrabold transition duration-200 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-yellow; }
   .btn-primary { @apply bg-brand-yellow text-brand-deep shadow-[0_12px_30px_rgba(251,207,8,.22)] hover:-translate-y-0.5 hover:bg-[#ffe05a]; }
   .btn-outline-light { @apply border-white/60 bg-white/5 text-white backdrop-blur-sm hover:border-white hover:bg-white hover:text-brand-deep; }
+  .btn-outline-purple { @apply border-brand-purple/30 bg-white text-brand-purple hover:-translate-y-0.5 hover:border-brand-purple hover:bg-brand-purple hover:text-white; }
+
+  /* Shared "Our Activities" rail — home page and every listing/detail page. */
+  .activities { @apply relative overflow-hidden bg-brand-surface; }
+  .activities-track { @apply mt-8 grid auto-cols-[calc((100%-60px)/4)] grid-flow-col gap-5 overflow-x-auto pb-2 [scroll-snap-type:x_mandatory] max-lg:auto-cols-[calc((100%-40px)/2.2)] max-md:auto-cols-[78vw]; scrollbar-width: none; }
+  .activities-track::-webkit-scrollbar { display: none; }
+  .activity-card { @apply relative flex flex-col overflow-hidden rounded-3xl border border-brand-purple/10 bg-white shadow-[0_18px_45px_rgba(69,13,105,.1)] transition hover:-translate-y-1 [scroll-snap-align:start]; }
+  .activity-card::after { content: ''; @apply absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-brand-purple to-brand-yellow; }
+  .activity-media { @apply relative aspect-[4/3] overflow-hidden; }
+  .activity-media img { @apply size-full object-cover transition duration-500; }
+  .activity-card:hover .activity-media img { @apply scale-105; }
+  .activity-play { @apply absolute left-1/2 top-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-brand-purple shadow-xl; }
+  .activity-play svg { @apply size-5; }
+  .activity-body { @apply flex items-center gap-3 p-5; }
+  .activity-icon { @apply grid size-11 shrink-0 place-items-center rounded-full bg-brand-purple/10 text-brand-purple; }
+  .activity-body h3 { @apply font-heading text-base font-extrabold text-brand-deep; }
+  .activity-body p { @apply mt-1 text-xs leading-relaxed text-gray-500; }
+  .activity-arrow { @apply ml-auto shrink-0 text-brand-purple; }
   .btn-lg { @apply min-h-14 px-7 text-base; }
   .btn-block { @apply w-full; }
 
@@ -95,8 +114,8 @@
   .nav-new-badge { @apply ml-0.5 inline-flex min-h-5 items-center rounded-full bg-brand-orange px-2 font-heading text-[9px] font-extrabold tracking-[.08em] text-white shadow-[0_4px_10px_rgba(232,60,34,.25)]; }
   .trust-strip { @apply relative min-h-0 content-center overflow-hidden bg-[#f7f0fa] text-brand-deep; }
   .trust-strip::before { content: ''; @apply absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-purple via-brand-orange to-brand-yellow; }
-  .trust-items { @apply mx-auto max-w-[1320px] py-2.5; }
-  .trust-item { @apply flex min-h-14 min-w-0 items-center justify-center gap-2.5 justify-self-stretch px-4; }
+  .trust-items { @apply mx-auto max-w-[1320px] py-1.5; }
+  .trust-item { @apply flex min-h-11 min-w-0 items-center justify-center gap-2.5 justify-self-stretch px-4; }
   .trust-social-logo { @apply size-10 shrink-0 object-contain; }
   .trust-google-logo { @apply size-9; }
   .trust-traveller-logo { @apply h-11 w-12; }
@@ -136,15 +155,14 @@
   .destination-img-wrap { @apply border border-brand-purple/10 bg-brand-surface shadow-sm transition duration-300; }
   .destination-card:hover .destination-img-wrap { @apply border-brand-purple/30 shadow-xl; }
 
-  /* Vibe with Us reels (Instagram embeds, cropped to video-only and
-     cover-scaled to fill the card with no letterboxing — see main.js
-     cropInstagramEmbed). Same centered/cover technique for the homepage
-     row and the full-screen viewer, they just fill different-shaped boxes. */
+  /* Vibe with Us reels (self-hosted Cloudinary mp4s rendered as
+     autoplay-muted <video> elements — see main.js reelCardHtml). The cards
+     are 9:16, the full-screen viewer is edge-to-edge; the video covers
+     either box with object-fit:cover. */
   .vibe-reel-track { scrollbar-width: none; }
   .vibe-reel-track::-webkit-scrollbar { display: none; }
-  .ig-crop { @apply absolute left-1/2 top-1/2 overflow-hidden; transform-origin: center; }
 
-  /* Full-screen mobile reels viewer — edge-to-edge, cover-fit crop */
+  /* Full-screen mobile reels viewer — edge-to-edge, cover-fit video */
   .reels-viewer { @apply invisible fixed inset-0 z-[200] bg-black opacity-0 transition-opacity duration-200; }
   .reels-viewer.open { @apply visible opacity-100; }
   .reels-viewer-close { @apply absolute right-4 top-4 z-20 grid size-11 cursor-pointer place-items-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60; }
@@ -153,6 +171,10 @@
   .reels-viewer-track::-webkit-scrollbar { display: none; }
   .reels-slide { @apply relative block h-dvh w-full snap-start overflow-hidden bg-black; }
   .reels-slide-frame { @apply absolute inset-0 overflow-hidden; }
+  .reels-slide-frame video { @apply size-full object-cover; }
+  .reel-controls { @apply absolute bottom-2.5 right-2.5 z-10 flex items-center gap-1.5; }
+  .reel-btn { @apply grid size-8 cursor-pointer place-items-center rounded-full border border-white/25 bg-black/45 text-white shadow-md backdrop-blur-sm transition hover:bg-black/65 focus-visible:outline-2 focus-visible:outline-white/70; }
+  .reel-btn svg { @apply size-4; }
 
   /* Reusable image-led sections */
   .luxury-intro-banner { @apply bg-white py-10 md:py-14; }
@@ -789,21 +811,6 @@
 .enquiry-orbit > span:last-child { @apply block whitespace-nowrap leading-none; }
 .enquiry-orbit-ring { @apply rounded-full; }
 
-/* Traveller story rail */
-.trip-stories .section-header { @apply mb-3 items-end; }
-.trip-stories .section-kicker { @apply text-brand-yellow; }
-.trip-stories .section-title { @apply text-white; }
-.trip-stories .section-subtitle { @apply mb-8 ml-0 max-w-2xl text-left text-white/70; }
-.trip-stories .destination-scroll-controls button { @apply border-white/20 bg-white text-brand-purple hover:border-brand-yellow hover:bg-brand-yellow hover:text-brand-deep; }
-.story-reel { scrollbar-width: none; }
-.story-reel::-webkit-scrollbar { display: none; }
-.story-frame::after { content: ''; @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent; }
-.story-frame { @apply transition duration-300 hover:-translate-y-1 hover:border-brand-yellow/60; }
-.story-frame img { @apply transition duration-500; }
-.story-frame:hover img { @apply scale-105; }
-.story-play { @apply transition duration-200; }
-.story-frame:hover .story-play { @apply scale-110; }
-.story-play svg { @apply size-6 fill-current; }
 
 /* Footer alignment and hierarchy */
 .footer-wave { @apply hidden; }
@@ -851,8 +858,6 @@
     .trust-label { @apply text-[10px]!; }
   }
   .legacy-document-bridge .container { width: min(calc(100% - 48px), 1600px) !important; }
-  .trip-stories .section-header { @apply flex; }
-  .trip-stories .section-subtitle { @apply text-sm; }
 }
 
 @media (max-width: 639px) {
@@ -896,9 +901,6 @@
     .campaign-image-slider .campaign-slide { @apply h-full min-h-0; }
     .campaign-image-slider .campaign-slide > img { @apply object-center; }
   }
-  .trip-stories { @apply py-12; }
-  .trip-stories .section-header { @apply items-center; }
-  .trip-stories .section-subtitle { @apply mb-6; }
   .footer .footer-brand { @apply order-first; }
   .legacy-document-bridge .container { width: calc(100% - 32px) !important; }
   .legacy-document-bridge .category-trip-body,
@@ -926,9 +928,28 @@
 .mobile-bottom-nav .bottom-nav-trips { @apply font-heading text-[1.65rem] font-medium tracking-[-.05em]; }
 .mobile-bottom-nav .bottom-nav-whatsapp { @apply mx-auto size-12 min-h-12 rounded-full transition-transform hover:scale-105; }
 .mobile-bottom-nav.nav-hidden { @apply translate-y-[calc(100%+12px)]; }
-#header { transition: transform .28s ease, box-shadow .2s ease; }
+#header { transition: transform .28s ease, box-shadow .2s ease, background-color .25s ease; }
 #header.nav-hidden { transform: translateY(-105%); }
 .hamburger span { @apply h-0.5 w-6 rounded-full bg-brand-ink; }
+
+/* Video intro hero: on mobile/tablet only, the header floats transparent
+   over the video until scrolled past it, then reverts to its normal solid
+   header styling. Desktop header always stays solid. */
+.hero-intro-video { z-index: 10; }
+.hero-intro-video video { pointer-events: none; }
+@media (max-width: 1099px) {
+  body:has(.hero-intro-video) #header:not(.header-solid) {
+    background: transparent;
+    box-shadow: none;
+  }
+  body:has(.hero-intro-video) #header.header-solid {
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(69, 13, 105, .09);
+  }
+  body:has(.hero-intro-video) #header:not(.header-solid) .hamburger span { background-color: #fff; }
+  body:has(.hero-intro-video) #header:not(.header-solid) .header-phone-mobile { color: #fff; }
+  body:has(.hero-intro-video) #header:not(.header-solid) .logo-img-mobile { filter: brightness(0) invert(1); }
+}
 
 @media (max-width: 767px) {
   .mobile-bottom-nav { @apply grid; }
@@ -1427,9 +1448,9 @@
 .legacy-document-bridge .journal-grid {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 409px;
+  grid-auto-columns: 411px;
   grid-template-columns: none;
-  gap: 24px;
+  gap: 16px;
   overflow-x: auto;
   padding: 0;
   padding-right: 0;
@@ -1444,15 +1465,14 @@
   border-radius: 16px !important;
   box-shadow: none;
   scroll-snap-align: start;
+  margin: 8px 0;
 }
 .legacy-document-bridge .journal-img { aspect-ratio: 2.02 / 1 !important; }
-.legacy-document-bridge .story-reel { grid-auto-columns: 409px !important; gap: 24px !important; }
-.legacy-document-bridge .story-frame { aspect-ratio: 16 / 9 !important; border-radius: 0 !important; }
 
 @media (max-width: 767px) {
   .legacy-document-bridge .container { width: calc(100% - 24px) !important; }
   .legacy-document-bridge .section-title { font-size: 20px; line-height: 28px; letter-spacing: 0; }
-  .legacy-document-bridge :is(.destinations, .upcoming, .why-us, .trending, .reviews, .faq, .home-journal, .corporate-banner, .trip-stories) {
+  .legacy-document-bridge :is(.destinations, .upcoming, .why-us, .trending, .reviews, .faq, .home-journal, .corporate-banner, .activities) {
     padding-top: 28px !important;
     padding-bottom: 28px !important;
   }
@@ -1470,8 +1490,8 @@
     font-size: 12.5px;
   }
   .legacy-document-bridge .hero-ctas .btn svg { display: none; }
-  .legacy-document-bridge .trust-strip { height: 56px; padding-top: 0 !important; padding-bottom: 0 !important; }
-  .legacy-document-bridge .trust-items { height: 56px; padding: 0; }
+  .legacy-document-bridge .trust-strip { height: 44px; padding-top: 0 !important; padding-bottom: 0 !important; }
+  .legacy-document-bridge .trust-items { height: 44px; padding: 0; }
   .legacy-document-bridge #destinations .destination-heading { margin-bottom: 20px; }
   .legacy-document-bridge #destinations .destination-actions { display: none; }
   .legacy-document-bridge #destinations .destination-tabs { gap: 8px; margin-bottom: 24px; }
@@ -1579,11 +1599,9 @@
     text-align: center;
   }
   .legacy-document-bridge #reviews .review-text { -webkit-line-clamp: 5; }
-  .legacy-document-bridge .journal-grid { grid-auto-columns: 280px; gap: 16px; }
+  .legacy-document-bridge .journal-grid { grid-auto-columns: 280px; gap: 8px; }
   .legacy-document-bridge .journal-card { width: 280px; min-height: 226px; }
   .legacy-document-bridge .journal-img { width: 280px; height: 116px; aspect-ratio: auto !important; }
-  .legacy-document-bridge .story-reel { grid-auto-columns: 280px !important; gap: 16px !important; }
-  .legacy-document-bridge .story-frame { width: 280px; height: 158px; aspect-ratio: auto !important; }
   .legacy-document-bridge .faq-heading { display: grid; gap: 12px; margin-bottom: 24px; }
   .legacy-document-bridge .faq-heading > div { min-width: 0; }
   .legacy-document-bridge .faq-heading p { margin-top: 8px; font-size: 14px; line-height: 20px; }
