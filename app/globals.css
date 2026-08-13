@@ -550,10 +550,10 @@
 .hotel-confidence-panel strong { @apply font-heading text-sm font-extrabold; }
 .hotel-confidence-panel small { @apply text-xs leading-5 text-white/55; }
 
-.hotel-property-hero { @apply relative isolate min-h-[580px] overflow-hidden bg-brand-deep text-white; }
-.hotel-property-hero > img { @apply absolute inset-0 size-full object-cover; transform: scale(1.02); animation: hotel-hero-drift 14s ease-out both; }
+.hotel-property-hero { @apply relative isolate aspect-[2.25/1] w-full max-w-full overflow-hidden bg-brand-deep text-white max-md:min-h-[380px] md:aspect-[4.8/1]; }
+.hotel-property-hero > img { @apply absolute inset-0 h-full w-full object-cover; transform: scale(1.02); animation: hotel-hero-drift 14s ease-out both; }
 .hotel-property-scrim { @apply absolute inset-0 bg-[linear-gradient(90deg,rgba(28,4,40,.9)_0%,rgba(36,7,51,.58)_48%,rgba(20,3,30,.12)_75%),linear-gradient(0deg,rgba(20,3,29,.82),transparent_60%)]; }
-.hotel-property-copy { @apply relative z-10 flex min-h-[580px] flex-col justify-end pb-16 pt-24; }
+.hotel-property-copy { @apply absolute inset-0 z-10 flex flex-col justify-end pb-16 pt-24; }
 .hotel-property-copy .breadcrumbs { @apply mb-auto flex flex-wrap gap-2 text-xs text-white/65; }
 .hotel-property-copy h1 { @apply max-w-4xl font-heading text-[clamp(3rem,6vw,6rem)] font-extrabold leading-[.94] tracking-[-.055em]; }
 .hotel-property-copy > p { @apply mt-4 max-w-2xl text-base leading-7 text-white/75; }
@@ -603,7 +603,6 @@
   .hotel-result-summary strong { @apply text-2xl; }
   .hotel-filter-dock > label { @apply min-w-full; }
   .hotel-filter-dock select { @apply w-full; }
-  .hotel-property-hero,.hotel-property-copy { @apply min-h-[540px]; }
   .hotel-property-copy { @apply pb-10 pt-20; }
   .hotel-property-copy h1 { @apply text-[2.7rem]; }
   .hotel-property-copy .hotel-hero-pills span:nth-child(3) { @apply hidden; }
@@ -645,7 +644,7 @@
 .category-tabs button.active { @apply border-brand-purple! bg-brand-purple! text-white! shadow-lg; }
 .category-tabs button:empty::before { content: 'All trips'; }
 .page-hero::after { content: ''; @apply pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-black/80 via-brand-deep/35 to-transparent; }
-.page-hero-content { @apply relative z-10; }
+.page-hero-content { @apply absolute inset-0 z-10; }
 
 /* Trip detail routes: shared Tailwind component skin for every /trips/[slug]. */
 @layer components {
@@ -1246,6 +1245,7 @@
 }
 .legacy-document-bridge #reviews .review-track {
   display: grid;
+  grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 24px) / 2);
   gap: 24px !important;
@@ -1344,6 +1344,7 @@
    (desktop two-column cards + mobile stacked cards). */
 #reviews .review-track {
   display: grid;
+  grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 24px) / 2);
   gap: 24px !important;
@@ -1427,8 +1428,11 @@
   font-weight: 500;
   line-height: 24px;
 }
-@media (max-width: 767px) {
+/* Tablet + mobile: one review card per screen (same horizontal box design
+   as desktop), auto-sliding — see wireReviewAutoplay() in main.js/app.js. */
+@media (max-width: 1099px) {
   #reviews .review-track {
+    grid-template-rows: none;
     grid-auto-flow: column;
     grid-auto-columns: calc(100vw - 40px);
     gap: 16px !important;
@@ -1440,30 +1444,66 @@
   }
   #reviews .review-card {
     scroll-snap-align: start;
-    flex-direction: column;
+    flex-direction: row;
     width: calc(100vw - 40px);
-    height: calc((100vw - 40px) / .9);
-    min-height: 0;
-    aspect-ratio: .9 / 1;
+    height: auto;
+    min-height: 220px;
+    aspect-ratio: auto;
     padding: 0 !important;
   }
   #reviews .review-img {
-    flex: 0 0 45%;
-    width: 100%;
-    height: 45%;
+    flex: 0 0 38%;
+    width: 38%;
+    height: auto;
   }
   #reviews .review-body {
-    flex: 0 0 55%;
-    align-items: center;
-    width: 100%;
-    height: 55%;
+    flex: 0 0 62%;
+    align-items: flex-start;
+    width: 62%;
+    height: auto;
     padding: 16px;
-    text-align: center;
+    text-align: left;
   }
-  #reviews .review-text { -webkit-line-clamp: 5; }
+  #reviews .review-text { -webkit-line-clamp: 6; }
+}
+@media (max-width: 1099px) {
+  .legacy-document-bridge #reviews .review-track {
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: calc(100vw - 40px);
+    gap: 16px !important;
+    width: 100%;
+    margin: 0;
+    padding: 0 2px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .legacy-document-bridge #reviews .review-card {
+    scroll-snap-align: start;
+    flex-direction: row;
+    width: calc(100vw - 40px);
+    height: auto;
+    min-height: 220px;
+    aspect-ratio: auto;
+    padding: 0 !important;
+  }
+  .legacy-document-bridge #reviews .review-img {
+    flex: 0 0 38%;
+    width: 38%;
+    height: auto;
+  }
+  .legacy-document-bridge #reviews .review-body {
+    flex: 0 0 62%;
+    align-items: flex-start;
+    width: 62%;
+    height: auto;
+    padding: 16px;
+    text-align: left;
+  }
+  .legacy-document-bridge #reviews .review-text { -webkit-line-clamp: 6; }
 }
 @media (min-width: 1536px) {
-  #reviews .review-track { grid-auto-rows: 230px; }
+  #reviews .review-track { grid-template-rows: repeat(2, 230px); }
   #reviews .review-card { height: 230px; min-height: 230px; }
 }
 .legacy-document-bridge .traveller-love {
@@ -1605,40 +1645,6 @@
     font-size: 20px;
     line-height: 28px;
   }
-  .legacy-document-bridge #reviews .review-track {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: calc(100vw - 40px);
-    gap: 16px !important;
-    width: 100%;
-    margin: 0;
-    padding: 0 2px 6px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-  }
-  .legacy-document-bridge #reviews .review-card {
-    scroll-snap-align: start;
-    flex-direction: column;
-    width: calc(100vw - 40px);
-    height: calc((100vw - 40px) / .9);
-    min-height: 0;
-    aspect-ratio: .9 / 1;
-    padding: 0 !important;
-  }
-  .legacy-document-bridge #reviews .review-img {
-    flex: 0 0 45%;
-    width: 100%;
-    height: 45%;
-  }
-  .legacy-document-bridge #reviews .review-body {
-    flex: 0 0 55%;
-    align-items: center;
-    width: 100%;
-    height: 55%;
-    padding: 16px;
-    text-align: center;
-  }
-  .legacy-document-bridge #reviews .review-text { -webkit-line-clamp: 5; }
   .legacy-document-bridge .journal-grid { grid-auto-columns: 280px; gap: 8px; }
   .legacy-document-bridge .journal-card { width: 280px; min-height: 226px; }
   .legacy-document-bridge .journal-img { width: 280px; height: 116px; aspect-ratio: auto !important; }
@@ -1659,7 +1665,7 @@
 }
 
 @media (min-width: 1536px) {
-  .legacy-document-bridge .review-track { grid-auto-rows: 230px; }
+  .legacy-document-bridge .review-track { grid-template-rows: repeat(2, 230px); }
   .legacy-document-bridge .review-card { height: 230px; min-height: 230px; }
 }
 

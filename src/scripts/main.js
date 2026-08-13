@@ -352,6 +352,29 @@ wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
 wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
 wireRail('#vibe-reel-track', '#vibe-prev', '#vibe-next', '.vibe-reel-card', 240);
 
+// Below the desktop breakpoint, reviews show one card per screen — auto-advance
+// through them instead of requiring a manual swipe/arrow tap.
+function wireReviewAutoplay(trackSelector) {
+  const track = $(trackSelector);
+  if (!track || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const isSingleCardLayout = () => window.innerWidth <= 1099;
+  let timer;
+  const stop = () => window.clearInterval(timer);
+  const advance = () => {
+    if (!isSingleCardLayout()) return;
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 5;
+    track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + track.clientWidth, behavior: 'smooth' });
+  };
+  const start = () => { stop(); if (isSingleCardLayout()) timer = window.setInterval(advance, 4000); };
+  track.addEventListener('mouseenter', stop);
+  track.addEventListener('mouseleave', start);
+  track.addEventListener('touchstart', stop, { passive: true });
+  track.addEventListener('touchend', start, { passive: true });
+  window.addEventListener('resize', start, { passive: true });
+  start();
+}
+wireReviewAutoplay('#review-track');
+
 // Self-hosted reels shown in the homepage "Travel Vibes" rail and the
 // full-screen mobile reels viewer. Order matches the Cloudinary upload
 // result (reels-upload-result.json); each slot's public id points to the
