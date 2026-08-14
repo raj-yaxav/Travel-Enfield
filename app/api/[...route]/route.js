@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { connectDatabase } from '../../../lib/mongodb';
 import { Destination, Trip, Category, Blog, Page, Enquiry, User, Hotel } from '../../../server/models';
 import { destinations, trips, categoryData, blogs, pageData, hotels } from '../../../server/seed';
-import { sendOtpEmail } from '../../../server/mailer';
+import { sendOtpEmail, sendEnquiryAdminEmail } from '../../../server/mailer';
 import { USER_SESSION_COOKIE, createUserSessionToken, getCurrentUserId } from '../../../lib/user-auth';
 
 const OTP_TTL_MS = 10 * 60 * 1000;
@@ -157,6 +157,7 @@ export async function POST(request, context) {
 
     if (pathname === 'enquiries') {
       const enquiry = await Enquiry.create(body);
+      await sendEnquiryAdminEmail(enquiry.toObject());
       return json({ ok: true, id: enquiry.id }, 201);
     }
     if (pathname === 'auth/login') {

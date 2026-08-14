@@ -139,6 +139,16 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') drop
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
+// Only one video should play with sound at a time: the moment any <video>
+// unmutes (reel, hero intro, future additions), mute every other one.
+// Setting .muted always fires 'volumechange', so this catches button clicks
+// and any programmatic unmute without needing to touch each call site.
+document.addEventListener('volumechange', event => {
+  const video = event.target;
+  if (video.tagName !== 'VIDEO' || video.muted) return;
+  $$('video').forEach(other => { if (other !== video) other.muted = true; });
+}, true);
+
 const announcement = $('#announcement-bar');
 $('#announcement-close')?.addEventListener('click', () => {
   announcement?.remove();
@@ -352,6 +362,100 @@ wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
 wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
 wireRail('#vibe-reel-track', '#vibe-prev', '#vibe-next', '.vibe-reel-card', 240);
 
+// Embla-style "peek" carousel: the card nearest the track's centre scales up
+// to full size, the rest sit at 0.9 — driven by scroll position, not :hover,
+// so it also works on touch.
+function wireJournalScale() {
+  document.querySelectorAll('.journal-grid').forEach(track => {
+    if (track.dataset.scaleReady) return;
+    track.dataset.scaleReady = 'true';
+    const cards = [...track.querySelectorAll('.journal-card')];
+    if (!cards.length) return;
+    const update = () => {
+      const trackRect = track.getBoundingClientRect();
+      const center = trackRect.left + trackRect.width / 2;
+      let closest = null, closestDist = Infinity;
+      cards.forEach(card => {
+        const r = card.getBoundingClientRect();
+        const dist = Math.abs((r.left + r.width / 2) - center);
+        if (dist < closestDist) { closestDist = dist; closest = card; }
+      });
+      cards.forEach(card => { card.style.transform = card === closest ? 'scale(1)' : 'scale(0.9)'; });
+    };
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  });
+}
+wireJournalScale();
+
+// Left/right elastic drag: click-and-drag (or touch-drag) the track past its
+// start or end and it stretches with resistance, then springs back — like a
+// native rubber-band scroll, but also works with a mouse (native overflow
+// scroll has no drag-to-scroll at all).
+function wireElasticDrag(trackSelector) {
+  document.querySelectorAll(trackSelector).forEach(track => {
+    if (track.dataset.elasticReady) return;
+    track.dataset.elasticReady = 'true';
+    let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+    const applyOvershoot = amount => { overshoot = amount; track.style.transform = amount ? `translateX(${-amount}px)` : ''; };
+    const settle = () => {
+      const start = overshoot; const startTime = performance.now(); const duration = 320;
+      const step = now => {
+        const t = Math.min(1, (now - startTime) / duration);
+        applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
+        if (t < 1) raf = requestAnimationFrame(step); else { track.style.transform = ''; overshoot = 0; }
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const pointerDown = e => {
+      isDown = true; dragged = false;
+      track.style.cursor = 'grabbing';
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      startScroll = track.scrollLeft;
+      if (raf) cancelAnimationFrame(raf);
+    };
+    const pointerMove = e => {
+      if (!isDown) return;
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const delta = startX - x;
+      if (Math.abs(delta) > 6) dragged = true;
+      const next = startScroll + delta;
+      const max = maxScroll();
+      if (next < 0) { track.scrollLeft = 0; applyOvershoot(next * 0.35); }
+      else if (next > max) { track.scrollLeft = max; applyOvershoot((next - max) * 0.35); }
+      else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
+      if (e.cancelable && dragged) e.preventDefault();
+    };
+    const pointerUp = () => {
+      if (!isDown) return;
+      isDown = false;
+      track.style.cursor = 'grab';
+      if (overshoot) settle();
+    };
+    track.style.cursor = 'grab';
+    track.addEventListener('mousedown', pointerDown);
+    track.addEventListener('touchstart', pointerDown, { passive: true });
+    window.addEventListener('mousemove', pointerMove);
+    track.addEventListener('touchmove', pointerMove, { passive: false });
+    window.addEventListener('mouseup', pointerUp);
+    track.addEventListener('touchend', pointerUp);
+    track.addEventListener('touchcancel', pointerUp);
+    track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+    // Images/links inside the track are draggable by default in the browser;
+    // that native drag hijacks the mouseup event so our spring-back never runs.
+    track.addEventListener('dragstart', e => e.preventDefault());
+  });
+}
+wireElasticDrag('.journal-grid');
+wireElasticDrag('.review-track');
+wireElasticDrag('#activities-track');
+wireElasticDrag('#vibe-reel-track');
+wireElasticDrag('.mobile-search-slider');
+wireElasticDrag('#trip-track');
+
 // Below the desktop breakpoint, reviews show one card per screen — auto-advance
 // through them instead of requiring a manual swipe/arrow tap.
 function wireReviewAutoplay(trackSelector) {
@@ -515,7 +619,13 @@ wireMobileSearchFilter(mobileSearchPanel, mobileSearchInput);
 const backToTop = $('#back-to-top');
 if (backToTop) {
   backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  const toggleBackToTop = () => backToTop.classList.toggle('show', window.scrollY > 480);
+  let lastScrollY = window.scrollY;
+  const toggleBackToTop = () => {
+    const currentY = window.scrollY;
+    const scrollingUp = currentY < lastScrollY;
+    backToTop.classList.toggle('show', currentY > 480 && scrollingUp);
+    lastScrollY = currentY;
+  };
   window.addEventListener('scroll', toggleBackToTop, { passive: true });
   toggleBackToTop();
 }
@@ -706,7 +816,7 @@ if (campaignSlider) {
   const stopCampaigns = () => window.clearInterval(campaignTimer);
   const startCampaigns = () => {
     stopCampaigns();
-    if (!reduceMotion) campaignTimer = window.setInterval(() => showCampaign(campaignIndex + 1), 4500);
+    if (!reduceMotion) campaignTimer = window.setInterval(() => showCampaign(campaignIndex + 1), 4000);
   };
 
   campaignSlider.addEventListener('mouseenter', stopCampaigns);

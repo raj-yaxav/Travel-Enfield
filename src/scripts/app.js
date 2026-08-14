@@ -4,7 +4,35 @@ import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Be
 
 const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
 const mount = document.querySelector('#page-content');
-document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542539/travelenfield/brand/logo-navbar.png'; });
+document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786716218/travelenfield/brand/logo-navbar.png'; });
+
+// Full-page overlay: hides header/content/footer together until the route's
+// data has fetched and rendered, instead of letting header+footer flash in
+// while the content area is still loading.
+const routeOverlay = document.querySelector('#route-overlay');
+const routeOverlayMessage = document.querySelector('#route-overlay-message');
+const ROUTE_OVERLAY_MESSAGES = [
+  'Packing your bags for adventure…',
+  'Hunting down the best deals…',
+  'Charting exciting new routes…',
+  'Gathering trips you’ll love…',
+  'Almost there — adventure awaits…',
+];
+let routeOverlayTimer = null;
+function startRouteOverlayMessages() {
+  if (!routeOverlayMessage || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let i = 0;
+  routeOverlayTimer = window.setInterval(() => {
+    i = (i + 1) % ROUTE_OVERLAY_MESSAGES.length;
+    routeOverlayMessage.style.opacity = '0';
+    window.setTimeout(() => { routeOverlayMessage.textContent = ROUTE_OVERLAY_MESSAGES[i]; routeOverlayMessage.style.opacity = '1'; }, 250);
+  }, 1600);
+}
+function hideRouteOverlay() {
+  if (routeOverlayTimer) window.clearInterval(routeOverlayTimer);
+  routeOverlay?.classList.add('is-hidden');
+}
+startRouteOverlayMessages();
 const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
 const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]));
 const icon = (name, cls = '') => `<i data-lucide="${name}" class="${cls}"></i>`;
@@ -94,13 +122,13 @@ const tailwindMap = {
   '.review-trip': 'text-xs text-gray-500',
   '.read-more': 'font-extrabold text-brand-purple',
   '.journal-grid': 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
-  '.journal-card': 'overflow-hidden rounded-2xl border border-brand-purple/10 bg-white shadow-sm scale-95 transition-transform duration-150 ease-out hover:scale-100 focus-within:scale-100',
+  '.journal-card': 'overflow-hidden rounded-2xl border border-brand-purple/10 bg-white shadow-sm transition-transform duration-150 ease-out',
   '.journal-img': 'aspect-[1.35] overflow-hidden',
   '.journal-img img': 'size-full object-cover',
-  '.journal-body': 'p-4',
-  '.journal-body h3': 'mb-2 font-heading text-sm font-extrabold text-brand-deep',
-  '.journal-body small': 'text-xs text-gray-500',
-  '.journal-cta': 'mt-3 inline-flex items-center gap-1 text-sm font-extrabold text-brand-purple',
+  '.journal-body': 'flex flex-wrap items-center justify-between gap-2 p-4',
+  '.journal-body h3': 'order-1 w-full font-heading text-sm font-extrabold leading-snug text-brand-deep',
+  '.journal-body small': 'order-2 text-xs text-gray-500',
+  '.journal-cta': 'order-3 inline-flex shrink-0 items-center gap-1 text-sm font-extrabold text-brand-purple',
   '.side-card,.trip-enquiry-card,.form-card,.custom-form-wrap': 'rounded-2xl border border-brand-purple/10 bg-white p-6 shadow-xl',
   '.form-grid': 'grid grid-cols-2 gap-4 max-sm:grid-cols-1',
   '.field': 'grid gap-1.5',
@@ -264,7 +292,13 @@ if(mobileSearchPanel&&mobileSearchInput){
 const backToTop=document.querySelector('#back-to-top');
 if(backToTop){
   backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-  const toggleBackToTop=()=>backToTop.classList.toggle('show',window.scrollY>480);
+  let lastScrollY=window.scrollY;
+  const toggleBackToTop=()=>{
+    const currentY=window.scrollY;
+    const scrollingUp=currentY<lastScrollY;
+    backToTop.classList.toggle('show',currentY>480&&scrollingUp);
+    lastScrollY=currentY;
+  };
   window.addEventListener('scroll',toggleBackToTop,{passive:true});
   toggleBackToTop();
 }
@@ -296,7 +330,15 @@ document.querySelectorAll('.footer-col').forEach(col=>{
 function hero({ title, description, image = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {
   return `<section class="page-hero"><img src="${esc(image)}" alt="" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
 }
-function categoryBanner(image, title, description, crumbLabel, { cover = false } = {}) {
+function categoryBanner(image, title, description, crumbLabel, { cover = false, titleOverlay = false } = {}) {
+  if (titleOverlay) {
+    return `<section class="relative aspect-[1.4/1] w-full max-w-full overflow-hidden bg-brand-ink md:aspect-[3/1]">
+      <img src="${esc(image)}" alt="${esc(title)}" class="absolute inset-0 h-full w-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
+      <h1 class="absolute inset-x-0 bottom-5 px-5 font-heading text-xl font-extrabold leading-tight text-white md:bottom-9 md:px-20 md:text-4xl">${esc(title)}</h1>
+    </section>
+    <div class="px-5 pt-4 md:px-20"><nav class="flex items-center gap-2 text-xs font-normal text-[#5A5A5A]" aria-label="Breadcrumb"><a href="/" class="hover:text-brand-purple">Home</a><span>/</span><span>${esc(crumbLabel)}</span></nav></div>`;
+  }
   const sectionClass = cover
     ? 'relative aspect-[2.25/1] w-full max-w-full overflow-hidden md:aspect-[4.8/1]'
     : 'w-full max-w-full overflow-hidden';
@@ -336,11 +378,13 @@ async function renderListing(slug) {
   const destinationsList=[...new Set(trips.map(t=>t.destinationSlug).filter(Boolean))];
   setMeta(category.title, category.description);
   mount.innerHTML = categoryBanner(category.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', category.title, category.description, category.name||'Trips', { cover: true })
-    + `<div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
+    + `<div class="relative">
+    <div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
     <div class="sticky top-[66px] z-30 block w-full bg-white py-2 min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(destinationsList)}</div>${bikeFilterPanel(trips, true)}</div>
     <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
     ${bikeFilterPanel(trips)}
-    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${trips.length ? trips.map(t => `<div class="bt-trip-card-wrap w-full" data-dest="${esc(t.destinationSlug || '')}" data-badge="${esc(t.badge || '')}" data-price="${Number(t.price)||0}" data-dates="${esc((t.dates||[]).join('|'))}">${bikeTripCard(t)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>`
+    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${trips.length ? trips.map(t => `<div class="bt-trip-card-wrap w-full" data-dest="${esc(t.destinationSlug || '')}" data-badge="${esc(t.badge || '')}" data-price="${Number(t.price)||0}" data-dates="${esc((t.dates||[]).join('|'))}">${bikeTripCard(t)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>
+    </div>`
     + reviewsSection(reviewsForTrips(trips))
     + reasonsSection()
     + homeFaqSection(category.faq)
@@ -401,15 +445,15 @@ function bikeFilterPanel(trips, mobile = false) {
 }
 
 const REASONS_CARDS = [
-  ['users-round', 'Solo never feels solo', 'Join alone and you still land in a group that looks out for you from day one.'],
-  ['shield-check', 'Safety is non-negotiable', 'Vetted routes, verified stays, emergency protocols and a support line that always answers.'],
-  ['user-round-check', 'Captains who know the road', 'Every departure is led by trained trip captains who have travelled the route many times over.'],
-  ['receipt-text', 'No hidden costs', 'Line-by-line inclusions before you pay. What you see on the page is what you pay at the end.'],
-  ['sparkles', 'Vibe check comes first', 'Departures are grouped by age and travel style, so the company suits the trip you wanted.'],
+  ['users-round', 'Solo never feels solo', 'Join alone and you still land in a group that looks out for you from day one.', 'border-brand-purple/10', 'bg-brand-purple/10', 'text-brand-purple'],
+  ['shield-check', 'Safety is non-negotiable', 'Vetted routes, verified stays, emergency protocols and a support line that always answers.', 'border-brand-cyan/10', 'bg-brand-cyan/10', 'text-brand-cyan'],
+  ['user-round-check', 'Captains who know the road', 'Every departure is led by trained trip captains who have travelled the route many times over.', 'border-brand-orange/10', 'bg-brand-orange/10', 'text-brand-orange'],
+  ['receipt-text', 'No hidden costs', 'Line-by-line inclusions before you pay. What you see on the page is what you pay at the end.', 'border-brand-lime/20', 'bg-brand-lime/15', 'text-[#5c9c0e]'],
+  ['sparkles', 'Vibe check comes first', 'Departures are grouped by age and travel style, so the company suits the trip you wanted.', 'border-brand-yellow/25', 'bg-brand-yellow/20', 'text-[#b8890a]'],
 ];
 
 function reasonsSection() {
-  return `<section class="reasons-section h-fit w-full bg-brand-surface px-8 py-14 md:px-0 md:py-16"><h2 class="mb-6 text-center font-heading text-xl font-medium text-brand-deep md:text-3xl">Reasons To Make Us Your Travel Bestie</h2><div class="flex flex-wrap justify-center gap-4 md:gap-6">${REASONS_CARDS.map(([iconName, title, body]) => `<div class="flex aspect-[3/1] h-28 items-center rounded-2xl bg-white px-3 md:h-40 md:min-w-96 md:basis-1/4 md:items-start md:px-6"><div class="my-auto flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-2xl bg-brand-purple/10 text-brand-purple md:h-[70px] md:w-[70px]">${icon(iconName, 'size-6 md:size-8')}</div><div class="flex flex-col gap-3 p-3 md:gap-4 md:p-6"><h3 class="text-sm font-medium text-brand-deep md:text-base">${esc(title)}</h3><p class="text-xs font-normal leading-relaxed text-gray-500 md:text-sm">${esc(body)}</p></div></div>`).join('')}</div></section>`;
+  return `<section class="reasons-section h-fit w-full bg-gradient-to-b from-brand-surface to-white px-8 py-14 md:px-0 md:py-16"><h2 class="mb-8 text-center font-heading text-2xl font-extrabold text-brand-deep md:text-3xl">Reasons To Make Us Your <span class="text-brand-orange">Travel Bestie</span></h2><div class="flex flex-wrap justify-center gap-4 md:gap-6">${REASONS_CARDS.map(([iconName, title, body, borderCls, bgCls, textCls]) => `<div class="flex aspect-[3/1] h-28 items-center rounded-2xl border ${borderCls} bg-white px-3 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg md:h-40 md:min-w-96 md:basis-1/4 md:items-start md:px-6"><div class="my-auto flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-2xl ${bgCls} ${textCls} md:h-[70px] md:w-[70px]">${icon(iconName, 'size-6 md:size-8')}</div><div class="flex flex-col gap-3 p-3 md:gap-4 md:p-6"><h3 class="text-sm font-extrabold text-brand-deep md:text-base">${esc(title)}</h3><p class="text-xs font-normal leading-relaxed text-gray-500 md:text-sm">${esc(body)}</p></div></div>`).join('')}</div></section>`;
 }
 
 const ACTIVITY_CARDS = [
@@ -629,7 +673,7 @@ function journalSection(blogs) {
 }
 
 function offersSliderSection() {
-  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative overflow-hidden rounded-[32px] bg-brand-deep shadow-2xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542545/travelenfield/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542546/travelenfield/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542543/travelenfield/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
+  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative aspect-[4/1] w-full overflow-hidden rounded-2xl bg-brand-deep shadow-2xl md:aspect-[16/3] md:rounded-3xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542545/travelenfield/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542546/travelenfield/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542543/travelenfield/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
 }
 
 function wireCampaignSlider(root = mount) {
@@ -645,7 +689,7 @@ function wireCampaignSlider(root = mount) {
     slides.forEach((slide, i) => { const active = i === index; slide.setAttribute('aria-hidden', String(!active)); slide.tabIndex = active ? 0 : -1; });
   };
   const stop = () => window.clearInterval(timer);
-  const start = () => { stop(); if (!reduceMotion) timer = window.setInterval(() => show(index + 1), 4500); };
+  const start = () => { stop(); if (!reduceMotion) timer = window.setInterval(() => show(index + 1), 4000); };
   slider.addEventListener('mouseenter', stop); slider.addEventListener('mouseleave', start);
   slider.addEventListener('focusin', stop); slider.addEventListener('focusout', start);
   show(0); start();
@@ -678,6 +722,97 @@ function wireRails() {
   wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
   wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
   wireReviewAutoplay('#review-track');
+  wireJournalScale();
+  wireElasticDrag('.journal-grid');
+  wireElasticDrag('.review-track');
+  wireElasticDrag('#activities-track');
+}
+
+// Left/right elastic drag: click-and-drag (or touch-drag) the track past its
+// start or end and it stretches with resistance, then springs back — like a
+// native rubber-band scroll, but also works with a mouse (native overflow
+// scroll has no drag-to-scroll at all).
+function wireElasticDrag(trackSelector) {
+  document.querySelectorAll(trackSelector).forEach(track => {
+    if (track.dataset.elasticReady) return;
+    track.dataset.elasticReady = 'true';
+    let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+    const applyOvershoot = amount => { overshoot = amount; track.style.transform = amount ? `translateX(${-amount}px)` : ''; };
+    const settle = () => {
+      const start = overshoot; const startTime = performance.now(); const duration = 320;
+      const step = now => {
+        const t = Math.min(1, (now - startTime) / duration);
+        applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
+        if (t < 1) raf = requestAnimationFrame(step); else { track.style.transform = ''; overshoot = 0; }
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const pointerDown = e => {
+      isDown = true; dragged = false;
+      track.style.cursor = 'grabbing';
+      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      startScroll = track.scrollLeft;
+      if (raf) cancelAnimationFrame(raf);
+    };
+    const pointerMove = e => {
+      if (!isDown) return;
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const delta = startX - x;
+      if (Math.abs(delta) > 6) dragged = true;
+      const next = startScroll + delta;
+      const max = maxScroll();
+      if (next < 0) { track.scrollLeft = 0; applyOvershoot(next * 0.35); }
+      else if (next > max) { track.scrollLeft = max; applyOvershoot((next - max) * 0.35); }
+      else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
+      if (e.cancelable && dragged) e.preventDefault();
+    };
+    const pointerUp = () => {
+      if (!isDown) return;
+      isDown = false;
+      track.style.cursor = 'grab';
+      if (overshoot) settle();
+    };
+    track.style.cursor = 'grab';
+    track.addEventListener('mousedown', pointerDown);
+    track.addEventListener('touchstart', pointerDown, { passive: true });
+    window.addEventListener('mousemove', pointerMove);
+    track.addEventListener('touchmove', pointerMove, { passive: false });
+    window.addEventListener('mouseup', pointerUp);
+    track.addEventListener('touchend', pointerUp);
+    track.addEventListener('touchcancel', pointerUp);
+    track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+    // Images/links inside the track are draggable by default in the browser;
+    // that native drag hijacks the mouseup event so our spring-back never runs.
+    track.addEventListener('dragstart', e => e.preventDefault());
+  });
+}
+
+// Embla-style "peek" carousel: the card nearest the track's centre scales up
+// to full size, the rest sit at 0.9 — driven by scroll position, not :hover,
+// so it also works on touch.
+function wireJournalScale() {
+  document.querySelectorAll('.journal-grid').forEach(track => {
+    if (track.dataset.scaleReady) return;
+    track.dataset.scaleReady = 'true';
+    const cards = [...track.querySelectorAll('.journal-card')];
+    if (!cards.length) return;
+    const update = () => {
+      const trackRect = track.getBoundingClientRect();
+      const center = trackRect.left + trackRect.width / 2;
+      let closest = null, closestDist = Infinity;
+      cards.forEach(card => {
+        const r = card.getBoundingClientRect();
+        const dist = Math.abs((r.left + r.width / 2) - center);
+        if (dist < closestDist) { closestDist = dist; closest = card; }
+      });
+      cards.forEach(card => { card.style.transform = card === closest ? 'scale(1)' : 'scale(0.9)'; });
+    };
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  });
 }
 
 // Below the desktop breakpoint, reviews show one card per screen — auto-advance
@@ -783,11 +918,13 @@ async function renderHotels() {
   const tabs = [...new Set(stays.map(h => h.destinationSlug).filter(Boolean))];
   setMeta('Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.');
   mount.innerHTML = categoryBanner('https://res.cloudinary.com/dq3typk9u/image/upload/v1786542562/travelenfield/hotels/hotel-discovery-hero-v2.png', 'Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.', 'Hotels', { cover: true })
-    + `<div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
+    + `<div class="relative">
+    <div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
     <div class="sticky top-[66px] z-30 block w-full bg-white py-2 min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(tabs)}</div>${hotelFilterPanel(stays, true)}</div>
     <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
     ${hotelFilterPanel(stays)}
-    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${stays.length ? stays.map(h => `<div class="bt-hotel-card-wrap w-full" data-dest="${esc(h.destinationSlug || '')}" data-star="${esc(String(Math.round(h.star || 4)))}" data-price="${Number(h.pricePerNight) || 0}">${hotelListingCard(h)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">More stays are being verified.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>`
+    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${stays.length ? stays.map(h => `<div class="bt-hotel-card-wrap w-full" data-dest="${esc(h.destinationSlug || '')}" data-star="${esc(String(Math.round(h.star || 4)))}" data-price="${Number(h.pricePerNight) || 0}">${hotelListingCard(h)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">More stays are being verified.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>
+    </div>`
     + reviewsSection()
     + reasonsSection()
     + homeFaqSection()
@@ -898,47 +1035,50 @@ async function renderTrip(slug) {
   const itinerary=(trip.itinerary||[]);
   const tripImage=trip.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg';
   const dest=await api(`/destinations/${trip.destinationSlug}`).catch(()=>null);
-  const waLink=`https://wa.me/919876543210?text=${encodeURIComponent(`Hi TravelEnfield! I am interested in the ${trip.title} trip.`)}`;
+  const waLink=`https://wa.me/919310656044?text=${encodeURIComponent(`Hi TravelEnfield! I am interested in the ${trip.title} trip.`)}`;
   const aboutCopy=[trip.summary,`${trip.title} runs for ${trip.duration} with a group of ${trip.groupSize}. Every day is paced so you experience the place instead of just ticking it off — transfers, stays and the experiences listed in the inclusions are handled end to end.`,`The group meets at ${trip.pickup} and moves together with a dedicated trip captain throughout. Ideal for friends, couples and solo travellers, this itinerary is built to feel smooth, safe and memorable from start to finish.`];
-  mount.innerHTML=categoryBanner(tripImage, trip.title, trip.summary, trip.title, { cover: true })
+  const destLabel=dest?.name||trip.title;
+  mount.innerHTML=categoryBanner(tripImage, trip.title, trip.summary, trip.title, { titleOverlay: true })
   + `<nav class="trip-audit-tabs" aria-label="Trip sections"><div class="container"><a href="#itinerary">Itinerary</a><a href="#inclusions">Inclusions</a><a href="#costing">Costing</a><a href="#notes">Notes</a></div></nav>
   <section class="trip-detail-shell"><div class="container trip-detail-layout">
     <main class="trip-detail-main">
       <section class="trip-about" aria-label="About this trip">
-        <div class="trip-section-heading trip-heading-left"><span class="page-eyebrow">About this trip</span><h2>${esc(trip.title)}</h2></div>
+        <h2 class="trip-about-heading">About ${esc(destLabel)} Trip</h2>
         <div class="trip-about-copy clamped">${aboutCopy.map(x=>`<p>${esc(x)}</p>`).join('')}</div>
         <button class="trip-read-more" type="button" data-read-more>Read More</button>
       </section>
       <section class="trip-breakdown" id="itinerary">
         <div class="trip-breakdown-head">
-          <div class="trip-section-heading trip-heading-left"><span class="page-eyebrow">ITINERARY</span><h2>Itinerary Breakdown</h2></div>
+          <h2 class="trip-section-title">Itinerary Breakdown</h2>
           <button class="trip-download" type="button" data-download-itinerary>${icon('receipt-text')} Download Itinerary</button>
         </div>
         <ol class="breakdown-list">${itinerary.map((day,i)=>`<li class="breakdown-item${i===0?' open':''}"><button type="button" class="breakdown-toggle" aria-expanded="${i===0}"><span class="breakdown-day"><small>Day</small><b>${day.day}</b></span><h3>${esc(day.title)}</h3><span class="breakdown-chevron">${icon('chevron-down')}</span></button><div class="breakdown-body">${(day.details||[]).map(x=>`<p>${esc(x)}</p>`).join('')}</div></li>`).join('')}</ol>
       </section>
       <section class="trip-costing" id="costing">
-        <div class="trip-section-heading trip-heading-left"><span class="page-eyebrow">COSTING</span><h2>Trip cost at a glance</h2><p>Clear per-person pricing for this departure — no hidden add-ons.</p></div>
+        <h2 class="trip-section-title">Trip Cost at a Glance</h2><p class="trip-section-subtext">Clear per-person pricing for this departure — no hidden add-ons.</p>
         <div class="costing-grid">
           <article class="costing-main"><small>Starting from</small><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del><span class="costing-off">${esc(trip.discount||'Limited offer')}</span><em>Per Person</em></article>
           <div class="costing-facts"><div>${icon('clock-3')}<span><small>Duration</small><strong>${esc(trip.duration)}</strong></span></div><div>${icon('users')}<span><small>Group size</small><strong>${esc(trip.groupSize)}</strong></span></div><div>${icon('map-pin')}<span><small>Meet-up point</small><strong>${esc(trip.pickup)}</strong></span></div></div>
         </div>
       </section>
-      <section class="trip-package" id="inclusions"><div class="trip-section-heading trip-heading-left"><span class="page-eyebrow">INCLUSIONS</span><h2>Everything you need to know</h2></div><div class="trip-package-grid"><article class="package-panel included"><h3>${icon('circle-check-big')} Included in your trip</h3><ul>${(trip.inclusions||[]).map(x=>`<li>${icon('check')} ${esc(x)}</li>`).join('')}</ul></article><article class="package-panel excluded"><h3>${icon('x')} Not included</h3><ul>${(trip.exclusions||[]).map(x=>`<li>${icon('x')} ${esc(x)}</li>`).join('')}</ul></article></div></section>
+      <section class="trip-package" id="inclusions"><h2 class="trip-section-title">What's in the Package?</h2><div class="trip-package-grid"><article class="package-panel included"><h3>${icon('circle-check-big')} Included in your trip</h3><ul>${(trip.inclusions||[]).map(x=>`<li>${icon('check')} ${esc(x)}</li>`).join('')}</ul></article><article class="package-panel excluded"><h3>${icon('x')} Not included</h3><ul>${(trip.exclusions||[]).map(x=>`<li>${icon('x')} ${esc(x)}</li>`).join('')}</ul></article></div></section>
       <section class="trip-notes" id="notes"><h2>${icon('shield-check')} Good to know before you go</h2><ul>${(trip.notes||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
       ${dest&&dest.faq&&dest.faq.length?homeFaqSection(dest.faq):''}
     </main>
     <aside class="trip-enquiry-sticky"><div class="trip-enquiry-card trip-booking">
       <p class="trip-from">Trip Starts From</p>
-      <div class="trip-enquiry-price"><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del></div>
-      <p class="trip-saving">${esc(trip.discount||'Limited departure offer')}</p>
+      <div class="trip-enquiry-price"><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del><span class="trip-saving-inline">${esc(trip.discount||'Limited offer')}</span></div>
       <p class="trip-per-person">Per Person</p>
-      <div class="trip-booking-dates"><h4>${icon('calendar-days')} Trip Dates</h4>${(trip.dates||[]).map(x=>`<button type="button" class="trip-date-row" data-departure="${esc(x)}"><strong>${esc(x)}</strong><em>Starting ${money(trip.price)} /Person ${icon('chevron-right')}</em></button>`).join('')}</div>
+      <div class="trip-booking-dates">
+        <div class="trip-dates-head"><h4>${icon('calendar-days')} Trip Dates</h4><select class="trip-month-select" data-month-select aria-label="Filter dates by month">${[...new Set((trip.dates||[]).map(x=>x.split(' ')[0]))].map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join('')}</select></div>
+        <div class="trip-date-list" data-date-list>${(trip.dates||[]).map((x,i)=>`<button type="button" class="trip-date-row${i===0?' selected':''}" data-departure="${esc(x)}" data-month="${esc(x.split(' ')[0])}"><span><strong>${esc(x)}</strong><em>Starting ${money(trip.price)} /Person</em></span><span class="trip-date-check">${icon('check')}</span></button>`).join('')}</div>
+      </div>
       <div class="trip-booking-count"><h4>${icon('users')} No. of Travellers</h4><div class="count-stepper"><button type="button" data-count-minus aria-label="Fewer travellers">−</button><span data-count>1</span><button type="button" data-count-plus aria-label="More travellers">+</button></div></div>
-      <button type="button" class="btn btn-primary btn-block" data-book-now>${icon('send')} Book Now</button>
-      <a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} Any Doubt? WhatsApp</a>
+      <button type="button" class="btn btn-primary btn-block" data-book-now>${icon('send')} Enquiry Now</button>
+      <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>
     </div></aside>
   </div></section>
-  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button><a class="trip-mobile-wa" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>`;
+  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Enquiry Now</button><a class="trip-mobile-wa" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>`;
   wireTripExperience(trip);
   wireFaq();
 }
@@ -952,7 +1092,11 @@ function wireTripExperience(trip){
   const countEl=document.querySelector('[data-count]');let count=1;
   document.querySelectorAll('[data-count-minus],[data-count-plus]').forEach(btn=>btn.addEventListener('click',()=>{count=btn.dataset.countMinus!==undefined?Math.max(1,count-1):Math.min(30,count+1);if(countEl)countEl.textContent=count;}));
   document.querySelectorAll('[data-book-now]').forEach(btn=>btn.addEventListener('click',()=>openDepartureForm(trip,trip.dates?.[0]||'your preferred dates',btn,count)));
-  document.querySelectorAll('[data-departure]').forEach(button=>button.addEventListener('click',()=>openDepartureForm(trip,button.dataset.departure,button,count)));
+  document.querySelectorAll('[data-departure]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.trip-date-row').forEach(row=>row.classList.toggle('selected',row===button));openDepartureForm(trip,button.dataset.departure,button,count);}));
+  const monthSelect=document.querySelector('[data-month-select]'),dateRows=[...document.querySelectorAll('.trip-date-row')];
+  const applyMonthFilter=()=>{const month=monthSelect?.value;dateRows.forEach(row=>row.classList.toggle('hidden',Boolean(month)&&row.dataset.month!==month));};
+  monthSelect?.addEventListener('change',applyMonthFilter);
+  applyMonthFilter();
   const more=document.querySelector('[data-read-more]'),aboutCopy=document.querySelector('.trip-about-copy');
   more?.addEventListener('click',()=>openAboutPopup(trip.title,aboutCopy?.innerHTML||''));
   document.querySelectorAll('[data-download-itinerary]').forEach(btn=>btn.addEventListener('click',()=>downloadItinerary(trip)));
@@ -1025,6 +1169,6 @@ async function renderProfile(){
 
 function renderRouteLoader(){mount.innerHTML=`<div class="page-loader"><span aria-hidden="true"></span><p>Preparing your next adventure…</p></div>`;}
 
-async function router(){try{renderRouteLoader();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');await appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);}}
+async function router(){try{renderRouteLoader();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');await appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);}finally{hideRouteOverlay();}}
 
 router();
