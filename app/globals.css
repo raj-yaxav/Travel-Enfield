@@ -898,7 +898,18 @@
 
 .trip-about, .trip-breakdown, .trip-costing, .trip-package, .trip-notes { scroll-margin-top: 180px; }
 
-@media (min-width: 761px) { .trip-mobile-cta { display: none; } }
+/* The full sticky booking card only makes sense once it has its own column
+   (lg / 1024px+, matching .trip-detail-layout's grid breakpoint). Below
+   that, the compact bottom bar (.trip-mobile-cta) is the only booking entry
+   point, so the two must swap at the exact same breakpoint — otherwise
+   there's a width range with neither visible. */
+@media (min-width: 1024px) { .trip-mobile-cta { display: none; } }
+@media (max-width: 1023px) {
+  .trip-enquiry-sticky { @apply hidden; }
+  .trip-mobile-cta { @apply flex; }
+  body:has(.trip-mobile-cta) { padding-bottom: calc(134px + env(safe-area-inset-bottom)); }
+  body:has(.trip-mobile-cta) .footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
 @media (max-width: 760px) {
   .trip-audit-tabs { top: 70px; }
   .trip-about { @apply pt-6; }
@@ -910,9 +921,6 @@
   .breakdown-toggle h3 { @apply text-sm; }
   .breakdown-body { @apply px-3.5; }
   .costing-grid { grid-template-columns: 1fr; }
-  .trip-mobile-cta { @apply flex; }
-  body:has(.trip-mobile-cta) { padding-bottom: calc(134px + env(safe-area-inset-bottom)); }
-  body:has(.trip-mobile-cta) .footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 }
 
 /* Floating enquiry trigger */
@@ -1568,7 +1576,7 @@
 .legacy-document-bridge .traveller-love {
   padding-top: 40px;
   padding-bottom: 40px;
-  background: #eeeeee;
+  background: #c2c2c2;
   text-align: center;
 }
 .legacy-document-bridge .traveller-love .section-title { margin: 0; }
@@ -1582,6 +1590,7 @@
   height: auto;
   margin: 0 auto;
   border-radius: 20px;
+  background: #c2c2c2;
   object-fit: cover;
 }
 .legacy-document-bridge .journal-grid {

@@ -226,7 +226,7 @@ const tailwindMap = {
   '.hotel-booking-sticky': 'order-first min-w-0 lg:order-none lg:sticky lg:top-24',
   '.departure-modal': 'fixed inset-0 z-[120] grid place-items-center p-4',
   '.departure-backdrop': 'absolute inset-0 border-0 bg-brand-ink/70 backdrop-blur-sm',
-  '.departure-dialog': 'relative z-10 w-[min(100%,480px)] rounded-3xl bg-white p-7 shadow-2xl',
+  '.departure-dialog': 'relative z-10 max-h-[90vh] w-[min(100%,480px)] overflow-y-auto rounded-3xl bg-white p-5 shadow-2xl md:p-7',
   '.departure-close': 'absolute right-3 top-3 grid size-11 place-items-center rounded-full border border-brand-purple/10 bg-white text-brand-purple',
   '.departure-kicker': 'inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-brand-purple',
   '.departure-dialog h2': 'mb-2 mt-3 font-heading text-2xl font-extrabold text-brand-deep',
@@ -1078,7 +1078,7 @@ async function renderTrip(slug) {
       <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>
     </div></aside>
   </div></section>
-  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Enquiry Now</button><a class="trip-mobile-wa" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>`;
+  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button><a class="trip-mobile-wa" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>`;
   wireTripExperience(trip);
   wireFaq();
 }
@@ -1128,7 +1128,7 @@ function departureInputValue(label){const parsed=new Date(`${label} ${new Date()
 function openDepartureForm(trip,dateLabel,trigger,count=1){
   document.querySelector('.departure-modal')?.remove();
   document.body.insertAdjacentHTML('beforeend',`<div class="departure-modal open"><button class="departure-backdrop" type="button" aria-label="Close departure form"></button><section class="departure-dialog" role="dialog" aria-modal="true" aria-labelledby="departure-title"><button class="departure-close" type="button" aria-label="Close">${icon('x')}</button><span class="departure-kicker">${icon('calendar-days')} Selected departure</span><h2 id="departure-title">Travel on ${esc(dateLabel)}</h2><p>${esc(trip.title)} · Our expert will confirm availability before you pay.</p><form class="departure-form"><label>Full name<input name="name" required autocomplete="name" placeholder="Your name"></label><label>Phone number<input name="phone" type="tel" required autocomplete="tel" placeholder="+91 98765 43210"></label><label>Travel date<input name="travelDate" type="date" value="${departureInputValue(dateLabel)}" required></label><input type="hidden" name="destination" value="${esc(trip.title)}"><input type="hidden" name="type" value="selected-departure"><input type="hidden" name="travellers" value="${count}"><button class="btn btn-primary" type="submit">${icon('send')} Request this date</button><p class="form-status" role="status"></p></form><small class="departure-safe">${icon('shield-check')} No payment · No spam · Free callback</small></section></div>`);
-  const modal=document.querySelector('.departure-modal');applyTailwindStyles(modal);activateIcons();const form=modal.querySelector('form'),close=()=>{modal.remove();trigger?.focus()};modal.querySelectorAll('.departure-backdrop,.departure-close').forEach(x=>x.addEventListener('click',close));
+  const modal=document.querySelector('.departure-modal');applyTailwindStyles();activateIcons();const form=modal.querySelector('form'),close=()=>{modal.remove();trigger?.focus()};modal.querySelectorAll('.departure-backdrop,.departure-close').forEach(x=>x.addEventListener('click',close));
   const escape=e=>{if(e.key==='Escape'){document.removeEventListener('keydown',escape);close()}};document.addEventListener('keydown',escape);modal.querySelector('input')?.focus();
   form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button[type=submit]'),status=form.querySelector('.form-status');button.disabled=true;status.textContent='Saving your selected departure…';try{const body={...Object.fromEntries(new FormData(form)),travellers:Number(count)||1};const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!response.ok)throw new Error();status.className='form-status success';status.textContent='Date request received. Our expert will call you shortly.';setTimeout(close,1800)}catch{status.className='form-status error';status.textContent='Could not save right now. Please try again.'}finally{button.disabled=false}})
 }
