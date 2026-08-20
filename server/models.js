@@ -5,6 +5,8 @@ const Destination = mongoose.models.Destination || mongoose.model('Destination',
   name: { type: String, required: true }, slug: { type: String, required: true, unique: true, index: true },
   category: { type: String, enum: ['domestic', 'international'], required: true }, image: String,
   tagline: String, summary: String, startingPrice: Number, bestTime: String,
+  seoTitle: String, seoDescription: String, overview: String, planningNotes: String,
+  idealDuration: String, gettingThere: String, localInsight: String,
   highlights: [String], thingsToDo: [String], travelTips: [String], faq: [{ question: String, answer: String }],
 }, options));
 const Trip = mongoose.models.Trip || mongoose.model('Trip', new mongoose.Schema({

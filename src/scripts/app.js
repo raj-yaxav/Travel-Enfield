@@ -113,7 +113,7 @@ const tailwindMap = {
   '.faq-toggle': 'grid size-9 shrink-0 place-items-center rounded-full bg-brand-purple/10 text-brand-purple',
   '.faq-item.open .faq-toggle': 'bg-brand-yellow text-brand-deep',
   '.faq-answer p': 'px-5 pb-5 text-sm leading-relaxed text-gray-500',
-  '.review-track': 'grid auto-cols-[calc((100%_-_40px)/3)] grid-flow-col gap-5 overflow-x-auto pb-5 [scroll-snap-type:x_mandatory] max-lg:auto-cols-[calc((100%_-_20px)/2)] max-md:auto-cols-[84vw]',
+  '.review-track': 'grid auto-cols-[calc((100%_-_40px)/3)] grid-flow-col gap-5 overflow-x-auto pb-5 [scroll-snap-type:x_proximity] max-lg:auto-cols-[calc((100%_-_20px)/2)] max-md:auto-cols-[84vw]',
   '.review-card': 'grid snap-start grid-cols-[90px_1fr] gap-4 rounded-2xl border border-brand-purple/10 bg-white p-5 shadow-sm max-sm:grid-cols-[70px_1fr]',
   '.review-avatar': 'grid size-[90px] place-items-center rounded-full bg-gradient-to-br from-brand-purple to-brand-deep font-heading text-xl font-extrabold text-brand-yellow max-sm:size-[70px]',
   '.review-stars': 'text-brand-yellow',
@@ -379,7 +379,7 @@ async function renderListing(slug) {
   setMeta(category.title, category.description);
   mount.innerHTML = categoryBanner(category.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', category.title, category.description, category.name||'Trips', { cover: true })
     + `<div class="relative">
-    <div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
+    <div class="sticky top-[130px] z-30 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
     <div class="sticky top-[66px] z-30 block w-full bg-white py-2 min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(destinationsList)}</div>${bikeFilterPanel(trips, true)}</div>
     <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
     ${bikeFilterPanel(trips)}
@@ -726,6 +726,9 @@ function wireRails() {
   wireElasticDrag('.journal-grid');
   wireElasticDrag('.review-track');
   wireElasticDrag('#activities-track');
+  wireElasticDrag('.category-tabs');
+  wireElasticDrag('.hotel-destination-tabs');
+  wireElasticDrag('.hotel-quick-filters');
 }
 
 // Left/right elastic drag: click-and-drag (or touch-drag) the track past its
@@ -739,9 +742,14 @@ function wireElasticDrag(trackSelector) {
     let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
-    const applyOvershoot = amount => { overshoot = amount; track.style.transform = amount ? `translateX(${-amount}px)` : ''; };
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const applyOvershoot = amount => {
+      overshoot = amount;
+      track.style.transform = amount ? `translate3d(${-amount}px, 0, 0)` : '';
+    };
     const settle = () => {
-      const start = overshoot; const startTime = performance.now(); const duration = 320;
+      if (prefersReducedMotion) { applyOvershoot(0); return; }
+      const start = overshoot; const startTime = performance.now(); const duration = 280;
       const step = now => {
         const t = Math.min(1, (now - startTime) / duration);
         applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
@@ -749,39 +757,41 @@ function wireElasticDrag(trackSelector) {
       };
       raf = requestAnimationFrame(step);
     };
+    const eventX = e => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const pointerDown = e => {
+      if (e.button !== undefined && e.button !== 0) return;
       isDown = true; dragged = false;
       track.style.cursor = 'grabbing';
-      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      startX = eventX(e);
       startScroll = track.scrollLeft;
+      try { track.setPointerCapture?.(e.pointerId); } catch {}
       if (raf) cancelAnimationFrame(raf);
     };
     const pointerMove = e => {
       if (!isDown) return;
-      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const x = eventX(e);
       const delta = startX - x;
       if (Math.abs(delta) > 6) dragged = true;
       const next = startScroll + delta;
       const max = maxScroll();
-      if (next < 0) { track.scrollLeft = 0; applyOvershoot(next * 0.35); }
-      else if (next > max) { track.scrollLeft = max; applyOvershoot((next - max) * 0.35); }
+      if (next < 0) { track.scrollLeft = 0; applyOvershoot(Math.max(-56, Math.min(56, next * 0.52))); }
+      else if (next > max) { track.scrollLeft = max; applyOvershoot(Math.max(-56, Math.min(56, (next - max) * 0.52))); }
       else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
       if (e.cancelable && dragged) e.preventDefault();
     };
-    const pointerUp = () => {
+    const pointerUp = e => {
       if (!isDown) return;
       isDown = false;
       track.style.cursor = 'grab';
+      try { track.releasePointerCapture?.(e?.pointerId); } catch {}
       if (overshoot) settle();
     };
     track.style.cursor = 'grab';
-    track.addEventListener('mousedown', pointerDown);
-    track.addEventListener('touchstart', pointerDown, { passive: true });
-    window.addEventListener('mousemove', pointerMove);
-    track.addEventListener('touchmove', pointerMove, { passive: false });
-    window.addEventListener('mouseup', pointerUp);
-    track.addEventListener('touchend', pointerUp);
-    track.addEventListener('touchcancel', pointerUp);
+    track.style.touchAction = 'pan-y';
+    track.addEventListener('pointerdown', pointerDown);
+    track.addEventListener('pointermove', pointerMove);
+    track.addEventListener('pointerup', pointerUp);
+    track.addEventListener('pointercancel', pointerUp);
     track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
     // Images/links inside the track are draggable by default in the browser;
     // that native drag hijacks the mouseup event so our spring-back never runs.
@@ -853,15 +863,43 @@ function destinationTripCard(trip) {
   </a>`;
 }
 
+function destinationGuideSection(item) {
+  const list = (items, iconName) => (items || []).map(value => `<li class="flex gap-2"><span class="mt-0.5 shrink-0 text-brand-purple">${icon(iconName)}</span><span>${esc(value)}</span></li>`).join('');
+  return `<section class="border-y border-brand-purple/10 bg-brand-surface/60 px-5 py-10 md:px-20 md:py-14" aria-labelledby="${esc(item.slug)}-guide-title">
+    <div class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,.75fr)] lg:gap-14">
+      <article class="max-w-3xl">
+        <span class="section-kicker">Destination guide</span>
+        <h2 class="mt-2 font-heading text-2xl font-extrabold text-brand-deep md:text-3xl" id="${esc(item.slug)}-guide-title">Plan your ${esc(item.name)} trip</h2>
+        <p class="mt-4 text-sm leading-7 text-[#4f4f59] md:text-base">${esc(item.overview || item.summary)}</p>
+        <div class="mt-7 grid gap-6 sm:grid-cols-2">
+          <div><h3 class="font-heading text-lg font-extrabold text-brand-deep">Top experiences</h3><ul class="mt-3 grid gap-2.5 text-sm leading-6 text-[#4f4f59]">${list(item.thingsToDo, 'sparkles')}</ul></div>
+          <div><h3 class="font-heading text-lg font-extrabold text-brand-deep">Places to include</h3><ul class="mt-3 grid gap-2.5 text-sm leading-6 text-[#4f4f59]">${list(item.highlights, 'map-pin')}</ul></div>
+        </div>
+      </article>
+      <aside class="rounded-3xl border border-brand-purple/10 bg-white p-5 shadow-sm md:p-6">
+        <h3 class="font-heading text-xl font-extrabold text-brand-deep">At a glance</h3>
+        <dl class="mt-5 grid gap-4 text-sm"><div><dt class="font-bold text-brand-purple">Best time to visit</dt><dd class="mt-1 leading-6 text-[#4f4f59]">${esc(item.bestTime)}</dd></div><div><dt class="font-bold text-brand-purple">Ideal trip duration</dt><dd class="mt-1 leading-6 text-[#4f4f59]">${esc(item.idealDuration || '4 to 6 days')}</dd></div><div><dt class="font-bold text-brand-purple">Starting from</dt><dd class="mt-1 font-heading text-xl font-extrabold text-brand-deep">${money(item.startingPrice)}</dd></div></dl>
+        <a class="btn btn-primary mt-6 w-full justify-center" href="/custom-trip?destination=${esc(item.slug)}">Plan a custom trip</a>
+      </aside>
+    </div>
+    <div class="mx-auto mt-10 grid max-w-7xl gap-5 md:grid-cols-3">
+      <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Getting there</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.gettingThere || 'Our trip experts can help you plan the most practical arrival and transfer route for your dates.')}</p></article>
+      <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Plan smart</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.planningNotes || 'Plan around the season, keep your schedule realistic and confirm current local conditions before travelling.')}</p></article>
+      <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Travel like a local</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.localInsight || 'Leave room for local food, neighbourhood walks and small unplanned discoveries alongside the major highlights.')}</p></article>
+    </div>
+  </section>`;
+}
+
 async function renderDestination(slug) {
   const [item, trips, blogs] = await Promise.all([api(`/destinations/${slug}`), api(`/trips?destination=${slug}`), api('/blogs').catch(() => [])]);
-  setMeta(`${item.name} Tour Packages`, item.summary);
+  setMeta(item.seoTitle || `${item.name} Tour Packages`, item.seoDescription || item.summary);
   const matched = blogs.filter(b => (b.slug || '').includes(slug) || (b.image || '').includes(slug));
   const blogsToShow = [...matched, ...blogs.filter(b => !matched.includes(b))].slice(0, 5);
 
   mount.innerHTML = `<section class="relative aspect-[0.7/1] w-full max-w-full overflow-hidden bg-brand-ink md:aspect-[3.17/1]"><img src="${esc(item.image)}" alt="${esc(item.name)}" class="absolute inset-0 h-full w-full object-cover" /><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div><h1 class="absolute bottom-8 z-20 flex w-full justify-center px-4 text-center font-heading text-2xl font-extrabold text-white md:bottom-12 md:text-4xl">${esc(item.name)} Tour Packages</h1></section>
   <section class="px-5 py-8 md:px-20 md:py-10"><h2 class="font-heading text-xl font-extrabold text-brand-deep md:text-2xl">${esc(item.name)} Tour Packages</h2><p class="mt-2 max-w-4xl text-sm leading-relaxed text-[#5A5A5A] md:text-base">${esc(item.summary)} ${esc(item.tagline)}</p></section>
-  <section class="px-5 pb-10 md:px-20"><div class="flex flex-wrap justify-center gap-5 md:justify-start md:gap-6">${trips.length ? trips.map(destinationTripCard).join('') : '<div class="w-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></section>`
+   <section class="px-5 pb-10 md:px-20"><div class="flex flex-wrap justify-center gap-5 md:justify-start md:gap-6">${trips.length ? trips.map(destinationTripCard).join('') : '<div class="w-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned for this destination.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></section>`
+    + destinationGuideSection(item)
     + reviewsSection(reviewsForTrips(trips))
     + (blogsToShow.length ? journalSection(blogsToShow) : '')
     + homeFaqSection(item.faq);
@@ -919,7 +957,7 @@ async function renderHotels() {
   setMeta('Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.');
   mount.innerHTML = categoryBanner('https://res.cloudinary.com/dq3typk9u/image/upload/v1786542562/travelenfield/hotels/hotel-discovery-hero-v2.png', 'Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.', 'Hotels', { cover: true })
     + `<div class="relative">
-    <div class="sticky top-[130px] z-40 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
+    <div class="sticky top-[130px] z-30 hidden w-full bg-white py-2 min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
     <div class="sticky top-[66px] z-30 block w-full bg-white py-2 min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(tabs)}</div>${hotelFilterPanel(stays, true)}</div>
     <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
     ${hotelFilterPanel(stays)}

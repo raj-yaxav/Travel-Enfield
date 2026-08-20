@@ -400,9 +400,14 @@ function wireElasticDrag(trackSelector) {
     let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
-    const applyOvershoot = amount => { overshoot = amount; track.style.transform = amount ? `translateX(${-amount}px)` : ''; };
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const applyOvershoot = amount => {
+    overshoot = amount;
+    track.style.transform = amount ? `translate3d(${-amount}px, 0, 0)` : '';
+  };
     const settle = () => {
-      const start = overshoot; const startTime = performance.now(); const duration = 320;
+      if (prefersReducedMotion) { applyOvershoot(0); return; }
+      const start = overshoot; const startTime = performance.now(); const duration = 280;
       const step = now => {
         const t = Math.min(1, (now - startTime) / duration);
         applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
@@ -410,39 +415,41 @@ function wireElasticDrag(trackSelector) {
       };
       raf = requestAnimationFrame(step);
     };
+    const eventX = e => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const pointerDown = e => {
+      if (e.button !== undefined && e.button !== 0) return;
       isDown = true; dragged = false;
       track.style.cursor = 'grabbing';
-      startX = e.touches ? e.touches[0].clientX : e.clientX;
+      startX = eventX(e);
       startScroll = track.scrollLeft;
+      try { track.setPointerCapture?.(e.pointerId); } catch {}
       if (raf) cancelAnimationFrame(raf);
     };
     const pointerMove = e => {
       if (!isDown) return;
-      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const x = eventX(e);
       const delta = startX - x;
       if (Math.abs(delta) > 6) dragged = true;
       const next = startScroll + delta;
       const max = maxScroll();
-      if (next < 0) { track.scrollLeft = 0; applyOvershoot(next * 0.35); }
-      else if (next > max) { track.scrollLeft = max; applyOvershoot((next - max) * 0.35); }
+      if (next < 0) { track.scrollLeft = 0; applyOvershoot(Math.max(-56, Math.min(56, next * 0.52))); }
+      else if (next > max) { track.scrollLeft = max; applyOvershoot(Math.max(-56, Math.min(56, (next - max) * 0.52))); }
       else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
       if (e.cancelable && dragged) e.preventDefault();
     };
-    const pointerUp = () => {
+    const pointerUp = e => {
       if (!isDown) return;
       isDown = false;
       track.style.cursor = 'grab';
+      try { track.releasePointerCapture?.(e?.pointerId); } catch {}
       if (overshoot) settle();
     };
     track.style.cursor = 'grab';
-    track.addEventListener('mousedown', pointerDown);
-    track.addEventListener('touchstart', pointerDown, { passive: true });
-    window.addEventListener('mousemove', pointerMove);
-    track.addEventListener('touchmove', pointerMove, { passive: false });
-    window.addEventListener('mouseup', pointerUp);
-    track.addEventListener('touchend', pointerUp);
-    track.addEventListener('touchcancel', pointerUp);
+    track.style.touchAction = 'pan-y';
+    track.addEventListener('pointerdown', pointerDown);
+    track.addEventListener('pointermove', pointerMove);
+    track.addEventListener('pointerup', pointerUp);
+    track.addEventListener('pointercancel', pointerUp);
     track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
     // Images/links inside the track are draggable by default in the browser;
     // that native drag hijacks the mouseup event so our spring-back never runs.
@@ -455,6 +462,7 @@ wireElasticDrag('#activities-track');
 wireElasticDrag('#vibe-reel-track');
 wireElasticDrag('.mobile-search-slider');
 wireElasticDrag('#trip-track');
+wireElasticDrag('#destination-grid');
 
 // Below the desktop breakpoint, reviews show one card per screen — auto-advance
 // through them instead of requiring a manual swipe/arrow tap.
