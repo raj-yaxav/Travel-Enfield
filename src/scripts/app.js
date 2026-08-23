@@ -695,7 +695,7 @@ function wireCampaignSlider(root = mount) {
   show(0); start();
 }
 
-async function appendSharedTravelSections() {
+function appendSharedTravelSections() {
   const first = location.pathname.split('/').filter(Boolean)[0] || '';
   if (['login', 'signup', 'profile'].includes(first)) return;
   if (!mount.querySelector('.campaign-slider')) mount.insertAdjacentHTML('beforeend', offersSliderSection());
@@ -703,8 +703,12 @@ async function appendSharedTravelSections() {
   if (!mount.querySelector('.review-track')) mount.insertAdjacentHTML('beforeend', reviewsSection());
   if (!mount.querySelector('.activities')) mount.insertAdjacentHTML('beforeend', activitiesSection());
   if (!mount.querySelector('.journal-grid')) {
-    const blogs = await api('/blogs').catch(() => []);
-    if (blogs.length) mount.insertAdjacentHTML('beforeend', journalSection(blogs.slice(0, 5)));
+    const routeAtRequest = location.pathname;
+    api('/blogs').then(blogs => {
+      if (location.pathname !== routeAtRequest || mount.querySelector('.journal-grid') || !blogs.length) return;
+      mount.insertAdjacentHTML('beforeend', journalSection(blogs.slice(0, 5)));
+      applyTailwindStyles(mount); activateIcons(); wireRails();
+    }).catch(() => {});
   }
   applyTailwindStyles(mount); activateIcons(); wireCampaignSlider(mount); wireRails();
 }
@@ -731,71 +735,45 @@ function wireRails() {
   wireElasticDrag('.hotel-quick-filters');
 }
 
-// Left/right elastic drag: click-and-drag (or touch-drag) the track past its
-// start or end and it stretches with resistance, then springs back — like a
-// native rubber-band scroll, but also works with a mouse (native overflow
-// scroll has no drag-to-scroll at all).
+// Edge feedback only: native scrolling and every link click remain owned by
+// the browser. This prevents a carousel gesture from ever swallowing a card
+// navigation while retaining the rubber-band cue at either end of a rail.
 function wireElasticDrag(trackSelector) {
   document.querySelectorAll(trackSelector).forEach(track => {
     if (track.dataset.elasticReady) return;
     track.dataset.elasticReady = 'true';
-    let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
-
-    const maxScroll = () => track.scrollWidth - track.clientWidth;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const applyOvershoot = amount => {
-      overshoot = amount;
-      track.style.transform = amount ? `translate3d(${-amount}px, 0, 0)` : '';
+    let pointerActive = false, startX = 0, startScroll = 0;
+    const reset = () => {
+      track.classList.remove('is-edge-pulling');
+      track.style.removeProperty('--edge-pull');
     };
-    const settle = () => {
-      if (prefersReducedMotion) { applyOvershoot(0); return; }
-      const start = overshoot; const startTime = performance.now(); const duration = 280;
-      const step = now => {
-        const t = Math.min(1, (now - startTime) / duration);
-        applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
-        if (t < 1) raf = requestAnimationFrame(step); else { track.style.transform = ''; overshoot = 0; }
-      };
-      raf = requestAnimationFrame(step);
-    };
-    const eventX = e => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const pointerDown = e => {
       if (e.button !== undefined && e.button !== 0) return;
-      isDown = true; dragged = false;
-      track.style.cursor = 'grabbing';
-      startX = eventX(e);
+      pointerActive = true;
+      startX = e.clientX;
       startScroll = track.scrollLeft;
-      try { track.setPointerCapture?.(e.pointerId); } catch {}
-      if (raf) cancelAnimationFrame(raf);
+      reset();
     };
     const pointerMove = e => {
-      if (!isDown) return;
-      const x = eventX(e);
-      const delta = startX - x;
-      if (Math.abs(delta) > 6) dragged = true;
-      const next = startScroll + delta;
-      const max = maxScroll();
-      if (next < 0) { track.scrollLeft = 0; applyOvershoot(Math.max(-56, Math.min(56, next * 0.52))); }
-      else if (next > max) { track.scrollLeft = max; applyOvershoot(Math.max(-56, Math.min(56, (next - max) * 0.52))); }
-      else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
-      if (e.cancelable && dragged) e.preventDefault();
+      if (!pointerActive) return;
+      const delta = e.clientX - startX;
+      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      const atStart = startScroll <= 2 && delta > 8;
+      const atEnd = startScroll >= max - 2 && delta < -8;
+      if (!atStart && !atEnd) { reset(); return; }
+      const pull = Math.min(40, Math.abs(delta) * 0.36) * (atStart ? 1 : -1);
+      track.style.setProperty('--edge-pull', `${pull}px`);
+      track.classList.add('is-edge-pulling');
     };
-    const pointerUp = e => {
-      if (!isDown) return;
-      isDown = false;
-      track.style.cursor = 'grab';
-      try { track.releasePointerCapture?.(e?.pointerId); } catch {}
-      if (overshoot) settle();
+    const pointerUp = () => {
+      pointerActive = false;
+      reset();
     };
-    track.style.cursor = 'grab';
-    track.style.touchAction = 'pan-y';
     track.addEventListener('pointerdown', pointerDown);
     track.addEventListener('pointermove', pointerMove);
     track.addEventListener('pointerup', pointerUp);
     track.addEventListener('pointercancel', pointerUp);
-    track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
-    // Images/links inside the track are draggable by default in the browser;
-    // that native drag hijacks the mouseup event so our spring-back never runs.
-    track.addEventListener('dragstart', e => e.preventDefault());
+    track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') pointerUp(); });
   });
 }
 
@@ -882,10 +860,11 @@ function destinationGuideSection(item) {
         <a class="btn btn-primary mt-6 w-full justify-center" href="/custom-trip?destination=${esc(item.slug)}">Plan a custom trip</a>
       </aside>
     </div>
-    <div class="mx-auto mt-10 grid max-w-7xl gap-5 md:grid-cols-3">
+    <div class="mx-auto mt-10 grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-4">
       <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Getting there</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.gettingThere || 'Our trip experts can help you plan the most practical arrival and transfer route for your dates.')}</p></article>
       <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Plan smart</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.planningNotes || 'Plan around the season, keep your schedule realistic and confirm current local conditions before travelling.')}</p></article>
       <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Travel like a local</h3><p class="mt-3 text-sm leading-6 text-[#4f4f59]">${esc(item.localInsight || 'Leave room for local food, neighbourhood walks and small unplanned discoveries alongside the major highlights.')}</p></article>
+      <article class="rounded-2xl border border-brand-purple/10 bg-white p-5"><h3 class="font-heading text-lg font-extrabold text-brand-deep">Travel essentials</h3><ul class="mt-3 grid gap-2 text-sm leading-6 text-[#4f4f59]">${list(item.travelTips, 'shield-check')}</ul></article>
     </div>
   </section>`;
 }
@@ -1070,18 +1049,18 @@ function wireHotelExperience() {
 
 async function renderTrip(slug) {
   const trip=await api(`/trips/${slug}`); setMeta(trip.title,trip.summary);
+  const destinationRequest=api(`/destinations/${trip.destinationSlug}`).catch(()=>null);
   const itinerary=(trip.itinerary||[]);
   const tripImage=trip.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg';
-  const dest=await api(`/destinations/${trip.destinationSlug}`).catch(()=>null);
   const waLink=`https://wa.me/919310656044?text=${encodeURIComponent(`Hi TravelEnfield! I am interested in the ${trip.title} trip.`)}`;
   const aboutCopy=[trip.summary,`${trip.title} runs for ${trip.duration} with a group of ${trip.groupSize}. Every day is paced so you experience the place instead of just ticking it off — transfers, stays and the experiences listed in the inclusions are handled end to end.`,`The group meets at ${trip.pickup} and moves together with a dedicated trip captain throughout. Ideal for friends, couples and solo travellers, this itinerary is built to feel smooth, safe and memorable from start to finish.`];
-  const destLabel=dest?.name||trip.title;
+  const destLabel=(trip.destinationSlug||trip.title).split('-').map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ');
   mount.innerHTML=categoryBanner(tripImage, trip.title, trip.summary, trip.title, { titleOverlay: true })
   + `<nav class="trip-audit-tabs" aria-label="Trip sections"><div class="container"><a href="#itinerary">Itinerary</a><a href="#inclusions">Inclusions</a><a href="#costing">Costing</a><a href="#notes">Notes</a></div></nav>
   <section class="trip-detail-shell"><div class="container trip-detail-layout">
     <main class="trip-detail-main">
       <section class="trip-about" aria-label="About this trip">
-        <h2 class="trip-about-heading">About ${esc(destLabel)} Trip</h2>
+        <h2 class="trip-about-heading">About <span data-trip-destination-label>${esc(destLabel)}</span> Trip</h2>
         <div class="trip-about-copy clamped">${aboutCopy.map(x=>`<p>${esc(x)}</p>`).join('')}</div>
         <button class="trip-read-more" type="button" data-read-more>Read More</button>
       </section>
@@ -1101,7 +1080,7 @@ async function renderTrip(slug) {
       </section>
       <section class="trip-package" id="inclusions"><h2 class="trip-section-title">What's in the Package?</h2><div class="trip-package-grid"><article class="package-panel included"><h3>${icon('circle-check-big')} Included in your trip</h3><ul>${(trip.inclusions||[]).map(x=>`<li>${icon('check')} ${esc(x)}</li>`).join('')}</ul></article><article class="package-panel excluded"><h3>${icon('x')} Not included</h3><ul>${(trip.exclusions||[]).map(x=>`<li>${icon('x')} ${esc(x)}</li>`).join('')}</ul></article></div></section>
       <section class="trip-notes" id="notes"><h2>${icon('shield-check')} Good to know before you go</h2><ul>${(trip.notes||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
-      ${dest&&dest.faq&&dest.faq.length?homeFaqSection(dest.faq):''}
+      <div data-trip-destination-faq></div>
     </main>
     <aside class="trip-enquiry-sticky"><div class="trip-enquiry-card trip-booking">
       <p class="trip-from">Trip Starts From</p>
@@ -1119,6 +1098,14 @@ async function renderTrip(slug) {
   <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button><a class="trip-mobile-wa" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>`;
   wireTripExperience(trip);
   wireFaq();
+  destinationRequest.then(dest => {
+    const faqSlot=mount.querySelector('[data-trip-destination-faq]');
+    if (!dest || !faqSlot) return;
+    const label=mount.querySelector('[data-trip-destination-label]');
+    if (label && dest.name) label.textContent=dest.name;
+    if (dest.faq?.length) faqSlot.innerHTML=homeFaqSection(dest.faq);
+    applyTailwindStyles(mount); activateIcons(); wireFaq();
+  });
 }
 
 function wireTripExperience(trip){
@@ -1207,6 +1194,12 @@ async function renderProfile(){
 
 function renderRouteLoader(){mount.innerHTML=`<div class="page-loader"><span aria-hidden="true"></span><p>Preparing your next adventure…</p></div>`;}
 
-async function router(){try{renderRouteLoader();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');await appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);}finally{hideRouteOverlay();}}
+async function router(){try{renderRouteLoader();activateIcons();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(['about-us','contact-us','reviews','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);activateIcons();}finally{hideRouteOverlay();}}
 
+// Shared chrome is visible while route data loads, so render its icons before
+// awaiting API calls. Dynamic page icons are rendered again after each route.
+activateIcons();
 router();
+// React finishes hydrating the legacy HTML after this module starts. A final
+// frame catches any navigation icons inserted during that hydration pass.
+requestAnimationFrame(activateIcons);

@@ -143,9 +143,17 @@
   .destination-grid, .trip-carousel-track, .review-track, .journal-grid, .activities-track, .vibe-reel-track, .mobile-search-slider, .category-tabs, .hotel-destination-tabs, .hotel-quick-filters {
     overscroll-behavior-x: contain;
     will-change: transform;
+    transition: transform 260ms cubic-bezier(.22, 1, .36, 1);
+    /* Capture-style free rail: the drag position stays under the finger instead
+       of snapping to a complete card after every short swipe. */
+    scroll-snap-type: none !important;
+  }
+  .destination-grid.is-edge-pulling, .trip-carousel-track.is-edge-pulling, .review-track.is-edge-pulling, .journal-grid.is-edge-pulling, .activities-track.is-edge-pulling, .vibe-reel-track.is-edge-pulling, .mobile-search-slider.is-edge-pulling, .category-tabs.is-edge-pulling, .hotel-destination-tabs.is-edge-pulling, .hotel-quick-filters.is-edge-pulling {
+    transform: translate3d(var(--edge-pull), 0, 0);
+    transition: none;
   }
   @media (prefers-reduced-motion: reduce) {
-    .destination-grid, .trip-carousel-track, .review-track, .journal-grid, .activities-track, .vibe-reel-track, .mobile-search-slider, .category-tabs, .hotel-destination-tabs, .hotel-quick-filters { scroll-behavior: auto; }
+    .destination-grid, .trip-carousel-track, .review-track, .journal-grid, .activities-track, .vibe-reel-track, .mobile-search-slider, .category-tabs, .hotel-destination-tabs, .hotel-quick-filters { scroll-behavior: auto; transition: none; }
   }
   .mobile-search-slider::-webkit-scrollbar { display: none; }
   .mobile-search-slider .search-dest-card { @apply w-[220px] shrink-0 [scroll-snap-align:start]; }
@@ -1586,10 +1594,15 @@
   background: #c2c2c2;
   text-align: center;
 }
-.legacy-document-bridge .traveller-love .section-title { margin: 0; }
+.legacy-document-bridge .traveller-love .section-title {
+  margin: 0;
+  color: #2f0a57;
+}
 .legacy-document-bridge .traveller-love .section-subtitle {
   max-width: 760px;
   margin: 16px auto 24px;
+  color: #2c2432;
+  font-weight: 500;
 }
 .legacy-document-bridge .traveller-love-video {
   display: block;

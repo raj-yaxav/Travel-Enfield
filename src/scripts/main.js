@@ -31,7 +31,9 @@ import {
   Globe2,
   Heart,
   Luggage,
+  LogIn,
   Map,
+  MapPin,
   MapPinned,
   MessageCircle,
   Mail,
@@ -98,7 +100,9 @@ renderIcons({
     Globe2,
     Heart,
     Luggage,
+    LogIn,
     Map,
+    MapPin,
     MapPinned,
     MessageCircle,
     Mail,
@@ -389,71 +393,45 @@ function wireJournalScale() {
 }
 wireJournalScale();
 
-// Left/right elastic drag: click-and-drag (or touch-drag) the track past its
-// start or end and it stretches with resistance, then springs back — like a
-// native rubber-band scroll, but also works with a mouse (native overflow
-// scroll has no drag-to-scroll at all).
+// Edge feedback only: native scrolling and every link click remain owned by
+// the browser. This prevents a carousel gesture from ever swallowing a card
+// navigation while retaining the rubber-band cue at either end of a rail.
 function wireElasticDrag(trackSelector) {
   document.querySelectorAll(trackSelector).forEach(track => {
     if (track.dataset.elasticReady) return;
     track.dataset.elasticReady = 'true';
-    let isDown = false, startX = 0, startScroll = 0, overshoot = 0, dragged = false, raf = null;
-
-    const maxScroll = () => track.scrollWidth - track.clientWidth;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const applyOvershoot = amount => {
-    overshoot = amount;
-    track.style.transform = amount ? `translate3d(${-amount}px, 0, 0)` : '';
-  };
-    const settle = () => {
-      if (prefersReducedMotion) { applyOvershoot(0); return; }
-      const start = overshoot; const startTime = performance.now(); const duration = 280;
-      const step = now => {
-        const t = Math.min(1, (now - startTime) / duration);
-        applyOvershoot(start * (1 - (1 - Math.pow(1 - t, 3))));
-        if (t < 1) raf = requestAnimationFrame(step); else { track.style.transform = ''; overshoot = 0; }
-      };
-      raf = requestAnimationFrame(step);
+    let pointerActive = false, startX = 0, startScroll = 0;
+    const reset = () => {
+      track.classList.remove('is-edge-pulling');
+      track.style.removeProperty('--edge-pull');
     };
-    const eventX = e => e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     const pointerDown = e => {
       if (e.button !== undefined && e.button !== 0) return;
-      isDown = true; dragged = false;
-      track.style.cursor = 'grabbing';
-      startX = eventX(e);
+      pointerActive = true;
+      startX = e.clientX;
       startScroll = track.scrollLeft;
-      try { track.setPointerCapture?.(e.pointerId); } catch {}
-      if (raf) cancelAnimationFrame(raf);
+      reset();
     };
     const pointerMove = e => {
-      if (!isDown) return;
-      const x = eventX(e);
-      const delta = startX - x;
-      if (Math.abs(delta) > 6) dragged = true;
-      const next = startScroll + delta;
-      const max = maxScroll();
-      if (next < 0) { track.scrollLeft = 0; applyOvershoot(Math.max(-56, Math.min(56, next * 0.52))); }
-      else if (next > max) { track.scrollLeft = max; applyOvershoot(Math.max(-56, Math.min(56, (next - max) * 0.52))); }
-      else { track.scrollLeft = next; if (overshoot) applyOvershoot(0); }
-      if (e.cancelable && dragged) e.preventDefault();
+      if (!pointerActive) return;
+      const delta = e.clientX - startX;
+      const max = Math.max(0, track.scrollWidth - track.clientWidth);
+      const atStart = startScroll <= 2 && delta > 8;
+      const atEnd = startScroll >= max - 2 && delta < -8;
+      if (!atStart && !atEnd) { reset(); return; }
+      const pull = Math.min(40, Math.abs(delta) * 0.36) * (atStart ? 1 : -1);
+      track.style.setProperty('--edge-pull', `${pull}px`);
+      track.classList.add('is-edge-pulling');
     };
-    const pointerUp = e => {
-      if (!isDown) return;
-      isDown = false;
-      track.style.cursor = 'grab';
-      try { track.releasePointerCapture?.(e?.pointerId); } catch {}
-      if (overshoot) settle();
+    const pointerUp = () => {
+      pointerActive = false;
+      reset();
     };
-    track.style.cursor = 'grab';
-    track.style.touchAction = 'pan-y';
     track.addEventListener('pointerdown', pointerDown);
     track.addEventListener('pointermove', pointerMove);
     track.addEventListener('pointerup', pointerUp);
     track.addEventListener('pointercancel', pointerUp);
-    track.addEventListener('click', e => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
-    // Images/links inside the track are draggable by default in the browser;
-    // that native drag hijacks the mouseup event so our spring-back never runs.
-    track.addEventListener('dragstart', e => e.preventDefault());
+    track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') pointerUp(); });
   });
 }
 wireElasticDrag('.journal-grid');
