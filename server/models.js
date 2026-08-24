@@ -34,7 +34,8 @@ const Hotel = mongoose.models.Hotel || mongoose.model('Hotel', new mongoose.Sche
 }, options));
 const Blog = mongoose.models.Blog || mongoose.model('Blog', new mongoose.Schema({
   title: String, slug: { type: String, unique: true }, excerpt: String, image: String, category: String,
-  author: String, readTime: String, publishedAt: Date, sections: [{ heading: String, body: String }],
+  author: String, readTime: String, publishedAt: Date, seoTitle: String, seoDescription: String,
+  sections: [{ heading: String, body: String, bullets: [String] }],
 }, options));
 const Page = mongoose.models.Page || mongoose.model('Page', new mongoose.Schema({
   slug: { type: String, unique: true }, title: String, eyebrow: String, intro: String,

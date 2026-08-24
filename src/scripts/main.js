@@ -1,5 +1,7 @@
 import './enquiry-popup.js';
 import { setLoginPopup } from './login-popup.js';
+import EmblaCarousel from 'embla-carousel';
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 import {
   createIcons,
   Backpack,
@@ -191,6 +193,7 @@ if (heroIntro) {
 // return immediately when the traveller scrolls up or reaches the page top.
 const mobileHeader = $('#header');
 const mobileBottomNav = $('#mobile-bottom-nav');
+const mobileAnnouncement = $('#announcement-bar');
 let lastMobileScrollY = window.scrollY;
 let mobileScrollTicking = false;
 const syncMobileChrome = () => {
@@ -200,9 +203,11 @@ const syncMobileChrome = () => {
   if (!mobile || currentY < 24) {
     mobileHeader?.classList.remove('nav-hidden');
     mobileBottomNav?.classList.remove('nav-hidden');
+    mobileAnnouncement?.classList.remove('nav-hidden');
   } else if (Math.abs(delta) > 5 && !document.body.classList.contains('menu-open')) {
     mobileHeader?.classList.toggle('nav-hidden', delta > 0);
     mobileBottomNav?.classList.toggle('nav-hidden', delta > 0);
+    mobileAnnouncement?.classList.toggle('nav-hidden', delta > 0);
   }
   lastMobileScrollY = currentY;
   mobileScrollTicking = false;
@@ -333,8 +338,8 @@ function carouselStep() {
   if (!card || !tripTrack) return 320;
   return card.getBoundingClientRect().width + 20;
 }
-prevButton?.addEventListener('click', () => tripTrack?.scrollBy({ left: -carouselStep(), behavior: 'smooth' }));
-nextButton?.addEventListener('click', () => tripTrack?.scrollBy({ left: carouselStep(), behavior: 'smooth' }));
+prevButton?.addEventListener('click', () => tripTrack?._emblaWheelApi ? tripTrack._emblaWheelApi.scrollPrev() : tripTrack?.scrollBy({ left: -carouselStep(), behavior: 'smooth' }));
+nextButton?.addEventListener('click', () => tripTrack?._emblaWheelApi ? tripTrack._emblaWheelApi.scrollNext() : tripTrack?.scrollBy({ left: carouselStep(), behavior: 'smooth' }));
 function updateCarouselButtons() {
   if (!tripTrack) return;
   if (prevButton) prevButton.disabled = tripTrack.scrollLeft < 5;
@@ -351,8 +356,8 @@ function wireRail(trackSelector, prevSelector, nextSelector, itemSelector, fallb
   const next = $(nextSelector);
   if (!track) return;
   const step = () => ($(itemSelector, track)?.getBoundingClientRect().width || fallbackStep) + 20;
-  prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-  next?.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+  prev?.addEventListener('click', () => track._emblaWheelApi ? track._emblaWheelApi.scrollPrev() : track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => track._emblaWheelApi ? track._emblaWheelApi.scrollNext() : track.scrollBy({ left: step(), behavior: 'smooth' }));
   const update = () => {
     if (prev) prev.disabled = track.scrollLeft < 5;
     if (next) next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 5;
@@ -393,54 +398,30 @@ function wireJournalScale() {
 }
 wireJournalScale();
 
-// Edge feedback only: native scrolling and every link click remain owned by
-// the browser. This prevents a carousel gesture from ever swallowing a card
-// navigation while retaining the rubber-band cue at either end of a rail.
-function wireElasticDrag(trackSelector) {
+// Captureatrip uses Embla plus its official wheel-gestures plugin. The plugin
+// adds/removes `.is-wheel-dragging` on the viewport and supplies the same
+// damped boundary behaviour for mouse wheels and precision trackpads.
+function wireEmblaWheelGestures(trackSelector) {
   document.querySelectorAll(trackSelector).forEach(track => {
-    if (track.dataset.elasticReady) return;
-    track.dataset.elasticReady = 'true';
-    let pointerActive = false, startX = 0, startScroll = 0;
-    const reset = () => {
-      track.classList.remove('is-edge-pulling');
-      track.style.removeProperty('--edge-pull');
-    };
-    const pointerDown = e => {
-      if (e.button !== undefined && e.button !== 0) return;
-      pointerActive = true;
-      startX = e.clientX;
-      startScroll = track.scrollLeft;
-      reset();
-    };
-    const pointerMove = e => {
-      if (!pointerActive) return;
-      const delta = e.clientX - startX;
-      const max = Math.max(0, track.scrollWidth - track.clientWidth);
-      const atStart = startScroll <= 2 && delta > 8;
-      const atEnd = startScroll >= max - 2 && delta < -8;
-      if (!atStart && !atEnd) { reset(); return; }
-      const pull = Math.min(40, Math.abs(delta) * 0.36) * (atStart ? 1 : -1);
-      track.style.setProperty('--edge-pull', `${pull}px`);
-      track.classList.add('is-edge-pulling');
-    };
-    const pointerUp = () => {
-      pointerActive = false;
-      reset();
-    };
-    track.addEventListener('pointerdown', pointerDown);
-    track.addEventListener('pointermove', pointerMove);
-    track.addEventListener('pointerup', pointerUp);
-    track.addEventListener('pointercancel', pointerUp);
-    track.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') pointerUp(); });
+    if (track.dataset.emblaWheelReady) return;
+    const viewport = document.createElement('div');
+    viewport.className = 'embla-wheel-viewport';
+    track.before(viewport);
+    viewport.append(track);
+    track.dataset.emblaWheelReady = 'true';
+    const embla = EmblaCarousel(viewport, { align: 'start', containScroll: 'trimSnaps', dragFree: true, loop: false }, [
+      WheelGesturesPlugin({ wheelDraggingClass: 'is-wheel-dragging', target: viewport }),
+    ]);
+    track._emblaWheelApi = embla;
   });
 }
-wireElasticDrag('.journal-grid');
-wireElasticDrag('.review-track');
-wireElasticDrag('#activities-track');
-wireElasticDrag('#vibe-reel-track');
-wireElasticDrag('.mobile-search-slider');
-wireElasticDrag('#trip-track');
-wireElasticDrag('#destination-grid');
+wireEmblaWheelGestures('.journal-grid');
+wireEmblaWheelGestures('.review-track');
+wireEmblaWheelGestures('#activities-track');
+wireEmblaWheelGestures('#vibe-reel-track');
+wireEmblaWheelGestures('.mobile-search-slider');
+wireEmblaWheelGestures('#trip-track');
+wireEmblaWheelGestures('#destination-grid');
 
 // Below the desktop breakpoint, reviews show one card per screen — auto-advance
 // through them instead of requiring a manual swipe/arrow tap.
