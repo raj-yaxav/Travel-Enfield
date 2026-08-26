@@ -613,7 +613,99 @@
 .bt-dest-chips::-webkit-scrollbar { display: none; }
 .bt-chips-dock { z-index: 31; background: rgba(255,255,255,.96); box-shadow: 0 1px 0 rgba(69,13,105,.1); backdrop-filter: blur(10px); }
 .bt-desktop-chips-dock { position: sticky; top: 132px; padding-top: 8px; padding-bottom: 8px; }
-@media (max-width: 1099px) { .bt-mobile-chips-dock { position: sticky; top: 110px; padding-top: 8px; padding-bottom: 8px; transition: top .28s ease; }.bt-mobile-chips-dock.tabs-at-top { top: 0; }.bt-mobile-chips-dock .bt-dest-chips { min-width: 0; flex: 1 1 auto; overscroll-behavior-x: contain; scroll-padding-inline: 4px; } }
+@media (max-width: 767px) { .bt-mobile-chips-dock { position: sticky; top: 110px; padding-top: 8px; padding-bottom: 8px; transition: top .28s ease; }.bt-mobile-chips-dock.tabs-at-top { top: 0; }.bt-mobile-chips-dock .bt-dest-chips { min-width: 0; flex: 1 1 auto; overscroll-behavior-x: contain; scroll-padding-inline: 4px; } }
+
+/* Shared Capture-style category architecture. Every renderListing() route
+   uses these rules: 20px mobile gutters, 80px from 768px, plus the same
+   landscape card and sticky filter geometry. Brand purple remains the only
+   visual departure from the reference's green selection treatment. */
+.bt-listing-intro { padding: 24px 20px 0; font-family: var(--font-manrope); }
+.bt-listing-readmore { padding-top: 8px; }
+.bt-listing-intro > div:first-child { width: 100%; }
+.bt-listing-intro h1 { margin: 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: 20px; font-weight: 800; line-height: 28px; letter-spacing: -.02em; }
+.bt-listing-intro p { margin: 16px 0 0; color: #46546a; font-size: 16px; line-height: 24px; }
+.bt-read-more { margin-top: 6px; padding: 0; border: 0; background: transparent; color: var(--color-brand-purple); font: inherit; font-size: 14px; font-weight: 700; line-height: 24px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.bt-read-more:focus-visible,.bt-filter-toggle:focus-visible,.bt-filter-chip:focus-visible,.bt-calendar-day:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-brand-purple) 35%, transparent); outline-offset: 2px; }
+.bt-listing { padding-top: 28px; }
+.bt-results-row { margin-top: 24px; }
+.bt-filter-rail { top: 154px; flex: 0 0 25%; }
+.bt-trips-grid { row-gap: 24px; column-gap: 24px; }
+.bt-trip-card { border: 1px solid rgba(69,13,105,.06); }
+.bt-filter-row:first-child .bt-filter-toggle { padding-top: 16px; }
+.bt-calendar { width: 100%; margin-top: 2px; border: 1px solid rgba(69,13,105,.14); border-radius: 16px; background: linear-gradient(145deg,#fff,#fcfaff); padding: 16px 14px; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+.bt-calendar-head { display: grid; grid-template-columns: 32px 1fr 32px; align-items: center; color: var(--color-brand-deep); font-size: 15px; text-align: center; }
+.bt-calendar-head button { display: grid; width: 32px; height: 32px; place-items: center; border: 0; border-radius: 999px; background: transparent; color: #8b7d94; }
+.bt-calendar-head button:disabled { opacity: .55; }
+.bt-calendar-head svg { width: 17px; height: 17px; }
+.bt-calendar-weekdays,.bt-calendar-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); text-align: center; }
+.bt-calendar-weekdays { margin-top: 16px; color: #7a7181; font-size: 11px; font-weight: 700; }
+.bt-calendar-grid { margin-top: 10px; gap: 4px 2px; }
+.bt-calendar-day { display: grid; min-width: 30px; height: 30px; place-items: center; border: 0; border-radius: 9px; background: transparent; color: #44394b; font-size: 12px; font-weight: 600; }
+button.bt-calendar-day { cursor: pointer; }
+.bt-calendar-available { color: var(--color-brand-purple); font-weight: 800; }
+.bt-calendar-available:hover,.bt-calendar-day.selected { background: color-mix(in srgb, var(--color-brand-purple) 12%, white); color: var(--color-brand-purple); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-brand-purple) 24%, transparent); }
+.bt-mobile-filter-panel { position: absolute; inset: calc(100% + 8px) 20px auto; z-index: 35; max-height: min(70dvh,620px); overflow-y: auto; }
+.bt-intro-dialog { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; }
+.bt-intro-dialog.hidden { display: none; }
+.bt-intro-dialog-backdrop { position: absolute; inset: 0; border: 0; background: rgba(18,10,23,.68); }
+.bt-intro-dialog article { position: relative; width: min(100%,640px); border-radius: 20px; background: #fff; padding: 32px; box-shadow: 0 28px 80px rgba(19,8,29,.32); }
+.bt-intro-dialog h2 { margin: 0 42px 20px 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: 24px; line-height: 32px; }
+.bt-intro-dialog p { margin: 0; color: #253044; font-size: 16px; line-height: 26px; }
+.bt-intro-dialog-close { position: absolute; top: 18px; right: 18px; display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(69,13,105,.14); border-radius: 999px; background: #fff; color: var(--color-brand-deep); cursor: pointer; }
+.bt-intro-dialog-close svg { width: 18px; height: 18px; }
+@media (min-width: 768px) {
+  .bt-listing-intro { padding: 40px 80px 0; }
+  .bt-listing-intro h1 { font-size: 30px; line-height: 36px; }
+  .bt-listing-intro p { margin-top: 16px; }
+  .bt-desktop-chips-dock { top: 154px; }
+  .bt-trip-card { height: 146px; }
+  .bt-filter-rail { width: 25%; }
+  .bt-calendar { padding: 18px; }
+}
+@media (max-width: 767px) {
+  .bt-listing-intro { padding-top: 20px; }
+  .bt-listing-intro p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .bt-listing { padding-top: 10px; }
+  .bt-results-row { margin-top: 16px; }
+  .bt-trip-card-wrap[hidden] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .bt-trip-card { transition: none; } }
+
+/* Capture A Trip category chrome: desktop navigation starts at 768px and the
+   fixed chrome occupies 154px (40px announcement + 66px utility row + 48px
+   navigation). Category filters use that same offset, so no chips or rail
+   can sit beneath the header while scrolling. */
+@media (min-width: 768px) {
+  .header-mobile { display: none !important; }
+  .header-desktop { display: block !important; }
+  .header-top {
+    width: min(calc(100% - 160px), 1600px) !important;
+    min-height: 66px !important;
+    grid-template-columns: 120px minmax(280px, 430px) minmax(0, 1fr) !important;
+    gap: 24px !important;
+  }
+  .header-logo { width: 100px !important; }
+  .header-logo .logo-img { width: 100px !important; height: 39px !important; }
+  .header-search { height: 42px !important; }
+  .header-nav { min-height: 48px !important; }
+  .bt-desktop-chips-dock { top: 154px !important; }
+  .bt-filter-rail { top: 154px !important; }
+}
+@media (max-width: 767px) {
+  .header-desktop { display: none !important; }
+  .announcement-bar { height: 34px !important; min-height: 34px !important; }
+  body:has(.announcement-bar) #header { top: 34px !important; }
+  .header-mobile {
+    display: grid !important;
+    min-height: 52px !important;
+    grid-template-columns: 44px 1fr 44px !important;
+    padding-inline: 10px !important;
+  }
+  .header-logo-mobile img { height: 46px !important; max-width: 156px !important; }
+  .hamburger, .header-phone-mobile { width: 44px !important; height: 44px !important; }
+  .header-phone-mobile svg { width: 22px !important; height: 22px !important; }
+  .bt-mobile-chips-dock { top: 86px !important; }
+}
 .hotel-quick-filters button { @apply px-4 text-xs; }
 .hotel-quick-filters svg { @apply inline size-3.5 fill-current; }
 .hotel-results-grid { @apply gap-6 lg:grid-cols-3; }
@@ -1990,3 +2082,82 @@ body:has(.announcement-bar) #header { top: 40px !important; }
 .about-hero-inner { min-height: 600px; padding-bottom: 42px; }.about-hero-copy { position: relative; z-index: 1; max-width: 710px; margin: auto 0; }.about-hero-copy h1 { margin: 14px 0 20px; font-size: clamp(4rem, 8.8vw, 8.8rem); line-height: .83; }.about-hero-copy p { max-width: 480px; font-size: 17px; }.about-hero-signoff { position: relative; z-index: 1; margin: 0; color: rgba(255,255,255,.55); font-family: var(--font-manrope); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
 .about-story { padding: 128px 0; }.about-story-grid { grid-template-columns: minmax(160px,.34fr) minmax(0,1fr); align-items: start; gap: clamp(36px, 9vw, 150px); max-width: 1080px; }.about-story-index { color: #e9dff0; font-family: var(--font-manrope); font-size: clamp(5rem, 11vw, 10rem); font-weight: 800; line-height: .78; letter-spacing: -.09em; }.about-story-copy { max-width: 680px; }.about-story-copy h2 { max-width: 660px; margin-top: 14px; font-size: clamp(2.4rem, 4.2vw, 4.1rem); }.about-story-copy p { max-width: 625px; font-size: 17px; line-height: 1.72; }.about-values { padding: 92px 0; background: #f8f6fa; }.about-section-heading { max-width: 760px; }.about-section-heading h2 { max-width: 720px; font-size: clamp(2.35rem, 4vw, 4rem); }.about-value-grid { gap: 0; margin-top: 50px; border-top: 1px solid rgba(85,22,123,.16); }.about-value-grid article { min-height: 236px; border: 0; border-right: 1px solid rgba(85,22,123,.16); border-radius: 0; background: transparent; padding: 12px 28px 0 0; box-shadow: none; }.about-value-grid article + article { padding-left: 28px; }.about-value-grid article:last-child { border-right: 0; padding-right: 0; }.about-value-grid article:hover { transform: none; box-shadow: none; }.about-value-grid article > svg { margin-bottom: 38px; }.about-cta { padding: 105px 0; }.about-cta-inner { max-width: 1080px; }.about-cta h2 { font-size: clamp(2.7rem, 4vw, 4.3rem); }
 @media (max-width: 800px) { .about-hero { min-height: 560px; }.about-hero::before { top: -50px; right: -170px; width: 420px; height: 420px; }.about-hero-inner { min-height: 560px; padding-bottom: 29px; }.about-hero-copy h1 { font-size: clamp(3.65rem, 17vw, 5rem); line-height: .84; }.about-hero-copy p { max-width: 340px; margin-bottom: 25px; font-size: 16px; }.about-story { padding: 80px 0; }.about-story-grid { grid-template-columns: 1fr; gap: 28px; }.about-story-index { font-size: 84px; }.about-story-copy h2, .about-section-heading h2, .about-cta h2 { font-size: 32px; }.about-story-copy p { font-size: 16px; }.about-values { padding: 70px 0; }.about-value-grid { grid-template-columns: 1fr; gap: 0; margin-top: 35px; }.about-value-grid article, .about-value-grid article + article, .about-value-grid article:last-child { min-height: 0; border-right: 0; border-bottom: 1px solid rgba(85,22,123,.16); padding: 22px 0; }.about-value-grid article:last-child { border-bottom: 0; }.about-value-grid article > svg { margin-bottom: 17px; }.about-cta { padding: 70px 0; } }
+
+/* Capture A Trip category-header calibration.
+   320/375/430: 34px sale strip + 52px navigation = 86px.
+   768px and above: 40px sale strip + 66px primary header + 48px nav = 154px. */
+.announcement-bar { height: 40px !important; min-height: 40px !important; }
+@media (min-width: 768px) {
+  body:has(.announcement-bar) #header { top: 40px !important; }
+  .header-top { min-height: 66px !important; }
+  .header-nav { min-height: 48px !important; }
+  .bt-desktop-chips-dock, .bt-filter-rail { top: 154px !important; }
+}
+@media (max-width: 767px) {
+  .announcement-bar { height: 34px !important; min-height: 34px !important; }
+  body:has(.announcement-bar) #header { top: 34px !important; }
+  .header-mobile {
+    display: grid !important;
+    min-height: 52px !important;
+    grid-template-columns: 44px minmax(0, 1fr) 44px !important;
+    padding-inline: 10px !important;
+  }
+  .header-logo-mobile img { height: 46px !important; max-width: 156px !important; }
+  .hamburger, .header-phone-mobile { width: 44px !important; height: 44px !important; }
+  .header-phone-mobile svg { width: 22px !important; height: 22px !important; }
+  .bt-mobile-chips-dock { top: 86px !important; }
+}
+
+/* Keep the complete top chrome visible while the page scrolls. */
+#header { position: sticky !important; z-index: 50; }
+#header.nav-hidden, .announcement-bar.nav-hidden { transform: none !important; }
+
+/* Trip-detail alignment uses the same fixed chrome as the audited category
+   pages: 154px on desktop and 86px on mobile.  Tabs and booking must never
+   slide behind that chrome. */
+@media (min-width: 768px) {
+  .trip-audit-tabs { top: 154px !important; }
+  .trip-about, .trip-breakdown, .trip-costing, .trip-package, .trip-notes { scroll-margin-top: 230px; }
+}
+@media (min-width: 1024px) {
+  .trip-detail-layout { grid-template-columns: minmax(0, 1fr) clamp(340px, 24vw, 456px) !important; gap: clamp(34px, 4vw, 58px) !important; }
+  .trip-enquiry-sticky { top: 174px !important; }
+}
+@media (max-width: 767px) {
+  .trip-audit-tabs, .trip-audit-tabs.tabs-at-top { top: 86px !important; }
+  .trip-about, .trip-breakdown, .trip-costing, .trip-package, .trip-notes { scroll-margin-top: 144px; }
+}
+
+/* Capture-style traveller gallery: a varied desktop mosaic and a touch rail
+   on mobile, keeping the trip-detail sequence consistent on every slug. */
+.trip-gallery-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.trip-gallery-tabs button { display: inline-flex; min-height: 36px; align-items: center; gap: 6px; border: 1px solid rgba(85,22,123,.16); border-radius: 999px; background: #fff; padding: 0 13px; color: var(--color-brand-ink); font-size: 12px; font-weight: 800; }
+.trip-gallery-tabs button svg { width: 15px; height: 15px; }
+.trip-gallery-tabs button.active { border-color: var(--color-brand-purple); background: rgba(85,22,123,.08); color: var(--color-brand-purple); }
+.trip-gallery-grid { display: grid; grid-template-columns: 1.38fr 1fr 1fr; grid-template-rows: repeat(2, 180px); gap: 12px; margin-top: 26px; }
+.trip-gallery-grid figure { min-width: 0; margin: 0; overflow: hidden; border-radius: 18px; background: var(--color-brand-surface); }
+.trip-gallery-grid figure:first-child { grid-row: span 2; }
+.trip-gallery-grid img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.trip-gallery-grid figure:hover img { transform: scale(1.04); }
+@media (max-width: 767px) {
+  .trip-traveller-gallery .section-header { align-items: flex-start; gap: 16px; }
+  .trip-gallery-tabs { max-width: 150px; justify-content: flex-end; gap: 5px; }
+  .trip-gallery-tabs button { min-height: 31px; padding-inline: 9px; font-size: 10px; }
+  .trip-gallery-tabs button svg { width: 13px; height: 13px; }
+  .trip-gallery-grid { display: grid; grid-auto-columns: minmax(220px, 72vw); grid-auto-flow: column; grid-template-columns: none; grid-template-rows: none; gap: 12px; margin-right: -16px; overflow-x: auto; padding: 2px 16px 12px 0; scroll-snap-type: x proximity; scrollbar-width: none; }
+  .trip-gallery-grid::-webkit-scrollbar { display: none; }
+  .trip-gallery-grid figure, .trip-gallery-grid figure:first-child { grid-row: auto; height: 310px; scroll-snap-align: start; }
+}
+
+/* Reference trip gallery: a horizontal traveller-media rail rather than a
+   homepage-style mosaic. */
+.trip-gallery-rail { display: flex; gap: 16px; margin-top: 26px; overflow-x: auto; padding: 2px 2px 14px; scroll-snap-type: x proximity; scrollbar-width: none; }
+.trip-gallery-rail::-webkit-scrollbar { display: none; }
+.trip-gallery-card { width: clamp(190px, 18vw, 258px); height: 310px; flex: 0 0 auto; margin: 0; overflow: hidden; border-radius: 18px; background: var(--color-brand-surface); scroll-snap-align: start; }
+.trip-gallery-card img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.trip-gallery-card:hover img { transform: scale(1.04); }
+@media (max-width: 767px) {
+  .trip-media-gallery .section-header { align-items: flex-start; gap: 16px; }
+  .trip-gallery-rail { margin-right: -16px; gap: 12px; padding-right: 16px; }
+  .trip-gallery-card { width: min(72vw, 260px); height: 340px; }
+}

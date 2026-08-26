@@ -2,9 +2,9 @@ import './enquiry-popup.js';
 import { setLoginPopup } from './login-popup.js';
 import EmblaCarousel from 'embla-carousel';
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
+import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map as MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
 
-const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
+const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map: MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
 const mount = document.querySelector('#page-content');
 document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786716218/travelenfield/brand/logo-navbar.png'; });
 
@@ -346,14 +346,14 @@ document.querySelectorAll('.footer-col').forEach(col=>{
 function hero({ title, description, image = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {
   return `<section class="page-hero"><img src="${esc(image)}" alt="" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
 }
-function categoryBanner(image, title, description, crumbLabel, { cover = false, titleOverlay = false } = {}) {
+function categoryBanner(image, title, description, crumbLabel, { cover = false, titleOverlay = false, readMore = false } = {}) {
   if (titleOverlay) {
     return `<section class="relative aspect-[1.4/1] w-full max-w-full overflow-hidden bg-brand-ink md:aspect-[3/1]">
       <img src="${esc(image)}" alt="${esc(title)}" class="absolute inset-0 h-full w-full object-cover" />
       <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
       <h1 class="absolute inset-x-0 bottom-5 px-5 font-heading text-xl font-extrabold leading-tight text-white md:bottom-9 md:px-20 md:text-4xl">${esc(title)}</h1>
-    </section>
-    <div class="px-5 pt-4 md:px-20"><nav class="flex items-center gap-2 text-xs font-normal text-[#5A5A5A]" aria-label="Breadcrumb"><a href="/" class="hover:text-brand-purple">Home</a><span>/</span><span>${esc(crumbLabel)}</span></nav></div>`;
+    </section>`
+
   }
   const sectionClass = cover
     ? 'relative aspect-[2.25/1] w-full max-w-full overflow-hidden md:aspect-[4.8/1]'
@@ -361,9 +361,11 @@ function categoryBanner(image, title, description, crumbLabel, { cover = false, 
   const imgClass = cover
     ? 'absolute inset-0 h-full w-full object-cover'
     : 'block h-auto w-full object-contain max-sm:min-h-[150px] max-sm:object-cover max-sm:object-[43%_center]';
+  const summary = readMore
+    ? `${esc(description)}<br><button type="button" class="bt-read-more" aria-haspopup="dialog">Read More</button>`
+    : esc(description);
   return `<section class="${sectionClass}"><img src="${esc(image)}" alt="${esc(title)}" class="${imgClass}" /></section>
-  <div class="mb-4 px-5 md:px-20"><nav class="flex items-center gap-2 text-xs font-normal text-[#5A5A5A]" aria-label="Breadcrumb"><a href="/" class="hover:text-brand-purple">Home</a><span>/</span><span>${esc(crumbLabel)}</span></nav></div>
-  <div class="relative w-full px-5 md:px-20"><h1 class="font-heading text-2xl font-extrabold text-brand-deep md:text-3xl">${esc(title)}</h1><p class="mt-1 text-sm font-normal leading-relaxed text-[#5A5A5A] md:text-base">${esc(description)}</p></div>`;
+  <div class="relative w-full px-5 py-2 md:px-20 md:pt-4"><h1 class="font-heading text-2xl font-extrabold text-brand-deep md:text-3xl">${esc(title)}</h1><p class="mt-1 text-sm font-normal leading-relaxed text-[#5A5A5A] md:text-base">${summary}</p></div>`;
 }
 function tripCard(trip) {
   return `<article class="listing-card" data-search="${esc(`${trip.title} ${trip.destinationSlug}`.toLowerCase())}" data-price="${trip.price}" data-duration="${trip.nights}"><a class="listing-card-media" href="/trips/${esc(trip.slug)}"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" /><span class="card-badge">${esc(trip.badge || 'Group Trip')}</span></a><div class="listing-card-body"><div class="card-meta"><span>${icon('clock-3')} ${esc(trip.duration)}</span><span>${icon('users')} ${esc(trip.groupSize || 'Group')}</span></div><h2><a href="/trips/${esc(trip.slug)}">${esc(trip.title)}</a></h2><p>${esc(trip.summary)}</p><div class="price-row"><del>${money(trip.oldPrice)}</del><strong>${money(trip.price)}</strong><a class="card-link" href="/trips/${esc(trip.slug)}" aria-label="View ${esc(trip.title)}">View ${icon('chevron-right')}</a></div></div></article>`;
@@ -393,20 +395,32 @@ async function renderListing(slug) {
   let trips = loadedTrips || []; if(slug==='deals') trips=trips.filter(t=>t.discount);
   const destinationsList=[...new Set(trips.map(t=>t.destinationSlug).filter(Boolean))];
   setMeta(category.title, category.description);
-  mount.innerHTML = categoryBanner(category.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', category.title, category.description, category.name||'Trips', { cover: true })
+  mount.innerHTML = categoryBanner(
+    category.image || 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg',
+    category.title,
+    category.description,
+    category.name || 'Trips',
+    { cover: true, readMore: true },
+  ) + categoryListingIntro(category)
     + `<div class="relative">
-    <div class="bt-chips-dock bt-desktop-chips-dock hidden w-full min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
-    <div class="bt-chips-dock bt-mobile-chips-dock block w-full min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(destinationsList)}</div>${bikeFilterPanel(trips, true)}</div>
-    <div class="min-[1100px]:mt-6 flex flex-row items-start gap-6">
+    <div class="bt-chips-dock bt-desktop-chips-dock hidden w-full md:mt-6 md:block"><div class="overflow-hidden px-20">${bikeChips(destinationsList)}</div></div>
+    <div class="bt-chips-dock bt-mobile-chips-dock block w-full md:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-10 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-semibold text-brand-ink" aria-expanded="false">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(destinationsList)}</div>${bikeFilterPanel(trips, true)}</div>
+    <div class="bt-results-row md:mt-6 flex flex-row items-start gap-6">
     ${bikeFilterPanel(trips)}
-    <div class="w-full min-[1100px]:w-3/4 min-[1100px]:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 min-[1100px]:px-0 min-[1100px]:grid-cols-2">${trips.length ? trips.map(t => `<div class="bt-trip-card-wrap w-full" data-dest="${esc(t.destinationSlug || '')}" data-badge="${esc(t.badge || '')}" data-price="${Number(t.price)||0}" data-dates="${esc((t.dates||[]).join('|'))}">${bikeTripCard(t)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>
+    <div class="w-full md:w-3/4 md:pr-20"><div class="bt-trips-grid grid grid-cols-1 gap-6 px-5 md:px-0 md:grid-cols-2">${trips.length ? trips.map(t => `<div class="bt-trip-card-wrap w-full" data-dest="${esc(t.destinationSlug || '')}" data-badge="${esc(t.badge || '')}" data-price="${Number(t.price)||0}" data-dates="${esc((t.dates||[]).join('|'))}">${bikeTripCard(t)}</div>`).join('') : '<div class="col-span-full rounded-2xl border border-dashed border-[#D8D8D8] bg-white p-10 text-center"><p class="text-[#1F1F1F]">New departures are being planned.</p><a class="mt-3 inline-block text-sm font-medium text-brand-purple" href="/custom-trip">Plan a custom trip</a></div>'}</div></div></div>
     </div>`
     + reviewsSection(reviewsForTrips(trips))
     + reasonsSection()
     + homeFaqSection(category.faq)
     + (blogs.length ? journalSection(blogs.slice(0, 5)) : '')
     + bikeDestinationsStrip(destinations);
-  wireBtFilters(); wireFaq();
+  wireBtFilters(); wireCategoryIntro(); wireFaq();
+}
+
+function categoryListingIntro(category) {
+  const title = category.title || 'Explore all trips';
+  const description = category.description || 'Compare curated domestic and international journeys.';
+  return `<div class="bt-intro-dialog hidden" role="dialog" aria-modal="true" aria-labelledby="bt-intro-title"><button type="button" class="bt-intro-dialog-backdrop" aria-label="Close description"></button><article><button type="button" class="bt-intro-dialog-close" aria-label="Close">${icon('x')}</button><h2 id="bt-intro-title">${esc(title)}</h2><p>${esc(description)}</p></article></div>`;
 }
 
 /* ------------------------------------------------------------------ *
@@ -424,7 +438,7 @@ const BT_FILTER_ROWS = [
 function bikeTripCard(trip) {
   const off = trip.oldPrice ? Math.max(0, trip.oldPrice - trip.price) : 0;
   const dates = (trip.dates || []).slice(0, 3).join(', ');
-  return `<a class="h-fit cursor-pointer" href="/trips/${esc(trip.slug)}"><div class="relative flex min-h-[7.75rem] w-full flex-row rounded-2xl shadow-md transition-transform duration-300 hover:scale-105 md:min-h-[9.125rem]"><div class="relative w-[35%] shrink-0 overflow-hidden rounded-l-2xl"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" class="absolute inset-0 h-full w-full object-cover"></div><div class="flex w-[65%] flex-col justify-center gap-1 rounded-r-2xl bg-white px-2 py-2 md:py-4"><div class="hidden text-xs font-normal text-[#5A5A5A] md:block">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-2 font-heading text-base font-medium leading-tight text-[#0f2417]">${esc(trip.title)}</div><div class="flex items-center gap-2"><div class="text-sm font-medium text-[#0f2417] md:text-base">${money(trip.price)}</div>${trip.oldPrice ? `<div class="relative text-[0.625rem] font-medium text-[#0f2417] md:text-xs"><div class="absolute top-1.5 h-[2px] w-full bg-[#f61b00]"></div>${money(trip.oldPrice)}</div>` : ''}${off ? `<div class="relative text-[0.625rem] font-medium text-[#f61b00] md:text-xs">${money(off)} Off</div>` : ''}</div><div class="block text-xs font-normal text-[#5A5A5A] md:hidden">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-1 text-xs font-normal text-[#5A5A5A] md:text-sm">${icon('calendar-days')} ${esc(dates)}</div></div></div></a>`;
+  return `<a class="h-fit cursor-pointer" href="/trips/${esc(trip.slug)}"><div class="bt-trip-card relative flex h-[7.75rem] w-full flex-row overflow-hidden rounded-2xl bg-white shadow-md transition-transform duration-300 hover:scale-[1.02] md:h-[9.125rem]"><div class="relative w-[35%] shrink-0 overflow-hidden"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" class="absolute inset-0 h-full w-full object-cover"></div><div class="flex w-[65%] flex-col justify-between px-2 md:py-2"><div class="hidden text-xs font-normal text-[#5A5A5A] md:block">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-2 font-heading text-base font-semibold leading-tight text-brand-deep">${esc(trip.title)}</div><div class="flex items-center gap-2"><div class="text-sm font-semibold text-brand-deep md:text-base">${money(trip.price)}</div>${trip.oldPrice ? `<div class="relative text-[0.625rem] font-medium text-[#5A5A5A] md:text-xs"><div class="absolute top-1.5 h-px w-full bg-brand-orange"></div>${money(trip.oldPrice)}</div>` : ''}${off ? `<div class="text-[0.625rem] font-semibold text-brand-orange md:text-xs">${money(off)} Off</div>` : ''}</div><div class="block text-xs font-normal text-[#5A5A5A] md:hidden">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-1 text-xs font-normal text-[#5A5A5A] md:text-sm">${icon('calendar-days')} ${esc(dates)}</div></div></div></a>`;
 }
 
 function bikeChips(destinations) {
@@ -444,20 +458,38 @@ function bikeFilterOptions(trips) {
   return { dates: [...dateSet].slice(0, 8).map(d => [d, d]), types: types.map(t => [t, t]), budgets };
 }
 
+function bikeCalendar(trips) {
+  const month = 'August'; const year = 2026; const firstWeekday = new Date(year, 7, 1).getDay();
+  const available = new Map();
+  (trips || []).forEach(trip => (trip.dates || []).forEach(label => {
+    const match = /Aug\s+(\d+)/i.exec(label);
+    if (match) available.set(Number(match[1]), label);
+  }));
+  const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const cells = Array.from({ length: firstWeekday + 31 }, (_, index) => {
+    if (index < firstWeekday) return '<span class="bt-calendar-empty" aria-hidden="true"></span>';
+    const day = index - firstWeekday + 1; const date = available.get(day);
+    return date ? `<button type="button" class="bt-calendar-day bt-calendar-available bt-filter-chip" data-filter-group="date" data-filter-value="${esc(date)}" aria-label="${esc(date)}">${day}</button>` : `<span class="bt-calendar-day">${day}</span>`;
+  }).join('');
+  return `<div class="bt-calendar" aria-label="${month} ${year} departures"><div class="bt-calendar-head"><button type="button" aria-label="Previous month" disabled>${icon('chevron-left')}</button><strong>${month} ${year}</strong><button type="button" aria-label="Next month" disabled>${icon('chevron-right')}</button></div><div class="bt-calendar-weekdays">${weekdays.map(day => `<span>${day}</span>`).join('')}</div><div class="bt-calendar-grid">${cells}</div></div>`;
+}
+
 function bikeFilterPanel(trips, mobile = false) {
   const { dates, types, budgets } = bikeFilterOptions(trips);
   const optionsFor = { date: dates, type: types, budget: budgets };
   const chip = (group, value, label) => `<button type="button" class="bt-filter-chip h-8 flex-shrink-0 rounded-full border border-[#D8D8D8] bg-white px-4 text-sm font-medium text-black transition-colors hover:bg-[#ECFFF5]" data-filter-group="${esc(group)}" data-filter-value="${esc(value)}">${esc(label)}</button>`;
   const rows = BT_FILTER_ROWS.map(([iconName, label, group]) => {
     const options = optionsFor[group] || [];
-    return `<div class="border-b border-[#EAEAEA] last:border-0">
-      <button type="button" class="bt-filter-toggle flex w-full cursor-pointer items-center justify-between py-4 text-sm font-normal text-[#1F1F1F]" aria-expanded="false"><span class="inline-flex items-center gap-2">${icon(iconName, 'size-4 text-brand-purple')} ${esc(label)}</span>${icon('chevron-down', 'bt-filter-chevron size-4 text-[#1F1F1F] transition-transform')}</button>
-      <div class="bt-filter-options hidden flex-wrap gap-2 pb-4">${options.length ? options.map(([v, l]) => chip(group, v, l)).join('') : '<span class="text-xs text-[#5A5A5A]">No options available.</span>'}</div>
+    const open = false;
+    const content = group === 'date' ? bikeCalendar(trips) : (options.length ? options.map(([v, l]) => chip(group, v, l)).join('') : '<span class="text-xs text-[#5A5A5A]">No options available.</span>');
+    return `<div class="bt-filter-row border-b border-[#EAEAEA] last:border-0">
+      <button type="button" class="bt-filter-toggle flex w-full cursor-pointer items-center justify-between py-4 text-sm font-semibold text-brand-ink" aria-expanded="${open}"><span class="inline-flex items-center gap-2">${icon(iconName, 'size-4 text-brand-purple')} ${esc(label)}</span>${icon('chevron-down', `bt-filter-chevron size-4 text-brand-ink transition-transform ${open ? 'rotate-180' : ''}`)}</button>
+      <div class="bt-filter-options ${open ? 'flex' : 'hidden'} flex-wrap gap-2 pb-4">${content}</div>
     </div>`;
   }).join('');
   const body = `<div class="flex items-center justify-between"><div class="flex items-center gap-2">${icon('sliders-horizontal', 'size-4 text-brand-purple')}<strong class="font-heading text-base font-extrabold text-brand-deep">Filters</strong></div><button type="button" class="bt-clear-filters text-xs font-medium text-brand-purple">Clear</button></div><div class="my-auto mt-3 h-px bg-gradient-to-r from-[#FDFDFD] via-[#EAEAEA] to-[#FDFDFD]"></div><div>${rows}</div>`;
-  if (mobile) return `<div class="bt-mobile-filter-panel hidden rounded-2xl border px-6 py-5 shadow-md">${body}</div>`;
-  return `<aside class="sticky top-52 ml-20 hidden h-fit w-1/4 rounded-2xl border px-6 py-5 shadow-md min-[1100px]:block">${body}</aside>`;
+  if (mobile) return `<div class="bt-mobile-filter-panel hidden rounded-2xl border border-brand-purple/10 bg-white px-5 py-4 shadow-xl">${body}</div>`;
+  return `<aside class="bt-filter-rail sticky top-52 ml-20 hidden h-fit w-1/4 rounded-2xl border border-brand-purple/10 bg-white px-6 py-5 shadow-md md:block">${body}</aside>`;
 }
 
 const REASONS_CARDS = [
@@ -496,6 +528,10 @@ function wireBtFilters() {
   const filterChips = Array.from(document.querySelectorAll('.bt-filter-chip'));
   const state = { dest: 'all', date: null, type: null, budget: null };
   const setChip = (chip, on) => {
+    if (chip.classList.contains('bt-calendar-day')) {
+      chip.classList.toggle('selected', on);
+      return;
+    }
     chip.classList.toggle('border-[#008342]', on);
     chip.classList.toggle('bg-[#ECFFF5]', on);
     chip.classList.toggle('border-[#D8D8D8]', !on);
@@ -550,6 +586,16 @@ function wireBtFilters() {
   if (mobileToggle && mobilePanel) {
     mobileToggle.addEventListener('click', () => { const open = mobilePanel.classList.toggle('hidden'); mobileToggle.setAttribute('aria-expanded', String(!open)); });
   }
+}
+
+function wireCategoryIntro() {
+  const dialog = document.querySelector('.bt-intro-dialog');
+  const open = document.querySelector('.bt-read-more');
+  if (!dialog || !open) return;
+  const close = () => dialog.classList.add('hidden');
+  open.addEventListener('click', () => dialog.classList.remove('hidden'));
+  dialog.querySelector('.bt-intro-dialog-backdrop')?.addEventListener('click', close);
+  dialog.querySelector('.bt-intro-dialog-close')?.addEventListener('click', close);
 }
 
 /* ------------------------------------------------------------------ *
@@ -679,10 +725,32 @@ function homeFaqSection(faq) {
   const items = (faq && faq.length ? faq : GENERIC_FAQ);
   return `<section class="faq section relative overflow-hidden bg-gradient-to-b from-brand-surface to-white py-12 md:py-16" id="faq"><div class="container"><div class="faq-heading"><div><span class="section-kicker">Answers before you pack</span><h2 class="section-title">Frequently Asked Questions</h2><p>Clear information about group size, safety, payments and cancellations—without the fine-print maze.</p></div><span class="faq-count">${icon('message-circle')} ${items.length} quick answers</span></div><div class="faq-layout grid grid-cols-[minmax(260px,.72fr)_minmax(0,1.55fr)] items-start gap-6 max-[900px]:grid-cols-1"><div class="faq-list grid gap-2 [&_.faq-item]:overflow-hidden [&_.faq-item]:rounded-2xl [&_.faq-item]:border [&_.faq-item]:border-brand-purple/10 [&_.faq-item]:bg-white [&_.faq-item]:shadow-sm [&_.faq-question]:min-h-14 [&_.faq-question]:w-full [&_.faq-question]:cursor-pointer [&_.faq-question]:px-5 [&_.faq-question]:py-3 [&_.faq-question]:font-heading [&_.faq-question]:font-bold [&_.faq-question]:text-brand-ink [&_.faq-item.open]:border-brand-purple/30 [&_.faq-item.open]:shadow-lg [&_.faq-toggle]:grid [&_.faq-toggle]:size-9 [&_.faq-toggle]:place-items-center [&_.faq-toggle]:rounded-full [&_.faq-toggle]:bg-brand-purple/10 [&_.faq-toggle]:text-brand-purple [&_.faq-item.open_.faq-toggle]:bg-brand-yellow [&_.faq-item.open_.faq-toggle]:text-brand-deep [&_.faq-answer_p]:px-5 [&_.faq-answer_p]:pb-5 [&_.faq-answer_p]:text-sm [&_.faq-answer_p]:leading-relaxed [&_.faq-answer_p]:text-gray-500" id="faq-list">${items.map((x, i) => `<div class="faq-item${i === 0 ? ' open' : ''}"><button class="faq-question" type="button" aria-expanded="${i === 0}"><span>${esc(x.question)}</span><span class="faq-toggle" aria-hidden="true">+</span></button><div class="faq-answer"><p>${esc(x.answer)}</p></div></div>`).join('')}</div></div></div></section>`;
 }
+function tripFaqSection(faq, label) {
+  return homeFaqSection(faq).replace('>Frequently Asked Questions<', `>${esc(label)} Frequently Asked Questions<`);
+}
+
 function reviewsSection(reviews = HOMEPAGE_REVIEWS) {
   return `<section class="reviews section bg-brand-surface py-12 md:py-16" id="reviews"><div class="container"><div class="section-header"><h2 class="section-title">Reviews From Our Travellers</h2><div class="destination-scroll-controls"><button type="button" id="review-prev" aria-label="Previous reviews">${icon('chevron-left')}</button><button type="button" id="review-next" aria-label="Next reviews">${icon('chevron-right')}</button></div></div><div class="review-carousel"><div class="review-track" id="review-track">${reviews.map(r => `<article class="review-card"><div class="review-img"><img src="${esc(r[0])}" alt="${esc(r[1])}" loading="lazy"></div><div class="review-body"><div class="review-stars">★★★★★</div><p class="review-text">${esc(r[2])} <a href="/reviews" class="read-more">Read more...</a></p><div class="review-author">${esc(r[1])}</div></div></article>`).join('')}</div></div></div></section>`;
 }
 
+
+const TRIP_TRENDING_FALLBACKS = [
+  { slug: 'bali', name: 'Bali', startingPrice: 44999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/bali.jpg' },
+  { slug: 'ladakh', name: 'Ladakh', startingPrice: 19499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542553/travelenfield/destinations/ladakh.jpg' },
+  { slug: 'spiti', name: 'Spiti Valley', startingPrice: 17999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542557/travelenfield/destinations/spiti.jpg' },
+  { slug: 'kerala', name: 'Kerala', startingPrice: 14999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/kerala.jpg' },
+  { slug: 'manali', name: 'Manali', startingPrice: 9499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542554/travelenfield/destinations/manali.jpg' },
+  { slug: 'meghalaya', name: 'Meghalaya', startingPrice: 15499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542555/travelenfield/destinations/meghalaya.jpg' },
+];
+
+function tripTravellerGallery(trip) {
+  const gallery = (trip.gallery?.length ? trip.gallery : [trip.image, trip.image, trip.image, trip.image, trip.image]).filter(Boolean).slice(0, 5);
+  return `<section class="trip-media-gallery section bg-white py-12 md:py-16" aria-labelledby="trip-gallery-title"><div class="container"><div class="section-header"><h2 class="section-title" id="trip-gallery-title">Gallery by Travellers</h2><div class="trip-gallery-tabs" role="tablist"><button type="button" class="active" role="tab" aria-selected="true">${icon('images')} All</button><button type="button" role="tab" aria-selected="false">${icon('camera')} Photos</button><button type="button" role="tab" aria-selected="false">${icon('video')} Videos</button></div></div><div class="trip-gallery-rail">${gallery.map((src, index) => `<figure class="trip-gallery-card"><img src="${esc(src)}" alt="${esc(trip.title)} traveller moment ${index + 1}" loading="lazy"></figure>`).join('')}</div></div></section>`;
+}
+
+function tripTrendingDestinations(items = TRIP_TRENDING_FALLBACKS) {
+  return `<section class="trending section bg-white py-12 md:py-14" aria-labelledby="trip-trending-title"><div class="container"><div class="section-header"><h2 class="section-title" id="trip-trending-title">Trending Destinations</h2><a href="/trips" class="see-all-link">See All <span>→</span></a></div><div class="trending-grid grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">${items.slice(0, 6).map(item => `<a href="/destinations/${esc(item.slug)}" class="trending-card relative aspect-square overflow-hidden rounded-2xl border border-brand-purple/15 shadow-lg"><img src="${esc(item.image)}" alt="${esc(item.name)} Tour Packages" loading="lazy" class="size-full object-cover"><span class="trending-info absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/95 to-transparent px-4 pb-4 pt-14"><strong class="block font-heading text-sm font-extrabold text-white">${esc(item.name)} Tour Packages</strong><small class="mt-1 block text-xs font-bold text-brand-yellow">Starting ${money(item.startingPrice)}</small></span></a>`).join('')}</div></div></section>`;
+}
 
 function journalSection(blogs) {
   return `<section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title"><div class="container"><div class="section-header journal-heading"><div><span class="section-kicker">Plan with local context</span><h2 class="section-title" id="journal-title">Related Blogs</h2></div><a href="/blog" class="see-all-link">Read All <span>&rarr;</span></a></div><div class="journal-grid">${blogs.map(b => `<article class="journal-card"><a href="/blog/${esc(b.slug)}"><div class="journal-img"><img src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy" /></div><div class="journal-body"><h3>${esc(b.title)}</h3><small>${esc(b.category)} | ${esc(b.readTime)}</small><span class="journal-cta">Read Now ${icon('arrow-right')}</span></div></a></article>`).join('')}</div></div></section>`;
@@ -712,8 +780,10 @@ function wireCampaignSlider(root = mount) {
 }
 
 function appendSharedTravelSections() {
-  const first = location.pathname.split('/').filter(Boolean)[0] || '';
+  const routeParts = location.pathname.split('/').filter(Boolean);
+  const first = routeParts[0] || '';
   if (['login', 'signup', 'profile', 'reviews', 'about-us'].includes(first)) return;
+  if (first === 'trips' && routeParts[1]) return;
   if (!mount.querySelector('.campaign-slider')) mount.insertAdjacentHTML('beforeend', offersSliderSection());
   if (!mount.querySelector('.reasons-section')) mount.insertAdjacentHTML('beforeend', reasonsSection());
   if (!mount.querySelector('.review-track')) mount.insertAdjacentHTML('beforeend', reviewsSection());
@@ -1049,7 +1119,7 @@ async function renderTrip(slug) {
   const destLabel=(trip.destinationSlug||trip.title).split('-').map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ');
   mount.innerHTML=categoryBanner(tripImage, trip.title, trip.summary, trip.title, { titleOverlay: true })
   + `<section class="trip-detail-shell"><div class="container trip-detail-layout">
-    <main class="trip-detail-main"><nav class="trip-audit-tabs" aria-label="Trip sections"><div class="container"><a href="#itinerary">Itinerary</a><a href="#inclusions">Inclusions</a><a href="#costing">Costing</a><a href="#notes">Notes</a></div></nav>
+    <main class="trip-detail-main"><nav class="trip-audit-tabs" aria-label="Trip sections"><div class="container"><a href="#itinerary">Itinerary</a><a href="#inclusions">Inclusions</a><a href="#trip-booking">Costing</a><a href="#notes">Notes</a></div></nav>
       <section class="trip-about" aria-label="About this trip">
         <h2 class="trip-about-heading">About <span data-trip-destination-label>${esc(destLabel)}</span> Trip</h2>
         <div class="trip-about-copy clamped">${aboutCopy.map(x=>`<p>${esc(x)}</p>`).join('')}</div>
@@ -1062,7 +1132,7 @@ async function renderTrip(slug) {
         </div>
         <ol class="breakdown-list">${itinerary.map((day,i)=>`<li class="breakdown-item${i===0?' open':''}"><button type="button" class="breakdown-toggle" aria-expanded="${i===0}"><span class="breakdown-day"><small>Day</small><b>${day.day}</b></span><h3>${esc(day.title)}</h3><span class="breakdown-chevron">${icon('chevron-down')}</span></button><div class="breakdown-body">${(day.details||[]).map(x=>`<p>${esc(x)}</p>`).join('')}</div></li>`).join('')}</ol>
       </section>
-      <section class="trip-costing" id="costing">
+      <section class="trip-costing hidden" id="costing" aria-hidden="true">
         <h2 class="trip-section-title">Trip Cost at a Glance</h2><p class="trip-section-subtext">Clear per-person pricing for this departure — no hidden add-ons.</p>
         <div class="costing-grid">
           <article class="costing-main"><small>Starting from</small><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del><span class="costing-off">${esc(trip.discount||'Limited offer')}</span><em>Per Person</em></article>
@@ -1071,9 +1141,8 @@ async function renderTrip(slug) {
       </section>
       <section class="trip-package" id="inclusions"><h2 class="trip-section-title">What's in the Package?</h2><div class="trip-package-grid"><article class="package-panel included"><h3>${icon('circle-check-big')} Included in your trip</h3><ul>${(trip.inclusions||[]).map(x=>`<li>${icon('check')} ${esc(x)}</li>`).join('')}</ul></article><article class="package-panel excluded"><h3>${icon('x')} Not included</h3><ul>${(trip.exclusions||[]).map(x=>`<li>${icon('x')} ${esc(x)}</li>`).join('')}</ul></article></div></section>
       <section class="trip-notes" id="notes"><h2>${icon('shield-check')} Good to know before you go</h2><ul>${(trip.notes||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>
-      <div data-trip-destination-faq></div>
     </main>
-    <aside class="trip-enquiry-sticky"><div class="trip-enquiry-card trip-booking">
+    <aside class="trip-enquiry-sticky" id="trip-booking"><div class="trip-enquiry-card trip-booking">
       <p class="trip-from">Trip Starts From</p>
       <div class="trip-enquiry-price"><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del><span class="trip-saving-inline">${esc(trip.discount||'Limited offer')}</span></div>
       <p class="trip-per-person">Per Person</p>
@@ -1086,7 +1155,11 @@ async function renderTrip(slug) {
       <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener">${icon('message-circle')} WhatsApp</a></div>
     </div></aside>
   </div></section>
-  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button></div>`;
+  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button></div>`
+  + tripTravellerGallery(trip)
+  + tripTrendingDestinations()
+  + reviewsSection(reviewsForTrips([trip]))
+  + `<div data-trip-destination-faq>${tripFaqSection([], destLabel)}</div><div data-trip-related-blogs></div>`;
   wireTripExperience(trip);
   wireFaq();
   destinationRequest.then(dest => {
@@ -1094,13 +1167,20 @@ async function renderTrip(slug) {
     if (!dest || !faqSlot) return;
     const label=mount.querySelector('[data-trip-destination-label]');
     if (label && dest.name) label.textContent=dest.name;
-    if (dest.faq?.length) faqSlot.innerHTML=homeFaqSection(dest.faq);
+    if (dest.faq?.length) faqSlot.innerHTML=tripFaqSection(dest.faq, dest.name || destLabel);
     applyTailwindStyles(mount); activateIcons(); wireFaq();
   });
+  const tripRouteAtRequest = location.pathname;
+  api('/blogs').then(blogs => {
+    const relatedSlot = mount.querySelector('[data-trip-related-blogs]');
+    if (location.pathname !== tripRouteAtRequest || !relatedSlot || !blogs?.length) return;
+    relatedSlot.innerHTML = journalSection(blogs.slice(0, 5));
+    applyTailwindStyles(mount); activateIcons(); wireRails();
+  }).catch(() => {});
 }
 
 function wireTripExperience(trip){
-  const steps=[['itinerary','Itinerary'],['inclusions','Inclusions'],['costing','Costing'],['notes','Notes']];
+  const steps=[['itinerary','Itinerary'],['inclusions','Inclusions'],['trip-booking','Costing'],['notes','Notes']];
   const links=[...document.querySelectorAll('.trip-audit-tabs a')];
   const setActive=id=>{links.forEach(link=>{const active=link.getAttribute('href')===`#${id}`;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','step');else link.removeAttribute('aria-current')})};
   const observer=new IntersectionObserver(entries=>{const visible=entries.filter(x=>x.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(visible)setActive(visible.target.id)},{rootMargin:'-35% 0px -55% 0px',threshold:[0,.1,.3,.6]});
