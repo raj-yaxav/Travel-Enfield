@@ -1170,6 +1170,20 @@ button.bt-calendar-day { cursor: pointer; }
 .mobile-bottom-nav .bottom-nav-trips { @apply font-heading text-[1.65rem] font-medium tracking-[-.05em]; }
 .mobile-bottom-nav .bottom-nav-whatsapp { @apply mx-auto size-12 min-h-12 rounded-full transition-transform hover:scale-105; }
 .mobile-bottom-nav.nav-hidden { @apply translate-y-[calc(100%+12px)]; }
+.mobile-trips-sheet { visibility: hidden; position: fixed; inset: 0; z-index: 180; display: flex; align-items: flex-end; opacity: 0; transition: opacity .25s ease, visibility .25s ease; }
+.mobile-trips-sheet.open { visibility: visible; opacity: 1; }
+.mobile-trips-backdrop { position: absolute; inset: 0; border: 0; background: rgba(0,0,0,.72); }
+.mobile-trips-dialog { position: relative; z-index: 1; width: 100%; max-height: min(82dvh, 710px); overflow-y: auto; border-radius: 18px 18px 0 0; background: #fff; padding: 26px 26px calc(22px + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform .3s cubic-bezier(.22,.8,.25,1); }
+.mobile-trips-sheet.open .mobile-trips-dialog { transform: translateY(0); }
+.mobile-trips-sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 21px; }
+.mobile-trips-sheet-head h2 { margin: 0; color: var(--color-brand-ink); font-family: var(--font-manrope); font-size: 25px; font-weight: 800; letter-spacing: -.035em; }
+.mobile-trips-close { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(35,24,43,.14); border-radius: 50%; background: #fff; color: var(--color-brand-ink); box-shadow: 0 2px 8px rgba(35,24,43,.12); }
+.mobile-trips-close svg { width: 21px; height: 21px; }
+.mobile-trips-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 21px 17px; }
+.mobile-trips-category { display: grid; justify-items: center; gap: 9px; min-width: 0; color: var(--color-brand-ink); text-align: center; font-family: var(--font-manrope); font-size: 14px; font-weight: 800; line-height: 1.35; }
+.mobile-trips-category img { display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 14px; object-fit: cover; box-shadow: 0 2px 6px rgba(35,24,43,.1); }
+@media (min-width: 768px) { .mobile-trips-sheet { display: none; } }
+.destination-card.is-hidden, .trip-card.is-hidden { display: none !important; }
 #header { transition: transform .28s ease, box-shadow .2s ease, background-color .25s ease; }
 #header.nav-hidden { transform: translateY(-105%); }
 .hamburger span { @apply h-0.5 w-6 rounded-full bg-brand-ink; }

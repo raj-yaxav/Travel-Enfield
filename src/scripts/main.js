@@ -305,7 +305,9 @@ function activateFilter(buttons, cards, attribute, hiddenClass = 'is-hidden') {
       });
       cards.forEach(card => {
         const categories = (card.dataset.category || card.dataset.trip || '').split(' ');
-        card.classList.toggle(hiddenClass, value !== 'all' && !categories.includes(value));
+        const hidden = value !== 'all' && !categories.includes(value);
+        card.classList.toggle(hiddenClass, hidden);
+        card.hidden = hidden;
       });
     });
     button.setAttribute('aria-pressed', String(button.classList.contains('active')));
@@ -582,6 +584,25 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && mobileSearchPanel?.classList.contains('open')) closeMobileSearch();
 });
 wireMobileSearchFilter(mobileSearchPanel, mobileSearchInput);
+
+const mobileTripsSheet = $('#mobile-trips-sheet');
+const mobileTripsTrigger = $('[data-mobile-trips-trigger]');
+const openMobileTrips = () => {
+  if (!mobileTripsSheet) return;
+  mobileTripsSheet.classList.add('open');
+  mobileTripsSheet.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+};
+const closeMobileTrips = () => {
+  if (!mobileTripsSheet) return;
+  mobileTripsSheet.classList.remove('open');
+  mobileTripsSheet.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+};
+mobileTripsTrigger?.addEventListener('click', openMobileTrips);
+$$('[data-mobile-trips-close]').forEach(button => button.addEventListener('click', closeMobileTrips));
+$$('.mobile-trips-category', mobileTripsSheet).forEach(link => link.addEventListener('click', closeMobileTrips));
+document.addEventListener('keydown', event => { if (event.key === 'Escape' && mobileTripsSheet?.classList.contains('open')) closeMobileTrips(); });
 
 const backToTop = $('#back-to-top');
 if (backToTop) {

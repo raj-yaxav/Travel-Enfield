@@ -1110,10 +1110,29 @@
   <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Quick navigation">
     <a href="/" class="bottom-nav-item is-active" aria-label="Home"><i data-lucide="home"></i></a>
     <button type="button" class="bottom-nav-item" data-mobile-search-trigger aria-haspopup="dialog" aria-controls="mobile-search-panel" aria-label="Search trips and destinations"><i data-lucide="search"></i></button>
-    <a href="/trips" class="bottom-nav-item bottom-nav-trips" aria-label="Explore trips"><span>TRIPS</span></a>
+    <button type="button" class="bottom-nav-item bottom-nav-trips" data-mobile-trips-trigger aria-haspopup="dialog" aria-controls="mobile-trips-sheet" aria-label="Explore trips"><span>TRIPS</span></button>
     <button type="button" class="bottom-nav-item" data-reels-trigger aria-haspopup="dialog" aria-controls="reels-viewer" aria-label="Watch travel reels"><i data-lucide="play"></i></button>
     <a href="https://wa.me/919310656044" class="bottom-nav-item bottom-nav-whatsapp" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542612/travelenfield/socialmedia/whatsapp.svg" alt="" class="size-10" loading="lazy" width="32" height="32" /></a>
   </nav>
+
+  <!-- ============ MOBILE EXPLORE TRIPS SHEET ============ -->
+  <div class="mobile-trips-sheet" id="mobile-trips-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-trips-title" aria-hidden="true">
+    <button type="button" class="mobile-trips-backdrop" data-mobile-trips-close aria-label="Close explore trips"></button>
+    <section class="mobile-trips-dialog">
+      <div class="mobile-trips-sheet-head"><h2 id="mobile-trips-title">Explore</h2><button type="button" class="mobile-trips-close" data-mobile-trips-close aria-label="Close explore trips"><i data-lucide="x"></i></button></div>
+      <div class="mobile-trips-grid">
+        <a href="/international-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/bali.jpg" alt="International group trips" loading="lazy"><span>International<br>Group Trips</span></a>
+        <a href="/domestic-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542556/travelenfield/destinations/nepal.jpg" alt="Domestic group trips" loading="lazy"><span>Domestic<br>Group Trips</span></a>
+        <a href="/bike-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542553/travelenfield/destinations/ladakh.jpg" alt="Ladakh and Spiti trips" loading="lazy"><span>Ladakh &amp; Spiti<br>Trips</span></a>
+        <a href="/weekend-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542554/travelenfield/destinations/manali.jpg" alt="Weekend trips" loading="lazy"><span>Weekend Trips</span></a>
+        <a href="/upcoming-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542557/travelenfield/destinations/spiti.jpg" alt="Upcoming trips" loading="lazy"><span>Upcoming Trips</span></a>
+        <a href="/trekking-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542555/travelenfield/destinations/meghalaya.jpg" alt="Spiritual trips" loading="lazy"><span>Spiritual Trips</span></a>
+        <a href="/trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542558/travelenfield/destinations/thailand.jpg" alt="Girls trips" loading="lazy"><span>All Girls Trips</span></a>
+        <a href="/custom-trip" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/kerala.jpg" alt="Customised trips" loading="lazy"><span>Customised<br>Trips</span></a>
+        <a href="/backpacking-trips" class="mobile-trips-category"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542556/travelenfield/destinations/nepal.jpg" alt="Find a travel group" loading="lazy"><span>The Match<br>Maker</span></a>
+      </div>
+    </section>
+  </div>
 
   <!-- ============ MOBILE SEARCH PANEL ============ -->
   <div class="mobile-search-panel" id="mobile-search-panel" role="dialog" aria-modal="true" aria-label="Search trips and destinations" aria-hidden="true">
