@@ -9,6 +9,7 @@
     "start": "next start -p 3000",
     "seed": "node server/seed.js",
     "seed:destinations": "node server/seed-destinations.js",
+    "seed:trip-catalog": "node server/seed-trip-catalog.js",
     "seed:blogs": "node server/seed-blogs.js"
   },
   "dependencies": {

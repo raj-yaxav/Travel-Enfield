@@ -48,6 +48,11 @@ function localReadFallback(route, request) {
   return undefined;
 }
 
+const mergeSeedTrips = (databaseTrips, seedTrips) => {
+  const knownSlugs = new Set(databaseTrips.map(trip => trip.slug));
+  return [...databaseTrips, ...seedTrips.filter(trip => !knownSlugs.has(trip.slug))];
+};
+
 export async function GET(request, context) {
   try {
     const { route = [] } = await context.params;
@@ -80,11 +85,14 @@ export async function GET(request, context) {
       const destination = url.searchParams.get('destination');
       if (category && category !== 'all') query.categories = category;
       if (destination) query.destinationSlug = destination;
-      return json(await Trip.find(query).lean());
+      const databaseTrips = await Trip.find(query).lean();
+      const seedTrips = trips.filter(item => (!category || category === 'all' || item.categories.includes(category)) && (!destination || item.destinationSlug === destination));
+      return json(mergeSeedTrips(databaseTrips, seedTrips));
     }
     if (route[0] === 'trips' && route[1]) {
       const item = await Trip.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Trip not found' }, 404);
+      const seededItem = trips.find(trip => trip.slug === route[1]);
+      return item ? json(item) : (seededItem ? json(seededItem) : json({ error: 'Trip not found' }, 404));
     }
     if (pathname === 'categories') return json(await Category.find().lean());
     if (route[0] === 'categories' && route[1]) {

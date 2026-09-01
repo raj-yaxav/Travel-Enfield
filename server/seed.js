@@ -82,14 +82,48 @@ export const destinations = [
 });
 
 const itinerary = names => names.map((title, i) => ({ day:i+1,title,details:[`Experience ${title} with your trip captain.`, 'Meals, transfers and stay follow the inclusions listed below.'] }));
-export const trips = [
+const baseTrips = [
   {title:'Leh Ladakh Bike Trip',slug:'leh-ladakh-bike-trip',destinationSlug:'ladakh',categories:['all','upcoming','domestic','bike-trips'],image:cdn('https://res.cloudinary.com/dq3typk9u/image/upload/v1786542549/travelenfield/categories/bike-trips.jpg'),duration:'6 nights / 7 days',nights:6,price:19499,oldPrice:24999,discount:'22% Off',badge:'Free Goodies',summary:'Ride across iconic high passes and remote valleys on a supported Himalayan motorcycle journey.',groupSize:'12–20 travellers',pickup:'Leh Airport',dates:['Aug 15','Aug 22','Sep 5','Sep 12'],itinerary:itinerary(['Arrival and acclimatisation in Leh','Leh local exploration','Leh to Nubra Valley','Nubra to Pangong Lake','Pangong to Leh','Buffer and celebration','Departure']),featured:true},
   {title:'Spiti Valley Road Trip',slug:'spiti-valley-road-trip',destinationSlug:'spiti',categories:['all','upcoming','domestic','backpacking-trips','bike-trips'],image:img('spiti'),duration:'7 nights / 8 days',nights:7,price:17999,oldPrice:22999,discount:'22% Off',badge:'Bestseller',summary:'A high-altitude road trip through monasteries, villages and dramatic cold-desert landscapes.',groupSize:'12–18 travellers',pickup:'Delhi',dates:['Aug 20','Sep 1','Sep 15','Oct 2'],itinerary:itinerary(['Delhi to Shimla','Shimla to Chitkul','Chitkul to Kalpa','Kalpa to Kaza','Kaza local circuit','Kaza to Chandratal','Chandratal to Manali','Departure']),featured:true},
   {title:'Bali Adventure Tour',slug:'bali-adventure-tour',destinationSlug:'bali',categories:['all','upcoming','international'],image:img('bali'),duration:'5 nights / 6 days',nights:5,price:44999,oldPrice:54999,discount:'18% Off',badge:'Free Goodies',summary:'A balanced Bali escape with temples, waterfalls, island views and social evenings.',groupSize:'10–18 travellers',pickup:'Denpasar Airport',dates:['Sep 10','Sep 24','Oct 8','Oct 22'],itinerary:itinerary(['Arrival in Bali','Ubud culture trail','Nusa Penida day trip','Mount Batur sunrise','Uluwatu and leisure','Departure']),featured:true},
   {title:'Thailand Beach Getaway',slug:'thailand-beach-getaway',destinationSlug:'thailand',categories:['all','upcoming','international'],image:img('thailand'),duration:'5 nights / 6 days',nights:5,price:32999,oldPrice:39999,discount:'18% Off',badge:'Trending',summary:'Island scenery, bustling markets and a fun group itinerary across Thailand.',groupSize:'10–18 travellers',pickup:'Bangkok Airport',dates:['Sep 5','Sep 19','Oct 3','Oct 17'],itinerary:itinerary(['Bangkok arrival','Bangkok city highlights','Fly to Krabi','Island hopping','Leisure and night market','Departure'])},
   {title:'Manali Snow Adventure',slug:'manali-snow-adventure',destinationSlug:'manali',categories:['all','upcoming','domestic','weekend','bike-trips'],image:img('manali'),duration:'3 nights / 4 days',nights:3,price:9499,oldPrice:12999,discount:'27% Off',badge:'Weekend Pick',summary:'A compact mountain break with snow activities, cafés and scenic drives.',groupSize:'12–24 travellers',pickup:'Delhi',dates:['Aug 10','Aug 17','Aug 24','Aug 31'],itinerary:itinerary(['Delhi to Manali','Solang Valley adventure','Old Manali and local sights','Return to Delhi'])},
   {title:'Meghalaya Explorer',slug:'meghalaya-explorer',destinationSlug:'meghalaya',categories:['all','upcoming','domestic','backpacking-trips','bike-trips'],image:img('meghalaya'),duration:'5 nights / 6 days',nights:5,price:15499,oldPrice:19999,discount:'23% Off',badge:'New',summary:'Clear rivers, forest trails and living root bridges in India’s northeast.',groupSize:'10–18 travellers',pickup:'Guwahati Airport',dates:['Sep 8','Sep 22','Oct 6','Oct 20'],itinerary:itinerary(['Guwahati to Shillong','Cherrapunji waterfalls','Living root bridge trek','Dawki and Mawlynnong','Shillong local day','Departure'])},
-].map(t => ({...t,inclusions:['Comfortable stays on sharing basis','Transfers as per itinerary','Trip captain throughout the journey','Experiences specifically mentioned'],exclusions:['Flights unless explicitly mentioned','Personal expenses and tips','Meals not listed in the itinerary','GST and applicable taxes'],notes:['Carry a valid photo ID.','Final schedule may change due to weather or local conditions.']}));
+];
+
+const generatedDestinationTrips = destinations.flatMap((destination, index) => {
+  const category = destination.category === 'international' ? 'international' : 'domestic';
+  const basePrice = Number(destination.startingPrice) || 9999;
+  const firstHighlight = destination.highlights?.[0] || destination.name;
+  const secondHighlight = destination.highlights?.[1] || 'local experiences';
+  const firstActivity = destination.thingsToDo?.[0] || `Explore ${destination.name}`;
+  const secondActivity = destination.thingsToDo?.[1] || 'Enjoy a relaxed local experience';
+  const departures = index % 2 === 0 ? ['Sep 6', 'Sep 20', 'Oct 4'] : ['Sep 13', 'Sep 27', 'Oct 11'];
+  const makeTrip = (variant, priceOffset, badge) => ({
+    title: `${destination.name} ${variant}`,
+    slug: `${destination.slug}-${variant.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+    destinationSlug: destination.slug,
+    categories: ['all', 'upcoming', category],
+    image: destination.image,
+    duration: destination.idealDuration || '5 nights / 6 days',
+    nights: 5,
+    price: basePrice + priceOffset,
+    oldPrice: basePrice + priceOffset + 4000,
+    discount: 'Early Bird Offer',
+    badge,
+    summary: `${destination.tagline} A thoughtfully paced ${destination.name} group departure with stays, transfers and on-ground support.`,
+    groupSize: '10–18 travellers',
+    pickup: `${destination.name} arrival point`,
+    dates: departures,
+    itinerary: itinerary([`Arrive and settle into ${destination.name}`, `Explore ${firstHighlight}`, firstActivity, `Discover ${secondHighlight}`, secondActivity, 'Departure with new stories']),
+  });
+  return [
+    makeTrip('Highlights Group Tour', 0, 'Group Departure'),
+    makeTrip('Explorer Group Tour', 2500, 'Traveller Favourite'),
+  ];
+});
+
+export const trips = [...baseTrips, ...generatedDestinationTrips].map(t => ({...t,inclusions:['Comfortable stays on sharing basis','Transfers as per itinerary','Trip captain throughout the journey','Experiences specifically mentioned'],exclusions:['Flights unless explicitly mentioned','Personal expenses and tips','Meals not listed in the itinerary','GST and applicable taxes'],notes:['Carry a valid photo ID.','Final schedule may change due to weather or local conditions.']}));
 
 export const hotels = [
   ['The Grand Dragon, Leh','the-grand-dragon-leh','ladakh','Leh, Ladakh','4','4.8','412','Bestseller','Mountain-view stay near Leh city','Sumptuous rooms with warm hospitality right in the heart of Ladakh’s capital.','7499','9999','Premium Mountain Room',['Breakfast included','Free WiFi','Oxygen support','In-house café','Airport pickup','Heated rooms'],['Heated rooms with mountain views','Gurudwara Pathar Sahib close by','Popular with group trips','Free airport transfer'],['3.2 km from Leh Airport','Walk to Leh Main Market','20 min to Shanti Stupa'],['Deluxe Mountain Room','2 adults','22 m²','Queen bed','Mountain view',['Breakfast','Heating','Hill view balcony'],'7499','9999','Premium Mountain Room','2 adults','30 m²','King bed','Panoramic valley view',['Breakfast','Heating','Minibar','Balcony'],'9499','12499','Family Suite','4 adults','46 m²','2 Queen beds','Valley + hill view',['Breakfast','Heating','Living area'],'12499','15999'],'14:00','12:00','Free cancellation up to 7 days before check-in',['Is breakfast included in the room rate?','Yes, a vegetarian spread is included for all stays.','Do you help with permits for travellers?','Yes, our front desk assists group trip travellers with permit paperwork.','Is there oxygen support on site?','The property has supplemental oxygen and a clinic on call.']],
