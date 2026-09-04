@@ -3,6 +3,7 @@ import { connectDatabase } from '../../../../lib/mongodb';
 import { isAdminRequest } from '../../../../lib/admin-auth';
 import { destroyCloudinaryImages } from '../../../../lib/cloudinary';
 import { ADMIN_RESOURCES, sanitizeDoc } from '../../../../server/admin-resources';
+import { trips as seedTrips } from '../../../../server/seed';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -66,12 +67,37 @@ async function handleStats() {
   return json({ counts: Object.fromEntries(counts), recentEnquiries });
 }
 
+// The public catalogue includes seed trips until an administrator customises them.
+// Promote only missing seed records before applying a global setting, so “all trips”
+// really includes every public card without overwriting any admin edits.
+async function ensureTripCatalogueRecords() {
+  if (!seedTrips.length) return 0;
+  const result = await ADMIN_RESOURCES.trips.model.bulkWrite(
+    seedTrips.map(trip => ({
+      updateOne: {
+        filter: { slug: trip.slug },
+        update: { $setOnInsert: trip },
+        upsert: true,
+      },
+    })),
+    { ordered: false }
+  );
+  return result.upsertedCount || 0;
+}
+
 export async function GET(request, context) {
   if (!isAdminRequest(request)) return json({ error: 'Not authenticated' }, 401);
   try {
     await connectDatabase();
     const { route = [] } = await context.params;
     if (route[0] === 'stats' && route.length === 1) return await handleStats();
+    if (route[0] === 'trips' && route[1] === 'date-visibility') {
+      const [total, hidden] = await Promise.all([
+        ADMIN_RESOURCES.trips.model.countDocuments(),
+        ADMIN_RESOURCES.trips.model.countDocuments({ showDates: false }),
+      ]);
+      return json({ total, showDates: total === 0 || hidden === 0 });
+    }
 
     const [resourceKey, id] = route;
     const config = ADMIN_RESOURCES[resourceKey];
@@ -135,6 +161,13 @@ export async function PUT(request, context) {
     await connectDatabase();
     const { route = [] } = await context.params;
     const [resourceKey, id] = route;
+    if (resourceKey === 'trips' && id === 'date-visibility') {
+      const body = await request.json().catch(() => null);
+      if (!body || typeof body.showDates !== 'boolean') return json({ error: 'showDates must be true or false' }, 400);
+      const synced = await ensureTripCatalogueRecords();
+      const result = await ADMIN_RESOURCES.trips.model.updateMany({}, { $set: { showDates: body.showDates } });
+      return json({ ok: true, modified: result.modifiedCount, synced, showDates: body.showDates });
+    }
     const config = ADMIN_RESOURCES[resourceKey];
     if (!config) return json({ error: 'Unknown resource' }, 404);
     if (!id) return json({ error: 'Missing id' }, 400);

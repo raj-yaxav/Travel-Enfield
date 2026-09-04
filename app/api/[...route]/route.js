@@ -16,7 +16,13 @@ const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const json = (data, status = 200) => NextResponse.json(data, { status });
+const PUBLIC_CACHE_HEADERS = {
+  // Public catalogue data can be served quickly while a fresh copy is
+  // revalidated in the background. Admin and account responses never use this.
+  'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=600',
+};
+const json = (data, status = 200, headers) => NextResponse.json(data, { status, headers });
+const cachedJson = data => json(data, 200, PUBLIC_CACHE_HEADERS);
 
 const failure = error => {
   console.error('API request failed:', error);
@@ -74,10 +80,10 @@ export async function GET(request, context) {
     await connectDatabase();
     const url = new URL(request.url);
 
-    if (pathname === 'destinations') return json(await Destination.find().lean());
+    if (pathname === 'destinations') return cachedJson(await Destination.find().lean());
     if (route[0] === 'destinations' && route[1]) {
       const item = await Destination.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Destination not found' }, 404);
+      return item ? cachedJson(item) : json({ error: 'Destination not found' }, 404);
     }
     if (pathname === 'trips') {
       const query = {};
@@ -85,29 +91,37 @@ export async function GET(request, context) {
       const destination = url.searchParams.get('destination');
       if (category && category !== 'all') query.categories = category;
       if (destination) query.destinationSlug = destination;
-      const databaseTrips = await Trip.find(query).lean();
-      const seedTrips = trips.filter(item => (!category || category === 'all' || item.categories.includes(category)) && (!destination || item.destinationSlug === destination));
-      return json(mergeSeedTrips(databaseTrips, seedTrips));
+      const [databaseTrips, persistedTripSlugs] = await Promise.all([
+        Trip.find(query).lean(),
+        Trip.find({}, { slug: 1 }).lean(),
+      ]);
+      const persistedSlugs = new Set(persistedTripSlugs.map(trip => trip.slug));
+      const seedTrips = trips.filter(item => (
+        !persistedSlugs.has(item.slug)
+        && (!category || category === 'all' || item.categories.includes(category))
+        && (!destination || item.destinationSlug === destination)
+      ));
+      return cachedJson(mergeSeedTrips(databaseTrips, seedTrips));
     }
     if (route[0] === 'trips' && route[1]) {
       const item = await Trip.findOne({ slug: route[1] }).lean();
       const seededItem = trips.find(trip => trip.slug === route[1]);
-      return item ? json(item) : (seededItem ? json(seededItem) : json({ error: 'Trip not found' }, 404));
+      return item ? cachedJson(item) : (seededItem ? cachedJson(seededItem) : json({ error: 'Trip not found' }, 404));
     }
-    if (pathname === 'categories') return json(await Category.find().lean());
+    if (pathname === 'categories') return cachedJson(await Category.find().lean());
     if (route[0] === 'categories' && route[1]) {
       const item = await Category.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Category not found' }, 404);
+      return item ? cachedJson(item) : json({ error: 'Category not found' }, 404);
     }
-    if (pathname === 'blogs') return json(await Blog.find().sort({ publishedAt: -1 }).lean());
+    if (pathname === 'blogs') return cachedJson(await Blog.find().sort({ publishedAt: -1 }).lean());
     if (route[0] === 'blogs' && route[1]) {
       const item = await Blog.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Article not found' }, 404);
+      return item ? cachedJson(item) : json({ error: 'Article not found' }, 404);
     }
-    if (pathname === 'pages') return json(await Page.find().lean());
+    if (pathname === 'pages') return cachedJson(await Page.find().lean());
     if (route[0] === 'pages' && route[1]) {
       const item = await Page.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Page not found' }, 404);
+      return item ? cachedJson(item) : json({ error: 'Page not found' }, 404);
     }
     if (pathname === 'auth/me') {
       const userId = getCurrentUserId(request);
@@ -120,11 +134,11 @@ export async function GET(request, context) {
       const query = {};
       const destination = url.searchParams.get('destination');
       if (destination) query.destinationSlug = destination;
-      return json(await Hotel.find(query).sort({ rating: -1 }).lean());
+      return cachedJson(await Hotel.find(query).sort({ rating: -1 }).lean());
     }
     if (route[0] === 'hotels' && route[1]) {
       const item = await Hotel.findOne({ slug: route[1] }).lean();
-      return item ? json(item) : json({ error: 'Hotel not found' }, 404);
+      return item ? cachedJson(item) : json({ error: 'Hotel not found' }, 404);
     }
     if (route[0] === 'profile' && route[1]) {
       const userId = getCurrentUserId(request);
@@ -149,7 +163,7 @@ export async function GET(request, context) {
     const fallback = localReadFallback(route, request);
     if (fallback !== undefined) {
       console.warn(`MongoDB unavailable; serving local read fallback for /api/${route.join('/')}.`);
-      return fallback ? json(fallback) : json({ error: 'Content not found' }, 404);
+      return fallback ? cachedJson(fallback) : json({ error: 'Content not found' }, 404);
     }
     return failure(error);
   }

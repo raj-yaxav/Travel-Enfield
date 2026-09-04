@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { adminFetch } from '../../lib/admin-api';
 import StatusBadge from './StatusBadge';
-import { IconSearch, IconPencil, IconTrash, IconPlus, IconChevronLeft, IconChevronRight, IconImage } from './Icons';
+import { IconSearch, IconPencil, IconTrash, IconPlus, IconChevronLeft, IconChevronRight, IconImage, IconLoader } from './Icons';
 
 function ColumnCell({ col, value }) {
   if (col.type === 'image') {
@@ -24,9 +24,11 @@ function ColumnCell({ col, value }) {
   return value === undefined || value === null || value === '' ? <span className="text-gray-300">—</span> : String(value);
 }
 
-function RowActions({ resourceKey, item, onDelete }) {
+function RowActions({ resourceKey, item, onDelete, onDateVisibility, dateBusy, dateUpdateScope }) {
+  const isDateUpdating = dateBusy && dateUpdateScope === item._id;
   return (
     <div className="inline-flex items-center gap-1">
+      {resourceKey === 'trips' && <button type="button" disabled={dateBusy} onClick={() => onDateVisibility(item._id, item.showDates === false)} className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-brand-purple transition-colors hover:bg-brand-purple/10 disabled:cursor-wait disabled:opacity-60" aria-label={isDateUpdating ? 'Updating exact date visibility' : item.showDates === false ? 'Show exact dates' : 'Hide exact dates'} aria-busy={isDateUpdating}>{isDateUpdating ? <><IconLoader className="h-3.5 w-3.5 animate-spin motion-reduce:animate-none" /> Updating</> : item.showDates === false ? 'Show dates' : 'Hide dates'}</button>}
       <Link href={`/admin/${resourceKey}/${item._id}`} className="rounded-lg p-2.5 text-gray-500 hover:bg-gray-100 hover:text-brand-purple" aria-label="Edit">
         <IconPencil className="h-4 w-4" />
       </Link>
@@ -41,7 +43,7 @@ function RowActions({ resourceKey, item, onDelete }) {
   );
 }
 
-function MobileCard({ item, resourceKey, columns, onDelete }) {
+function MobileCard({ item, resourceKey, columns, onDelete, onDateVisibility, dateBusy, dateUpdateScope }) {
   const imageCol = columns.find(col => col.type === 'image');
   const restCols = columns.filter(col => col !== imageCol);
   const [titleCol, ...detailCols] = restCols;
@@ -58,7 +60,7 @@ function MobileCard({ item, resourceKey, columns, onDelete }) {
           <p className="min-w-0 truncate font-bold text-brand-deep">
             {titleCol ? <ColumnCell col={titleCol} value={item[titleCol.key]} /> : '—'}
           </p>
-          <RowActions resourceKey={resourceKey} item={item} onDelete={onDelete} />
+          <RowActions resourceKey={resourceKey} item={item} onDelete={onDelete} onDateVisibility={onDateVisibility} dateBusy={dateBusy} dateUpdateScope={dateUpdateScope} />
         </div>
         <dl className="mt-1.5 space-y-1 text-sm text-gray-500">
           {detailCols.map(col => (
@@ -81,6 +83,9 @@ export default function ResourceTable({ resourceKey, config }) {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [allTripDatesVisible, setAllTripDatesVisible] = useState(true);
+  const [dateBusy, setDateBusy] = useState(false);
+  const [dateUpdateScope, setDateUpdateScope] = useState(null);
 
   const load = useCallback(async (p, s) => {
     setLoading(true);
@@ -88,11 +93,15 @@ export default function ResourceTable({ resourceKey, config }) {
     try {
       const params = new URLSearchParams({ page: String(p), limit: '20' });
       if (s) params.set('search', s);
-      const data = await adminFetch(`${resourceKey}?${params.toString()}`);
+      const [data, visibility] = await Promise.all([
+        adminFetch(`${resourceKey}?${params.toString()}`),
+        resourceKey === 'trips' ? adminFetch('trips/date-visibility') : Promise.resolve(null),
+      ]);
       setItems(data.items);
       setTotal(data.total);
       setPages(data.pages);
       setPage(data.page);
+      if (visibility) setAllTripDatesVisible(visibility.showDates);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -117,6 +126,35 @@ export default function ResourceTable({ resourceKey, config }) {
     }
   }
 
+  async function handleTripDateVisibility(id, showDates) {
+    setDateBusy(true);
+    setDateUpdateScope(id);
+    try {
+      await adminFetch(`trips/${id}`, { method: 'PUT', body: JSON.stringify({ showDates }) });
+      load(page, search);
+    } catch (err) {
+      window.alert(err.message);
+    } finally {
+      setDateBusy(false);
+      setDateUpdateScope(null);
+    }
+  }
+
+  async function handleAllTripDates(showDates) {
+    setDateBusy(true);
+    setDateUpdateScope('all');
+    try {
+      await adminFetch('trips/date-visibility', { method: 'PUT', body: JSON.stringify({ showDates }) });
+      setAllTripDatesVisible(showDates);
+      load(page, search);
+    } catch (err) {
+      window.alert(err.message);
+    } finally {
+      setDateBusy(false);
+      setDateUpdateScope(null);
+    }
+  }
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -133,6 +171,12 @@ export default function ResourceTable({ resourceKey, config }) {
           <IconPlus className="h-4 w-4" /> Add {config.singular}
         </Link>
       </div>
+
+      {resourceKey === 'trips' && <label className="mb-2 flex min-h-11 w-fit cursor-pointer items-center gap-2.5 rounded-lg border border-brand-purple/15 bg-brand-purple/5 px-3 text-sm font-semibold text-brand-deep" aria-busy={dateBusy && dateUpdateScope === 'all'}>
+        <input type="checkbox" checked={allTripDatesVisible} disabled={dateBusy} onChange={event => handleAllTripDates(event.target.checked)} className="h-4 w-4 rounded border-gray-300 text-brand-purple focus:ring-brand-purple" />
+        Show exact departure dates on all trips
+      </label>}
+      {resourceKey === 'trips' && dateBusy && <p className="mb-4 inline-flex min-h-9 items-center gap-2 rounded-lg bg-brand-purple/10 px-3 text-sm font-semibold text-brand-purple" role="status" aria-live="polite"><IconLoader className="h-4 w-4 animate-spin motion-reduce:animate-none" />{dateUpdateScope === 'all' ? 'Updating departure dates on all trips…' : 'Updating this trip…'}</p>}
 
       {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
 
@@ -158,7 +202,7 @@ export default function ResourceTable({ resourceKey, config }) {
                   </td>
                 ))}
                 <td className="px-5 py-3 text-right">
-                  <RowActions resourceKey={resourceKey} item={item} onDelete={handleDelete} />
+                  <RowActions resourceKey={resourceKey} item={item} onDelete={handleDelete} onDateVisibility={handleTripDateVisibility} dateBusy={dateBusy} dateUpdateScope={dateUpdateScope} />
                 </td>
               </tr>
             ))}
@@ -175,7 +219,7 @@ export default function ResourceTable({ resourceKey, config }) {
         ) : (
           <div className="divide-y divide-gray-100">
             {items.map(item => (
-              <MobileCard key={item._id} item={item} resourceKey={resourceKey} columns={config.columns} onDelete={handleDelete} />
+              <MobileCard key={item._id} item={item} resourceKey={resourceKey} columns={config.columns} onDelete={handleDelete} onDateVisibility={handleTripDateVisibility} dateBusy={dateBusy} dateUpdateScope={dateUpdateScope} />
             ))}
           </div>
         )}

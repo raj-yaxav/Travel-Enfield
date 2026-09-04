@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImageUploader from './ImageUploader';
 import { IconPlus, IconTrash, IconX } from './Icons';
+import { adminFetch } from '../../lib/admin-api';
 
 const inputClass = 'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20';
 
@@ -16,6 +17,59 @@ function StringArrayField({ value, onChange }) {
       placeholder="One item per line"
       className={inputClass}
     />
+  );
+}
+
+function MultiSelectField({ field, value, onChange }) {
+  const selected = Array.isArray(value) ? value : [];
+
+  function toggle(option) {
+    onChange(selected.includes(option)
+      ? selected.filter(item => item !== option)
+      : [...selected, option]);
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-2 rounded-lg border border-gray-200 bg-gray-50/60 p-3 sm:grid-cols-2">
+      {field.options.map(option => {
+        const value = typeof option === 'string' ? option : option.value;
+        const label = typeof option === 'string' ? option : option.label;
+        const checked = selected.includes(value);
+        return (
+          <label key={value} className={`flex min-h-10 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-sm font-medium transition-colors ${checked ? 'bg-brand-purple/10 text-brand-purple' : 'text-gray-700 hover:bg-white'}`}>
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={() => toggle(value)}
+              className="h-4 w-4 rounded border-gray-300 text-brand-purple focus:ring-brand-purple"
+            />
+            <span>{label}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+function MultiDateField({ value, onChange }) {
+  const [pendingDate, setPendingDate] = useState('');
+  const dates = Array.isArray(value) ? value : [];
+  const formatDate = date => /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${date}T00:00:00`))
+    : date;
+  const addDate = () => {
+    if (!pendingDate || dates.includes(pendingDate)) return;
+    onChange([...dates, pendingDate].sort());
+    setPendingDate('');
+  };
+  return (
+    <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-3">
+      <div className="flex flex-wrap gap-2">
+        <input type="date" value={pendingDate} onChange={event => setPendingDate(event.target.value)} className={inputClass} aria-label="Choose departure date" />
+        <button type="button" onClick={addDate} disabled={!pendingDate || dates.includes(pendingDate)} className="rounded-lg bg-brand-purple px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-deep disabled:cursor-not-allowed disabled:opacity-50">Add date</button>
+      </div>
+      {dates.length ? <ul className="mt-3 grid gap-2 sm:grid-cols-2">{dates.map(date => <li key={date} className="flex min-h-10 items-center justify-between gap-2 rounded-md bg-white px-3 text-sm font-semibold text-gray-700 ring-1 ring-gray-200"><span>{formatDate(date)}</span><button type="button" onClick={() => onChange(dates.filter(item => item !== date))} className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-600" aria-label={`Remove ${formatDate(date)}`}><IconX className="h-4 w-4" /></button></li>)}</ul> : <p className="mt-3 text-sm text-gray-500">No departure dates added yet.</p>}
+    </div>
   );
 }
 
@@ -98,7 +152,11 @@ function FieldControl({ field, value, onChange }) {
       return (
         <select value={value ?? ''} onChange={e => onChange(e.target.value)} className={inputClass}>
           <option value="">Select…</option>
-          {field.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+          {field.options.map(opt => {
+            const optionValue = typeof opt === 'string' ? opt : opt.value;
+            const optionLabel = typeof opt === 'string' ? opt : opt.label;
+            return <option key={optionValue} value={optionValue}>{optionLabel}</option>;
+          })}
         </select>
       );
     case 'date':
@@ -109,6 +167,10 @@ function FieldControl({ field, value, onChange }) {
       return <ImageArrayField value={value} onChange={onChange} />;
     case 'stringArray':
       return <StringArrayField value={value} onChange={onChange} />;
+    case 'multiSelect':
+      return <MultiSelectField field={field} value={value} onChange={onChange} />;
+    case 'multiDate':
+      return <MultiDateField value={value} onChange={onChange} />;
     case 'objectArray':
       return <ObjectArrayField items={value} itemFields={field.itemFields} onChange={onChange} />;
     default:
@@ -145,9 +207,33 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
   const [value, setValue] = useState(() => initialValue || {});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [destinations, setDestinations] = useState([]);
+  const [destinationsLoading, setDestinationsLoading] = useState(config.singular === 'Trip');
+  const [slugTouched, setSlugTouched] = useState(Boolean(initialValue?.slug));
+
+  useEffect(() => {
+    if (config.singular !== 'Trip') return;
+    let active = true;
+    adminFetch('destinations?limit=100')
+      .then(data => { if (active) setDestinations(data.items || []); })
+      .catch(() => { if (active) setError('Could not load destinations. Please refresh and try again.'); })
+      .finally(() => { if (active) setDestinationsLoading(false); });
+    return () => { active = false; };
+  }, [config.singular]);
 
   function setField(name, val) {
-    setValue(prev => ({ ...prev, [name]: val }));
+    setValue(prev => {
+      const next = { ...prev, [name]: val };
+      if (name === 'title' && config.singular === 'Trip' && !slugTouched) {
+        next.slug = String(val || '')
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+      }
+      return next;
+    });
+    if (name === 'slug') setSlugTouched(true);
   }
 
   async function handleSubmit(event) {
@@ -165,9 +251,17 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {config.fields.map(field => (
-        <FieldInput key={field.name} field={field} value={value[field.name]} onChange={val => setField(field.name, val)} />
-      ))}
+      {config.fields.map(field => {
+        const enhancedField = field.type === 'destinationSelect'
+          ? {
+              ...field,
+              type: 'select',
+              options: destinations.map(destination => ({ value: destination.slug, label: `${destination.name} (${destination.slug})` })),
+              hint: destinationsLoading ? 'Loading destinations...' : field.hint,
+            }
+          : field;
+        return <FieldInput key={field.name} field={enhancedField} value={value[field.name]} onChange={val => setField(field.name, val)} />;
+      })}
 
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
 

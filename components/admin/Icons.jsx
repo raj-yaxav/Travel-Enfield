@@ -50,6 +50,9 @@ export const IconTrash = props => (
 export const IconSearch = props => (
   <Svg {...props}><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></Svg>
 );
+export const IconLoader = props => (
+  <Svg {...props}><path d="M20 12a8 8 0 1 1-2.34-5.66" /></Svg>
+);
 export const IconUpload = props => (
   <Svg {...props}><path d="M12 16V4M7 9l5-5 5 5" /><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" /></Svg>
 );

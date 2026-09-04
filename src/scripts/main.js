@@ -1,7 +1,5 @@
 import './enquiry-popup.js';
 import { setLoginPopup } from './login-popup.js';
-import EmblaCarousel from 'embla-carousel';
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
 import {
   createIcons,
   Backpack,
@@ -187,6 +185,24 @@ if (heroIntro) {
   window.addEventListener('scroll', toggleHeaderSolid, { passive: true });
   window.addEventListener('resize', toggleHeaderSolid, { passive: true });
   toggleHeaderSolid();
+}
+
+// Keep the decorative hero video from consuming bandwidth/CPU after it leaves
+// the viewport. A static poster is shown until it is actually visible.
+if (heroIntro && heroIntroVideo) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = Boolean(navigator.connection?.saveData);
+  if (reducedMotion || saveData) {
+    heroIntroVideo.pause();
+  } else if ('IntersectionObserver' in window) {
+    const heroVideoObserver = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) heroIntroVideo.play().catch(() => {});
+      else heroIntroVideo.pause();
+    }, { threshold: 0.15 });
+    heroVideoObserver.observe(heroIntro);
+  } else {
+    heroIntroVideo.play().catch(() => {});
+  }
 }
 
 // Mobile navigation chrome follows reading direction: hide while moving down,
@@ -403,7 +419,18 @@ wireJournalScale();
 // Captureatrip uses Embla plus its official wheel-gestures plugin. The plugin
 // adds/removes `.is-wheel-dragging` on the viewport and supplies the same
 // damped boundary behaviour for mouse wheels and precision trackpads.
-function wireEmblaWheelGestures(trackSelector) {
+let emblaModules;
+const loadEmblaModules = () => {
+  if (!emblaModules) {
+    emblaModules = Promise.all([
+      import('embla-carousel'),
+      import('embla-carousel-wheel-gestures'),
+    ]).then(([embla, wheel]) => ({ EmblaCarousel: embla.default, WheelGesturesPlugin: wheel.WheelGesturesPlugin }));
+  }
+  return emblaModules;
+};
+async function wireEmblaWheelGestures(trackSelector) {
+  const { EmblaCarousel, WheelGesturesPlugin } = await loadEmblaModules();
   document.querySelectorAll(trackSelector).forEach(track => {
     if (track.dataset.emblaWheelReady) return;
     const viewport = document.createElement('div');

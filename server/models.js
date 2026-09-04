@@ -13,10 +13,17 @@ const Trip = mongoose.models.Trip || mongoose.model('Trip', new mongoose.Schema(
   title: { type: String, required: true }, slug: { type: String, required: true, unique: true, index: true },
   destinationSlug: { type: String, required: true, index: true }, categories: [String], image: String,
   duration: String, nights: Number, price: Number, oldPrice: Number, discount: String, badge: String,
-  summary: String, groupSize: String, pickup: String, dates: [String],
+  summary: String, groupSize: String, pickup: String, dates: [String], showDates: { type: Boolean, default: true },
   itinerary: [{ day: Number, title: String, details: [String] }], inclusions: [String], exclusions: [String],
   notes: [String], featured: { type: Boolean, default: false },
 }, options));
+// Mongoose preserves compiled models during Next development hot reloads. Keep
+// the new field available even if a Trip model was compiled before this change.
+if (!Trip.schema.path('showDates')) {
+  Trip.schema.add({ showDates: { type: Boolean, default: true } });
+}
+if (!Trip.schema.indexes().some(([fields]) => fields.destinationSlug === 1 && fields.categories === 1)) Trip.schema.index({ destinationSlug: 1, categories: 1 });
+if (!Trip.schema.indexes().some(([fields]) => fields.categories === 1 && fields.featured === 1)) Trip.schema.index({ categories: 1, featured: 1 });
 const Category = mongoose.models.Category || mongoose.model('Category', new mongoose.Schema({
   name: String, slug: { type: String, unique: true }, title: String, description: String, image: String, eyebrow: String, filters: [String],
   faq: [{ question: String, answer: String }],
@@ -32,11 +39,13 @@ const Hotel = mongoose.models.Hotel || mongoose.model('Hotel', new mongoose.Sche
   policies: { checkIn: String, checkOut: String, cancellation: String },
   faq: [{ question: String, answer: String }], featured: { type: Boolean, default: false },
 }, options));
+if (!Hotel.schema.indexes().some(([fields]) => fields.destinationSlug === 1 && fields.rating === -1)) Hotel.schema.index({ destinationSlug: 1, rating: -1 });
 const Blog = mongoose.models.Blog || mongoose.model('Blog', new mongoose.Schema({
   title: String, slug: { type: String, unique: true }, excerpt: String, image: String, category: String,
   author: String, readTime: String, publishedAt: Date, seoTitle: String, seoDescription: String,
   sections: [{ heading: String, body: String, bullets: [String] }],
 }, options));
+if (!Blog.schema.indexes().some(([fields]) => fields.publishedAt === -1)) Blog.schema.index({ publishedAt: -1 });
 const Page = mongoose.models.Page || mongoose.model('Page', new mongoose.Schema({
   slug: { type: String, unique: true }, title: String, eyebrow: String, intro: String,
   sections: [{ heading: String, body: String }],

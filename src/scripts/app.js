@@ -35,8 +35,29 @@ function hideRouteOverlay() {
   routeOverlay?.classList.add('is-hidden');
 }
 startRouteOverlayMessages();
+function wireDeferredVideos(root = document) {
+  const videos = [...root.querySelectorAll('video[data-deferred-video]')];
+  if (!videos.length) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData) return;
+  if (!('IntersectionObserver' in window)) {
+    videos.forEach(video => video.play().catch(() => {}));
+    return;
+  }
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.isIntersecting) video.play().catch(() => {});
+    else video.pause();
+  }), { rootMargin: '120px 0px', threshold: 0.1 });
+  videos.forEach(video => { if (!video.dataset.deferredReady) { video.dataset.deferredReady = 'true'; observer.observe(video); } });
+}
 const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value || 0);
 const esc = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]));
+const cloudImage = (url, width = 960) => {
+  const source = String(url || '');
+  if (!/res\.cloudinary\.com\/[^/]+\/image\/upload\//i.test(source)) return source;
+  if (/\/image\/upload\/[^/]*(?:f_auto|q_auto|w_\d+)/i.test(source)) return source;
+  return source.replace('/image/upload/', `/image/upload/f_auto,q_auto,w_${width},dpr_auto/`);
+};
 const icon = (name, cls = '') => `<i data-lucide="${name}" class="${cls}"></i>`;
 const readJsonResponse = async response => {
   const text = await response.text();
@@ -344,7 +365,7 @@ document.querySelectorAll('.footer-col').forEach(col=>{
 });
 
 function hero({ title, description, image = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {
-  return `<section class="page-hero"><img src="${esc(image)}" alt="" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
+  return `<section class="page-hero"><img src="${esc(cloudImage(image, 1920))}" alt="" fetchpriority="high" decoding="async" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
 }
 function categoryBanner(image, title, description, crumbLabel, { cover = false, titleOverlay = false, readMore = false } = {}) {
   if (titleOverlay) {
@@ -369,16 +390,16 @@ function categoryBanner(image, title, description, crumbLabel, { cover = false, 
 }
 function tripDetailHero(image, title) {
   return `<section class="trip-reference-hero" aria-labelledby="trip-page-title">
-    <img src="${esc(image)}" alt="${esc(title)}" fetchpriority="high" />
+    <img src="${esc(cloudImage(image, 1920))}" alt="${esc(title)}" fetchpriority="high" decoding="async" />
     <div class="trip-reference-hero-scrim" aria-hidden="true"></div>
     <h1 id="trip-page-title">${esc(title)}</h1>
   </section>`;
 }
 function tripCard(trip) {
-  return `<article class="listing-card" data-search="${esc(`${trip.title} ${trip.destinationSlug}`.toLowerCase())}" data-price="${trip.price}" data-duration="${trip.nights}"><a class="listing-card-media" href="/trips/${esc(trip.slug)}"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" /><span class="card-badge">${esc(trip.badge || 'Group Trip')}</span></a><div class="listing-card-body"><div class="card-meta"><span>${icon('clock-3')} ${esc(trip.duration)}</span><span>${icon('users')} ${esc(trip.groupSize || 'Group')}</span></div><h2><a href="/trips/${esc(trip.slug)}">${esc(trip.title)}</a></h2><p>${esc(trip.summary)}</p><div class="price-row"><del>${money(trip.oldPrice)}</del><strong>${money(trip.price)}</strong><a class="card-link" href="/trips/${esc(trip.slug)}" aria-label="View ${esc(trip.title)}">View ${icon('chevron-right')}</a></div></div></article>`;
+  return `<article class="listing-card" data-search="${esc(`${trip.title} ${trip.destinationSlug}`.toLowerCase())}" data-price="${trip.price}" data-duration="${trip.nights}"><a class="listing-card-media" href="/trips/${esc(trip.slug)}"><img src="${esc(cloudImage(trip.image, 720))}" alt="${esc(trip.title)}" loading="lazy" decoding="async" /><span class="card-badge">${esc(trip.badge || 'Group Trip')}</span></a><div class="listing-card-body"><div class="card-meta"><span>${icon('clock-3')} ${esc(trip.duration)}</span><span>${icon('users')} ${esc(trip.groupSize || 'Group')}</span></div><h2><a href="/trips/${esc(trip.slug)}">${esc(trip.title)}</a></h2><p>${esc(trip.summary)}</p><div class="price-row"><del>${money(trip.oldPrice)}</del><strong>${money(trip.price)}</strong><a class="card-link" href="/trips/${esc(trip.slug)}" aria-label="View ${esc(trip.title)}">View ${icon('chevron-right')}</a></div></div></article>`;
 }
 function destinationCard(item) {
-  return `<article class="listing-card" data-search="${esc(item.name.toLowerCase())}"><a class="listing-card-media" href="/destinations/${esc(item.slug)}"><img src="${esc(item.image)}" alt="${esc(item.name)}" loading="lazy" /></a><div class="listing-card-body"><div class="card-meta"><span>${icon('map-pin')} ${esc(item.category)}</span><span>${esc(item.bestTime)}</span></div><h2><a href="/destinations/${esc(item.slug)}">${esc(item.name)}</a></h2><p>${esc(item.tagline)}</p><div class="price-row"><span>From</span><strong>${money(item.startingPrice)}</strong><a class="card-link" href="/destinations/${esc(item.slug)}">Explore ${icon('chevron-right')}</a></div></div></article>`;
+  return `<article class="listing-card" data-search="${esc(item.name.toLowerCase())}"><a class="listing-card-media" href="/destinations/${esc(item.slug)}"><img src="${esc(cloudImage(item.image, 720))}" alt="${esc(item.name)}" loading="lazy" decoding="async" /></a><div class="listing-card-body"><div class="card-meta"><span>${icon('map-pin')} ${esc(item.category)}</span><span>${esc(item.bestTime)}</span></div><h2><a href="/destinations/${esc(item.slug)}">${esc(item.name)}</a></h2><p>${esc(item.tagline)}</p><div class="price-row"><span>From</span><strong>${money(item.startingPrice)}</strong><a class="card-link" href="/destinations/${esc(item.slug)}">Explore ${icon('chevron-right')}</a></div></div></article>`;
 }
 function filterBar(showSort = true) {
   return `<div class="filter-bar"><label class="sr-only" for="page-search">Search</label><input id="page-search" type="search" placeholder="Search trips or destinations…" />${showSort ? '<select id="page-sort" aria-label="Sort results"><option value="featured">Recommended</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option><option value="short">Shortest first</option></select>' : ''}<span class="result-count" id="result-count"></span></div>`;
@@ -391,7 +412,7 @@ function wireFilters() {
 }
 
 async function renderListing(slug) {
-  const map = { 'trips':'all','upcoming-trips':'upcoming','domestic-trips':'domestic','international-trips':'international','weekend-trips':'weekend','deals':'all','bike-trips':'bike-trips','backpacking-trips':'backpacking-trips','trekking-trips':'trekking-trips' };
+  const map = { 'trips':'all','upcoming-trips':'upcoming','domestic-trips':'domestic','international-trips':'international','weekend-trips':'weekend','deals':'deals','bike-trips':'bike-trips','backpacking-trips':'backpacking-trips','trekking-trips':'trekking-trips' };
   const tripCategory = map[slug];
   const [category, loadedTrips, blogs, destinations] = await Promise.all([
     api(`/categories/${slug}`).catch(() => ({ name:'Trips', title:'Explore all trips', description:'Compare curated domestic and international journeys.' })),
@@ -442,10 +463,14 @@ const BT_FILTER_ROWS = [
   ['indian-rupee', 'Budget', 'budget'],
 ];
 
+const tripDateText = (trip, limit = 3) => trip.showDates === false
+  ? 'All dates available'
+  : (trip.dates || []).slice(0, limit).join(', ');
+
 function bikeTripCard(trip) {
   const off = trip.oldPrice ? Math.max(0, trip.oldPrice - trip.price) : 0;
-  const dates = (trip.dates || []).slice(0, 3).join(', ');
-  return `<a class="h-fit cursor-pointer" href="/trips/${esc(trip.slug)}"><div class="bt-trip-card relative flex h-[7.75rem] w-full flex-row overflow-hidden rounded-2xl bg-white shadow-md transition-transform duration-300 hover:scale-[1.02] md:h-[9.125rem]"><div class="relative w-[35%] shrink-0 overflow-hidden"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" class="absolute inset-0 h-full w-full object-cover"></div><div class="flex w-[65%] flex-col justify-between px-2 md:py-2"><div class="hidden text-xs font-normal text-[#5A5A5A] md:block">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-2 font-heading text-base font-semibold leading-tight text-brand-deep">${esc(trip.title)}</div><div class="flex items-center gap-2"><div class="text-sm font-semibold text-brand-deep md:text-base">${money(trip.price)}</div>${trip.oldPrice ? `<div class="relative text-[0.625rem] font-medium text-[#5A5A5A] md:text-xs"><div class="absolute top-1.5 h-px w-full bg-brand-orange"></div>${money(trip.oldPrice)}</div>` : ''}${off ? `<div class="text-[0.625rem] font-semibold text-brand-orange md:text-xs">${money(off)} Off</div>` : ''}</div><div class="block text-xs font-normal text-[#5A5A5A] md:hidden">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-1 text-xs font-normal text-[#5A5A5A] md:text-sm">${icon('calendar-days')} ${esc(dates)}</div></div></div></a>`;
+  const dates = tripDateText(trip);
+  return `<a class="h-fit cursor-pointer" href="/trips/${esc(trip.slug)}"><div class="bt-trip-card relative flex h-[7.75rem] w-full flex-row overflow-hidden rounded-2xl bg-white shadow-md transition-transform duration-300 hover:scale-[1.02] md:h-[9.125rem]"><div class="relative w-[35%] shrink-0 overflow-hidden"><img src="${esc(cloudImage(trip.image, 560))}" alt="${esc(trip.title)}" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover"></div><div class="flex w-[65%] flex-col justify-between px-2 md:py-2"><div class="hidden text-xs font-normal text-[#5A5A5A] md:block">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-2 font-heading text-base font-semibold leading-tight text-brand-deep">${esc(trip.title)}</div><div class="flex items-center gap-2"><div class="text-sm font-semibold text-brand-deep md:text-base">${money(trip.price)}</div>${trip.oldPrice ? `<div class="relative text-[0.625rem] font-medium text-[#5A5A5A] md:text-xs"><div class="absolute top-1.5 h-px w-full bg-brand-orange"></div>${money(trip.oldPrice)}</div>` : ''}${off ? `<div class="text-[0.625rem] font-semibold text-brand-orange md:text-xs">${money(off)} Off</div>` : ''}</div><div class="block text-xs font-normal text-[#5A5A5A] md:hidden">${icon('clock-3')} ${esc(trip.duration)}</div><div class="line-clamp-1 text-xs font-normal text-[#5A5A5A] md:text-sm">${icon('calendar-days')} ${esc(dates)}</div></div></div></a>`;
 }
 
 function bikeChips(destinations) {
@@ -900,10 +925,10 @@ function wireReviewAutoplay(trackSelector) {
 
 function destinationTripCard(trip) {
   const off = trip.oldPrice ? Math.max(0, trip.oldPrice - trip.price) : 0;
-  const dates = (trip.dates || []).slice(0, 5).join(', ');
+  const dates = tripDateText(trip, 5);
   const href = trip.href || `/trips/${trip.slug}`;
   return `<a class="destination-trip-card" href="${esc(href)}">
-    <div class="destination-trip-media"><img src="${esc(trip.image)}" alt="${esc(trip.title)}" loading="lazy" /></div>
+    <div class="destination-trip-media"><img src="${esc(cloudImage(trip.image, 720))}" alt="${esc(trip.title)}" loading="lazy" decoding="async" /></div>
     <div class="destination-trip-body">
       <span class="destination-trip-duration">${icon('hourglass')} ${esc(trip.duration)}</span>
       <h3>${esc(trip.title)}</h3>
@@ -920,7 +945,7 @@ async function renderDestination(slug) {
   const matched = blogs.filter(b => (b.slug || '').includes(slug) || (b.image || '').includes(slug));
   const blogsToShow = [...matched, ...blogs.filter(b => !matched.includes(b))].slice(0, 5);
 
-  mount.innerHTML = `<section class="relative aspect-[0.7/1] w-full max-w-full overflow-hidden bg-brand-ink md:aspect-[3.17/1]"><img src="${esc(item.image)}" alt="${esc(item.name)}" class="absolute inset-0 h-full w-full object-cover" /><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div><h1 class="absolute bottom-8 z-20 flex w-full justify-center px-4 text-center font-heading text-2xl font-extrabold text-white md:bottom-12 md:text-4xl">${esc(item.name)} Tour Packages</h1></section>
+  mount.innerHTML = `<section class="relative aspect-[0.7/1] w-full max-w-full overflow-hidden bg-brand-ink md:aspect-[3.17/1]"><img src="${esc(cloudImage(item.image, 1920))}" alt="${esc(item.name)}" fetchpriority="high" decoding="async" class="absolute inset-0 h-full w-full object-cover" /><div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div><h1 class="absolute bottom-8 z-20 flex w-full justify-center px-4 text-center font-heading text-2xl font-extrabold text-white md:bottom-12 md:text-4xl">${esc(item.name)} Tour Packages</h1></section>
   <section class="px-5 py-8 md:px-20 md:py-10"><h2 class="font-heading text-xl font-extrabold text-brand-deep md:text-2xl">${esc(item.name)} Tour Packages</h2><p class="destination-about-copy mt-2 max-w-4xl overflow-hidden text-sm leading-relaxed text-[#5A5A5A] md:text-base">${esc(item.summary)} ${esc(item.tagline || '')}</p><button type="button" class="trip-read-more destination-read-more" data-destination-read-more>Read More</button></section>
    <section class="px-5 pb-10 md:px-20"><div class="flex flex-wrap justify-center gap-5 md:justify-start md:gap-6">${trips.map(destinationTripCard).join('')}</div></section>`
     + reviewsSection(reviewsForTrips(trips))
@@ -1061,7 +1086,7 @@ async function renderHotel(slug) {
     { icon: 'key-round', label: 'Check-out', value: hotel.policies?.checkOut || '12:00' },
     { icon: 'map-pin', label: 'Location', value: hotel.location || hotel.area || 'City centre' },
   ];
-  mount.innerHTML = `<section class="hotel-property-hero"><img src="${esc(hotel.image)}" alt="${esc(hotel.name)} in ${esc(hotel.location)}" /><div class="hotel-property-scrim"></div><div class="container hotel-property-copy"><div class="breadcrumbs"><a href="/">Home</a><span>/</span><a href="/hotels">Hotels</a><span>/</span><span>${esc(hotel.name)}</span></div><span class="hotel-property-kicker">${icon('badge-check')} ${esc(hotel.badge || 'TravelEnfield verified')}</span><h1>${esc(hotel.name)}</h1><p>${esc(hotel.tagline)}</p><div class="hotel-hero-pills"><span>${icon('star')} <strong>${esc(hotel.rating)}</strong> · ${esc(hotel.reviews)} verified reviews</span><span>${icon('map-pin')} ${esc(hotel.location)}</span><span>${icon('calendar-clock')} ${esc(hotel.policies?.cancellation || 'Flexible cancellation')}</span></div><a class="hotel-hero-rate" href="#rooms"><small>Rooms from</small><strong>${money(hotel.pricePerNight)}</strong><span>per night ${icon('arrow-down')}</span></a></div></section><nav class="hotel-detail-nav" aria-label="Hotel sections"><div class="container"><a class="active" href="#overview">Overview</a><a href="#rooms">Rooms</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#faq">Good to know</a><a class="hotel-nav-cta" href="#book-stay">Check availability</a></div></nav>`
+  mount.innerHTML = `<section class="hotel-property-hero"><img src="${esc(cloudImage(hotel.image, 1920))}" alt="${esc(hotel.name)} in ${esc(hotel.location)}" fetchpriority="high" decoding="async" /><div class="hotel-property-scrim"></div><div class="container hotel-property-copy"><div class="breadcrumbs"><a href="/">Home</a><span>/</span><a href="/hotels">Hotels</a><span>/</span><span>${esc(hotel.name)}</span></div><span class="hotel-property-kicker">${icon('badge-check')} ${esc(hotel.badge || 'TravelEnfield verified')}</span><h1>${esc(hotel.name)}</h1><p>${esc(hotel.tagline)}</p><div class="hotel-hero-pills"><span>${icon('star')} <strong>${esc(hotel.rating)}</strong> · ${esc(hotel.reviews)} verified reviews</span><span>${icon('map-pin')} ${esc(hotel.location)}</span><span>${icon('calendar-clock')} ${esc(hotel.policies?.cancellation || 'Flexible cancellation')}</span></div><a class="hotel-hero-rate" href="#rooms"><small>Rooms from</small><strong>${money(hotel.pricePerNight)}</strong><span>per night ${icon('arrow-down')}</span></a></div></section><nav class="hotel-detail-nav" aria-label="Hotel sections"><div class="container"><a class="active" href="#overview">Overview</a><a href="#rooms">Rooms</a><a href="#location">Location</a><a href="#reviews">Reviews</a><a href="#faq">Good to know</a><a class="hotel-nav-cta" href="#book-stay">Check availability</a></div></nav>`
     + `<section class="hotel-detail-shell"><div class="container hotel-detail-layout"><main class="hotel-detail-main">
       <section class="hotel-section" id="overview"><div class="hotel-gallery-wrap"><div class="hotel-gallery-grid"><div class="hotel-gallery-item"><img src="${esc(gallery[0] || hotel.image)}" alt="${esc(hotel.name)} main view" /></div>${thumbs.map((src, i) => `<div class="hotel-gallery-item"><img src="${esc(src)}" alt="${esc(hotel.name)} view ${i + 2}" loading="lazy" /></div>`).join('')}</div><span class="hotel-gallery-count">${icon('maximize')} 5 property photos</span></div>
       <div class="hotel-facts-row">${facts.map(f => `<article class="hotel-fact">${icon(f.icon)}<small>${esc(f.label)}</small><strong>${esc(f.value)}</strong></article>`).join('')}</div>
@@ -1102,6 +1127,7 @@ async function renderTrip(slug) {
   const destLabel=(trip.destinationSlug||trip.title).split('-').map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ');
   const standardNotes=['Carry a valid government photo ID and keep a digital backup handy.','Please arrive at the reporting point before the scheduled departure time.','Keep personal medicines, prescriptions and a basic first-aid kit with you.','Weather, road conditions and local restrictions can require itinerary changes.','Respect local culture, customs, photography rules and environmental guidelines.','Use sturdy footwear and layers suitable for changing mountain or coastal weather.','Keep valuables secure; TravelEnfield is not responsible for unattended belongings.','Follow your trip captain’s safety instructions during transfers and activities.','Alcohol or unsafe behaviour during the trip may lead to removal from activities.','Mobile connectivity can be limited in remote areas; share your itinerary with family before departure.','Any additional activity not listed in the inclusions is payable directly by the traveller.','Room allocation is on the booked sharing basis and is subject to availability.','Please carry reusable water bottles and avoid single-use plastic where possible.','Trip timings are estimates and may shift due to traffic, weather or operational needs.','Contact the support team promptly if you need help before or during the trip.'];
   const tripNotes=[...(trip.notes||[]),...standardNotes].filter((note,index,list)=>note&&list.indexOf(note)===index).slice(0,15);
+  const hasExactDates = trip.showDates !== false && (trip.dates || []).length > 0;
   const inclusionFallbacks=['Comfortable accommodation on the booked sharing basis.','All transfers and sightseeing mentioned in the itinerary.','Meals specifically listed in the day-wise itinerary.','Support from an experienced TravelEnfield trip captain.','Local permits and applicable entry permissions where stated.','Transportation for the planned route and scheduled activities.','Driver allowance, parking charges and tolls for included transfers.','Basic first-aid support throughout the journey.','All activities and experiences explicitly mentioned as included.','Pre-departure support for packing, meeting point and trip queries.'];
   const exclusionFallbacks=['GST and any taxes not expressly mentioned in the inclusions.','Travel to and from the reporting point or home city.','Meals, beverages and snacks not mentioned in the itinerary.','Personal shopping, laundry, tips and incidental expenses.','Optional activities, upgrades or entry tickets not listed as included.'];
   const packageItems=(items,fallbacks,count)=>[...(items||[]),...fallbacks].filter((item,index,list)=>item&&list.indexOf(item)===index).slice(0,count);
@@ -1133,10 +1159,10 @@ async function renderTrip(slug) {
       <p class="trip-from">Trip Starts From</p>
       <div class="trip-enquiry-price"><strong>${money(trip.price)}</strong><del>${money(trip.oldPrice)}</del><span class="trip-saving-inline">${esc(trip.discount||'Limited offer')}</span></div>
       <p class="trip-per-person">Per Person</p>
-      <div class="trip-booking-dates">
+      <div class="trip-booking-dates">${hasExactDates ? `
         <div class="trip-dates-head"><h4>${icon('calendar-days')} Trip Dates</h4><select class="trip-month-select" data-month-select aria-label="Filter dates by month">${[...new Set((trip.dates||[]).map(x=>x.split(' ')[0]))].map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join('')}</select></div>
         <div class="trip-date-list" data-date-list>${(trip.dates||[]).map((x,i)=>`<button type="button" class="trip-date-row${i===0?' selected':''}" data-departure="${esc(x)}" data-month="${esc(x.split(' ')[0])}"><span><strong>${esc(x)}</strong><em>Starting ${money(trip.price)} /Person</em></span><span class="trip-date-check">${icon('check')}</span></button>`).join('')}</div>
-      </div>
+      ` : `<div class="trip-dates-head"><h4>${icon('calendar-days')} Dates available</h4></div><p class="mt-3 text-sm font-semibold text-brand-purple">All dates available — send an enquiry for your preferred date.</p>`}</div>
       <div class="trip-booking-count"><h4>${icon('users')} No. of Travellers</h4><div class="count-stepper"><button type="button" data-count-minus aria-label="Fewer travellers">−</button><span data-count>1</span><button type="button" data-count-plus aria-label="More travellers">+</button></div></div>
       <button type="button" class="btn btn-primary btn-block" data-book-now>${icon('send')} Enquiry Now</button>
       <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener"><img src="/socialmedia/whatsapp.svg" alt="" width="18" height="18">WhatsApp</a></div>
@@ -1182,7 +1208,7 @@ function wireTripExperience(trip){
   window.addEventListener('resize',syncTabShadow,{passive:true});
   const countEl=document.querySelector('[data-count]');let count=1;
   document.querySelectorAll('[data-count-minus],[data-count-plus]').forEach(btn=>btn.addEventListener('click',()=>{count=btn.dataset.countMinus!==undefined?Math.max(1,count-1):Math.min(30,count+1);if(countEl)countEl.textContent=count;}));
-  document.querySelectorAll('[data-book-now]').forEach(btn=>btn.addEventListener('click',()=>openDepartureForm(trip,trip.dates?.[0]||'your preferred dates',btn,count)));
+  document.querySelectorAll('[data-book-now]').forEach(btn=>btn.addEventListener('click',()=>openDepartureForm(trip,trip.showDates === false ? 'your preferred date' : (trip.dates?.[0]||'your preferred dates'),btn,count)));
   document.querySelectorAll('[data-departure]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.trip-date-row').forEach(row=>row.classList.toggle('selected',row===button));openDepartureForm(trip,button.dataset.departure,button,count);}));
   const monthSelect=document.querySelector('[data-month-select]'),dateRows=[...document.querySelectorAll('.trip-date-row')];
   const applyMonthFilter=()=>{const month=monthSelect?.value;dateRows.forEach(row=>row.classList.toggle('hidden',Boolean(month)&&row.dataset.month!==month));};
@@ -1313,7 +1339,7 @@ function renderAboutPage(){
   setMeta('About TravelEnfield | Travel with your kind of people', 'TravelEnfield brings people together through memorable group journeys across India and beyond.');
   mount.innerHTML=`<div class="about-page about-capture-layout">
     <section class="about-hero about-visual-hero" aria-label="TravelEnfield travel community">
-      <img src="/about-hero.png" alt="TravelEnfield travellers sharing a journey" />
+      <img src="https://res.cloudinary.com/dq3typk9u/image/upload/f_auto,q_auto,w_1920,dpr_auto/v1788524339/travelenfield/about-hero.png" alt="TravelEnfield travellers sharing a journey" fetchpriority="high" decoding="async" />
       <div class="about-hero-shade" aria-hidden="true"></div>
       <div class="about-hero-inner container"><a class="btn btn-primary about-hero-enquiry" href="/custom-trip">Enquire Now</a></div>
     </section>
@@ -1323,18 +1349,18 @@ function renderAboutPage(){
       <div class="trust-item"><img class="trust-traveller-logo" src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542610/travelenfield/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
     </div></div></section>
     <section class="about-story" aria-labelledby="about-story-title"><div class="container"><div class="about-story-copy"><h2 id="about-story-title">About TravelEnfield</h2><p>TravelEnfield was created with a simple belief: travel is better when it brings people together. What began as a shared love for discovering new roads has grown into a community built around meaningful group journeys, weekend escapes and customised holidays. We make travel planning feel human and uncomplicated, with practical stays, trusted trip captains, community-led activities and enough breathing room to enjoy the place—not just rush through it. From solo travellers taking their first group trip to friends and families making time for each other, we help people explore with more confidence, comfort and connection.</p></div></div></section>
-    <section class="about-timeline" aria-label="TravelEnfield journey"><div class="container"><img src="/journey-img.png" alt="TravelEnfield's journey and milestones" loading="lazy" /></div></section>
+    <section class="about-timeline" aria-label="TravelEnfield journey"><div class="container"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/f_auto,q_auto,w_1440,dpr_auto/v1788524357/travelenfield/journey-img.png" alt="TravelEnfield's journey and milestones" loading="lazy" decoding="async" /></div></section>
     <section class="about-life" aria-labelledby="about-life-title"><div class="container"><div class="about-life-heading"><h2 id="about-life-title">Life at TravelEnfield</h2></div><div class="about-life-gallery" aria-label="TravelEnfield community gallery">
       <figure class="about-life-tile about-life-tile--large"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244400/travelenfield/about/g1.jpg" alt="TravelEnfield community on a trip" loading="lazy" /></figure>
       <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244401/travelenfield/about/g2.jpg" alt="Travellers enjoying a shared moment" loading="lazy" /></figure>
       <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244402/travelenfield/about/g3.jpg" alt="TravelEnfield group journey" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--wide"><video autoplay muted loop playsinline preload="metadata" aria-label="TravelEnfield community highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244409/travelenfield/about/gvideo.mp4" type="video/mp4" /></video></figure>
+      <figure class="about-life-tile about-life-tile--wide"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield community highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244409/travelenfield/about/gvideo.mp4" type="video/mp4" /></video></figure>
       <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244403/travelenfield/about/g4.jpg" alt="Travellers exploring together" loading="lazy" /></figure>
       <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244404/travelenfield/about/g5.jpg" alt="TravelEnfield traveller community" loading="lazy" /></figure>
       <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244405/travelenfield/about/g6.jpg" alt="Friends on a group trip" loading="lazy" /></figure>
       <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244406/travelenfield/about/g7.jpg" alt="Travel memories with TravelEnfield" loading="lazy" /></figure>
       <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244406/travelenfield/about/g8.jpg" alt="TravelEnfield community experience" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--large"><video autoplay muted loop playsinline preload="metadata" aria-label="TravelEnfield journey highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244410/travelenfield/about/gvideo2.mp4" type="video/mp4" /></video></figure>
+      <figure class="about-life-tile about-life-tile--large"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield journey highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244410/travelenfield/about/gvideo2.mp4" type="video/mp4" /></video></figure>
       <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244407/travelenfield/about/g9.jpg" alt="Travellers connecting on a journey" loading="lazy" /></figure>
       <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244401/travelenfield/about/g10.jpg" alt="TravelEnfield group photo" loading="lazy" /></figure>
     </div></div></section>
@@ -1365,7 +1391,7 @@ async function renderProfile(){
 
 function renderRouteLoader(){mount.innerHTML=`<div class="page-loader"><span aria-hidden="true"></span><p>Preparing your next adventure…</p></div>`;}
 
-async function router(){try{renderRouteLoader();activateIcons();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(first==='reviews')renderReviewsPage();else if(first==='about-us')renderAboutPage();else if(['contact-us','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);activateIcons();}finally{hideRouteOverlay();}}
+async function router(){try{renderRouteLoader();activateIcons();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(first==='reviews')renderReviewsPage();else if(first==='about-us')renderAboutPage();else if(['contact-us','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();wireDeferredVideos(mount);}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);activateIcons();}finally{hideRouteOverlay();}}
 
 // Shared chrome is visible while route data loads, so render its icons before
 // awaiting API calls. Dynamic page icons are rendered again after each route.
