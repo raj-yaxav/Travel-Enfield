@@ -6,7 +6,7 @@ import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Be
 
 const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map: MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
 const mount = document.querySelector('#page-content');
-document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786716218/travelenfield/brand/logo-navbar.png'; });
+document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/brand/logo-navbar.png'; });
 
 // Full-page overlay: hides header/content/footer together until the route's
 // data has fetched and rendered, instead of letting header+footer flash in
@@ -364,7 +364,7 @@ document.querySelectorAll('.footer-col').forEach(col=>{
   });
 });
 
-function hero({ title, description, image = 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {
+function hero({ title, description, image = 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hero.jpg', eyebrow = 'TravelEnfield', crumbs = [] }) {
   return `<section class="page-hero"><img src="${esc(cloudImage(image, 1920))}" alt="" fetchpriority="high" decoding="async" /><div class="page-hero-content container"><div class="breadcrumbs"><a href="/">Home</a>${crumbs.map(c=>`<span>/</span><a href="${c.href}">${esc(c.label)}</a>`).join('')}</div><div class="page-eyebrow">${esc(eyebrow)}</div><h1>${esc(title)}</h1><p>${esc(description)}</p></div></section>`;
 }
 function categoryBanner(image, title, description, crumbLabel, { cover = false, titleOverlay = false, readMore = false } = {}) {
@@ -424,7 +424,7 @@ async function renderListing(slug) {
   const destinationsList=[...new Set(trips.map(t=>t.destinationSlug).filter(Boolean))];
   setMeta(category.title, category.description);
   mount.innerHTML = categoryBanner(
-    category.image || 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg',
+    category.image || 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hero.jpg',
     category.title,
     category.description,
     category.name || 'Trips',
@@ -537,10 +537,10 @@ function reasonsSection() {
 }
 
 const ACTIVITY_CARDS = [
-  ['https://res.cloudinary.com/dq3typk9u/image/upload/v1786542575/travelenfield/woman-adventure-traveller.jpg', 'mountain-snow', 'Mountain Diaries', 'Trek through stunning trails and embrace the beauty of nature.'],
-  ['https://res.cloudinary.com/dq3typk9u/image/upload/v1786542537/travelenfield/bike-trip-captain.jpg', 'bike', 'Meet The Captains', 'Ride with our expert captains and feel the thrill of the road.'],
-  ['https://res.cloudinary.com/dq3typk9u/image/upload/v1786542557/travelenfield/destinations/spiti.jpg', 'footprints', 'Spiti, Day By Day', 'Experience the raw beauty and culture of Spiti valley.'],
-  ['https://res.cloudinary.com/dq3typk9u/image/upload/v1786542569/travelenfield/social-banner.jpg', 'sparkles', 'First Timers Friendly', 'Perfect experiences for first-time travellers, crafted with care.'],
+  ['https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/woman-adventure-traveller.jpg', 'mountain-snow', 'Mountain Diaries', 'Trek through stunning trails and embrace the beauty of nature.'],
+  ['https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/bike-trip-captain.jpg', 'bike', 'Meet The Captains', 'Ride with our expert captains and feel the thrill of the road.'],
+  ['https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/spiti.jpg', 'footprints', 'Spiti, Day By Day', 'Experience the raw beauty and culture of Spiti valley.'],
+  ['https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/social-banner.jpg', 'sparkles', 'First Timers Friendly', 'Perfect experiences for first-time travellers, crafted with care.'],
 ];
 
 function activitiesSection() {
@@ -733,10 +733,10 @@ function wireHotelFilters() {
 }
 
 const REVIEW_POOL = [
-  { image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542568/travelenfield/reviews/yash.webp', name: 'Yash', text: 'The trip was well-planned and perfectly executed. Great coordination, smooth travel, comfortable stay, and beautiful locations. Every moment was enjoyable and stress-free. Highly recommended for anyone looking for a professional and memorable travel experience.', trips: ['leh-ladakh-bike-trip'] },
-  { image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542565/travelenfield/reviews/dishant-soni.webp', name: 'Dishant Soni', text: 'Breathtaking Spiti – A Journey to Remember. Just returned from an incredible trip to Spiti Valley, and it was everything I hoped for and more. The landscapes were absolutely surreal—from high mountain passes to ancient monasteries and serene villages, every moment felt like a postcard come to life.', trips: ['spiti-valley-road-trip'] },
-  { image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542566/travelenfield/reviews/suleman-ahmad.webp', name: 'Suleman Ahmad', text: 'An Unforgettable Experience! I recently went on a trip to Meghalaya and it was truly one of the best experiences I have ever had. The captain was incredibly welcoming and supportive, handled the trip very well, and the amenities provided were really comfortable.', trips: ['meghalaya-explorer'] },
-  { image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542567/travelenfield/reviews/virender-singh.webp', name: 'Virender Singh', text: 'I recently booked my vacation through the team, and it was one of the best travel experiences I have had. They listened to all my preferences and curated an itinerary that perfectly matched what I was looking for, with comfortable stays, smooth transportation and a knowledgeable trip captain.', trips: ['manali-snow-adventure'] },
+  { image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/reviews/yash.webp', name: 'Yash', text: 'The trip was well-planned and perfectly executed. Great coordination, smooth travel, comfortable stay, and beautiful locations. Every moment was enjoyable and stress-free. Highly recommended for anyone looking for a professional and memorable travel experience.', trips: ['leh-ladakh-bike-trip'] },
+  { image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/reviews/dishant-soni.webp', name: 'Dishant Soni', text: 'Breathtaking Spiti – A Journey to Remember. Just returned from an incredible trip to Spiti Valley, and it was everything I hoped for and more. The landscapes were absolutely surreal—from high mountain passes to ancient monasteries and serene villages, every moment felt like a postcard come to life.', trips: ['spiti-valley-road-trip'] },
+  { image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/reviews/suleman-ahmad.webp', name: 'Suleman Ahmad', text: 'An Unforgettable Experience! I recently went on a trip to Meghalaya and it was truly one of the best experiences I have ever had. The captain was incredibly welcoming and supportive, handled the trip very well, and the amenities provided were really comfortable.', trips: ['meghalaya-explorer'] },
+  { image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/reviews/virender-singh.webp', name: 'Virender Singh', text: 'I recently booked my vacation through the team, and it was one of the best travel experiences I have had. They listened to all my preferences and curated an itinerary that perfectly matched what I was looking for, with comfortable stays, smooth transportation and a knowledgeable trip captain.', trips: ['manali-snow-adventure'] },
 ];
 const HOMEPAGE_REVIEWS = REVIEW_POOL.map(r => [r.image, r.name, r.text]);
 const reviewsForTrips = trips => {
@@ -770,12 +770,12 @@ function reviewsSection(reviews = HOMEPAGE_REVIEWS) {
 
 
 const TRIP_TRENDING_FALLBACKS = [
-  { slug: 'bali', name: 'Bali', startingPrice: 44999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/bali.jpg' },
-  { slug: 'ladakh', name: 'Ladakh', startingPrice: 19499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542553/travelenfield/destinations/ladakh.jpg' },
-  { slug: 'spiti', name: 'Spiti Valley', startingPrice: 17999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542557/travelenfield/destinations/spiti.jpg' },
-  { slug: 'kerala', name: 'Kerala', startingPrice: 14999, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542552/travelenfield/destinations/kerala.jpg' },
-  { slug: 'manali', name: 'Manali', startingPrice: 9499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542554/travelenfield/destinations/manali.jpg' },
-  { slug: 'meghalaya', name: 'Meghalaya', startingPrice: 15499, image: 'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542555/travelenfield/destinations/meghalaya.jpg' },
+  { slug: 'bali', name: 'Bali', startingPrice: 44999, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/bali.jpg' },
+  { slug: 'ladakh', name: 'Ladakh', startingPrice: 19499, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/ladakh.jpg' },
+  { slug: 'spiti', name: 'Spiti Valley', startingPrice: 17999, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/spiti.jpg' },
+  { slug: 'kerala', name: 'Kerala', startingPrice: 14999, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/kerala.jpg' },
+  { slug: 'manali', name: 'Manali', startingPrice: 9499, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/manali.jpg' },
+  { slug: 'meghalaya', name: 'Meghalaya', startingPrice: 15499, image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/meghalaya.jpg' },
 ];
 
 function tripTravellerGallery(trip) {
@@ -787,12 +787,30 @@ function tripTrendingDestinations(items = TRIP_TRENDING_FALLBACKS) {
   return `<section class="trending section bg-white py-12 md:py-14" aria-labelledby="trip-trending-title"><div class="container"><div class="section-header"><h2 class="section-title" id="trip-trending-title">Trending Destinations</h2><a href="/trips" class="see-all-link">See All <span>→</span></a></div><div class="trending-grid grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">${items.slice(0, 6).map(item => `<a href="/destinations/${esc(item.slug)}" class="trending-card relative aspect-square overflow-hidden rounded-2xl border border-brand-purple/15 shadow-lg"><img src="${esc(item.image)}" alt="${esc(item.name)} Tour Packages" loading="lazy" class="size-full object-cover"><span class="trending-info absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink/95 to-transparent px-4 pb-4 pt-14"><strong class="block font-heading text-sm font-extrabold text-white">${esc(item.name)} Tour Packages</strong><small class="mt-1 block text-xs font-bold text-brand-yellow">Starting ${money(item.startingPrice)}</small></span></a>`).join('')}</div></div></section>`;
 }
 
+function journalCards(blogs) {
+  return blogs.map(b => `<article class="journal-card"><a href="/blog/${esc(b.slug)}"><div class="journal-img"><img src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy" /></div><div class="journal-body"><h3>${esc(b.title)}</h3><small>${esc(b.category)} | ${esc(b.readTime)}</small><span class="journal-cta">Read Now ${icon('arrow-right')}</span></div></a></article>`).join('');
+}
+
 function journalSection(blogs) {
-  return `<section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title"><div class="container"><div class="section-header journal-heading"><div><span class="section-kicker">Plan with local context</span><h2 class="section-title" id="journal-title">Related Blogs</h2></div><a href="/blog" class="see-all-link">Read All <span>&rarr;</span></a></div><div class="journal-grid">${blogs.map(b => `<article class="journal-card"><a href="/blog/${esc(b.slug)}"><div class="journal-img"><img src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy" /></div><div class="journal-body"><h3>${esc(b.title)}</h3><small>${esc(b.category)} | ${esc(b.readTime)}</small><span class="journal-cta">Read Now ${icon('arrow-right')}</span></div></a></article>`).join('')}</div></div></section>`;
+  return `<section class="home-journal section bg-brand-surface py-16 md:py-20" aria-labelledby="journal-title"><div class="container"><div class="section-header journal-heading"><div><span class="section-kicker">Plan with local context</span><h2 class="section-title" id="journal-title">Related Blogs</h2></div><a href="/blog" class="see-all-link">Read All <span>&rarr;</span></a></div><div class="journal-grid">${journalCards(blogs)}</div></div></section>`;
+}
+
+const orderedSelections = (items, slugs = []) => {
+  const bySlug = new Map((items || []).filter(item => item?.slug).map(item => [item.slug, item]));
+  return (Array.isArray(slugs) ? slugs : []).map(slug => bySlug.get(slug)).filter(Boolean);
+};
+
+function tripRecommendationsSection({ trips = [], hotels = [], blogs = [] }) {
+  if (!trips.length && !hotels.length && !blogs.length) return '';
+  return `<section class="trip-related-content" aria-label="Related travel recommendations"><div class="container">
+    ${trips.length ? `<section class="trip-related-group" aria-labelledby="more-trips-title"><div class="trip-related-heading"><div><span>More to explore</span><h2 id="more-trips-title">More trips like this</h2></div><a href="/trips" class="see-all-link">See all trips ${icon('arrow-right')}</a></div><div class="trip-related-grid trip-related-trips cards-grid">${trips.map(tripCard).join('')}</div></section>` : ''}
+    ${hotels.length ? `<section class="trip-related-group" aria-labelledby="recommended-hotels-title"><div class="trip-related-heading"><div><span>Stay well</span><h2 id="recommended-hotels-title">Recommended hotels</h2></div><a href="/hotels" class="see-all-link">Explore hotels ${icon('arrow-right')}</a></div><div class="trip-related-grid trip-related-hotels bt-trips-grid">${hotels.map(hotelListingCard).join('')}</div></section>` : ''}
+    ${blogs.length ? `<section class="trip-related-group" aria-labelledby="recommended-blogs-title"><div class="trip-related-heading"><div><span>Plan better</span><h2 id="recommended-blogs-title">Recommended blogs</h2></div><a href="/blog" class="see-all-link">Read all guides ${icon('arrow-right')}</a></div><div class="trip-related-grid trip-related-blogs journal-grid">${journalCards(blogs)}</div></section>` : ''}
+  </div></section>`;
 }
 
 function offersSliderSection() {
-  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative aspect-[4/1] w-full overflow-hidden rounded-2xl bg-brand-deep shadow-2xl md:aspect-[16/3] md:rounded-3xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542545/travelenfield/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542546/travelenfield/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542543/travelenfield/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
+  return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative aspect-[4/1] w-full overflow-hidden rounded-2xl bg-brand-deep shadow-2xl md:aspect-[16/3] md:rounded-3xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
 }
 
 function wireCampaignSlider(root = mount) {
@@ -1004,7 +1022,7 @@ async function renderHotels() {
   ]);
   const tabs = [...new Set(stays.map(h => h.destinationSlug).filter(Boolean))];
   setMeta('Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.');
-  mount.innerHTML = categoryBanner('https://res.cloudinary.com/dq3typk9u/image/upload/v1786542562/travelenfield/hotels/hotel-discovery-hero-v2.png', 'Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.', 'Hotels', { cover: true })
+  mount.innerHTML = categoryBanner('https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hotels/hotel-discovery-hero-v2.png', 'Hotels & Handpicked Stays', 'Verified partner hotels across India and beyond with transparent per-night rates, free cancellation and real guest ratings.', 'Hotels', { cover: true })
     + `<div class="relative">
     <div class="bt-chips-dock bt-desktop-chips-dock hidden w-full min-[1100px]:mt-6 min-[1100px]:block"><div class="overflow-hidden px-20">${bikeChips(tabs)}</div></div>
     <div class="bt-chips-dock bt-mobile-chips-dock block w-full min-[1100px]:hidden"><div class="flex items-center gap-2 px-5"><button type="button" class="bt-mobile-filter-toggle inline-flex h-8 flex-shrink-0 items-center gap-2 rounded-full border border-brand-purple bg-brand-purple/10 px-4 text-sm font-medium text-brand-ink">${icon('sliders-horizontal', 'size-4 text-brand-purple')} Filters</button>${bikeChips(tabs)}</div>${hotelFilterPanel(stays, true)}</div>
@@ -1119,9 +1137,14 @@ function wireHotelExperience() {
 
 async function renderTrip(slug) {
   const trip=await api(`/trips/${slug}`); setMeta(trip.title,trip.summary);
-  const destinationRequest=api(`/destinations/${trip.destinationSlug}`).catch(()=>null);
+  const [destination, tripCatalogue, hotelCatalogue, blogCatalogue] = await Promise.all([
+    api(`/destinations/${trip.destinationSlug}`).catch(()=>null),
+    api('/trips').catch(()=>[]),
+    api('/hotels').catch(()=>[]),
+    api('/blogs').catch(()=>[]),
+  ]);
   const itinerary=(trip.itinerary||[]);
-  const tripImage=trip.image||'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg';
+  const tripImage=trip.image||'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hero.jpg';
   const waLink=`https://wa.me/919310656044?text=${encodeURIComponent(`Hi TravelEnfield! I am interested in the ${trip.title} trip.`)}`;
   const aboutCopy=[trip.summary,`${trip.title} runs for ${trip.duration} with a group of ${trip.groupSize}. Every day is paced so you experience the place instead of just ticking it off — transfers, stays and the experiences listed in the inclusions are handled end to end.`,`The group meets at ${trip.pickup} and moves together with a dedicated trip captain throughout. Ideal for friends, couples and solo travellers, this itinerary is built to feel smooth, safe and memorable from start to finish.`];
   const destLabel=(trip.destinationSlug||trip.title).split('-').map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ');
@@ -1134,6 +1157,28 @@ async function renderTrip(slug) {
   const includedItems=packageItems(trip.inclusions,inclusionFallbacks,10);
   const excludedItems=packageItems(trip.exclusions,exclusionFallbacks,5);
   const costingRows=Array.isArray(trip.costing)&&trip.costing.length ? trip.costing : [{mode:'Standard sharing / Per person',price:trip.price,oldPrice:trip.oldPrice},{mode:'Double sharing / Per person',price:trip.price,oldPrice:trip.oldPrice},{mode:'Solo upgrade',price:'On request',oldPrice:''}];
+  const recommendationIsManual = trip.recommendationMode === 'manual';
+  const relatedTrips = recommendationIsManual
+    ? orderedSelections(tripCatalogue, trip.relatedTripSlugs).filter(item => item.slug !== trip.slug).slice(0, 4)
+    : (() => {
+        const sameDestination = tripCatalogue.filter(item => item.slug !== trip.slug && item.destinationSlug === trip.destinationSlug);
+        const sharedCategories = new Set((trip.categories || []).filter(category => category !== 'all'));
+        const sameStyle = tripCatalogue.filter(item => item.slug !== trip.slug && item.destinationSlug !== trip.destinationSlug && (item.categories || []).some(category => sharedCategories.has(category)));
+        return [...sameDestination, ...sameStyle].filter((item, index, list) => list.findIndex(candidate => candidate.slug === item.slug) === index).slice(0, 4);
+      })();
+  const relatedHotels = recommendationIsManual
+    ? orderedSelections(hotelCatalogue, trip.recommendedHotelSlugs).slice(0, 4)
+    : (() => {
+        const sameDestination = hotelCatalogue.filter(item => item.destinationSlug === trip.destinationSlug);
+        return (sameDestination.length ? sameDestination : hotelCatalogue.filter(item => item.featured)).slice(0, 4);
+      })();
+  const destinationTerms = [trip.destinationSlug, destination?.name].filter(Boolean).map(value => String(value).toLowerCase());
+  const relatedBlogs = recommendationIsManual
+    ? orderedSelections(blogCatalogue, trip.recommendedBlogSlugs).slice(0, 4)
+    : (() => {
+        const relevant = blogCatalogue.filter(item => destinationTerms.some(term => `${item.title || ''} ${item.excerpt || ''} ${item.category || ''}`.toLowerCase().includes(term)));
+        return (relevant.length ? relevant : blogCatalogue).slice(0, 4);
+      })();
   mount.innerHTML=tripDetailHero(tripImage, trip.title)
   + `<section class="trip-detail-shell"><div class="container trip-detail-layout">
     <main class="trip-detail-main">
@@ -1144,11 +1189,11 @@ async function renderTrip(slug) {
       </section>
       <nav class="trip-audit-tabs" aria-label="Trip sections"><div class="container"><a href="#itinerary">Itinerary</a><a href="#inclusions">Inclusions</a><a href="#costing">Costing</a><a href="#notes">Notes</a></div></nav>
       <section class="trip-breakdown" id="itinerary">
+        <div class="trip-itinerary-visual"><img src="${esc(trip.itineraryImage||tripImage)}" alt="${esc(trip.title)} itinerary route" loading="lazy" /></div>
         <div class="trip-breakdown-head">
           <h2 class="trip-section-title">Itinerary Breakdown</h2>
           <button class="trip-download" type="button" data-download-itinerary>${icon('receipt-text')} Download Itinerary</button>
         </div>
-        <div class="trip-itinerary-visual"><img src="${esc(trip.itineraryImage||tripImage)}" alt="${esc(trip.title)} itinerary route" loading="lazy" /></div>
         <ol class="breakdown-list">${itinerary.map((day,i)=>`<li class="breakdown-item${i===0?' open':''}"><button type="button" class="breakdown-toggle" aria-expanded="${i===0}"><span class="breakdown-day"><small>Day</small><b>${day.day}</b></span><h3>${esc(day.title)}</h3><span class="breakdown-chevron">${icon('chevron-down')}</span></button><div class="breakdown-body">${(day.details||[]).map(x=>`<p>${esc(x)}</p>`).join('')}</div></li>`).join('')}</ol>
       </section>
       <section class="trip-package" id="inclusions"><h2 class="trip-section-title">What's in the Package?</h2><div class="trip-package-toggle" role="tablist" aria-label="Package details"><button type="button" class="active" role="tab" aria-selected="true" data-package-tab="included">Included</button><button type="button" role="tab" aria-selected="false" data-package-tab="excluded">Not Included</button></div><div class="trip-package-grid"><article class="package-panel included active" data-package-panel="included"><h3>Included</h3><ul>${includedItems.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article><article class="package-panel excluded" data-package-panel="excluded"><h3>Not Included</h3><ul>${excludedItems.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article></div></section>
@@ -1169,26 +1214,13 @@ async function renderTrip(slug) {
     </div></aside>
   </div></section>
   <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button></div>`
+  + tripRecommendationsSection({ trips: relatedTrips, hotels: relatedHotels, blogs: relatedBlogs })
   + tripTrendingDestinations()
   + reviewsSection(reviewsForTrips([trip]))
-  + `<div data-trip-destination-faq>${tripFaqSection([], destLabel)}</div><div data-trip-related-blogs></div>`;
+  + `<div data-trip-destination-faq>${tripFaqSection(destination?.faq || [], destination?.name || destLabel)}</div>`;
   wireTripExperience(trip);
   wireFaq();
-  destinationRequest.then(dest => {
-    const faqSlot=mount.querySelector('[data-trip-destination-faq]');
-    if (!dest || !faqSlot) return;
-    const label=mount.querySelector('[data-trip-destination-label]');
-    if (label && dest.name) label.textContent=dest.name;
-    if (dest.faq?.length) faqSlot.innerHTML=tripFaqSection(dest.faq, dest.name || destLabel);
-    applyTailwindStyles(mount); activateIcons(); wireFaq();
-  });
-  const tripRouteAtRequest = location.pathname;
-  api('/blogs').then(blogs => {
-    const relatedSlot = mount.querySelector('[data-trip-related-blogs]');
-    if (location.pathname !== tripRouteAtRequest || !relatedSlot || !blogs?.length) return;
-    relatedSlot.innerHTML = journalSection(blogs.slice(0, 5));
-    applyTailwindStyles(mount); activateIcons(); wireRails();
-  }).catch(() => {});
+  wireRails();
 }
 
 function wireTripExperience(trip){
@@ -1264,8 +1296,8 @@ async function renderTripLegacy(slug) {
 function enquiryForm(type='custom') { return `<form class="form-card" id="enquiry-form"><div class="form-grid"><div class="field"><label for="name">Full name</label><input id="name" name="name" required autocomplete="name" /></div><div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required autocomplete="tel" /></div><div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="email" /></div><div class="field"><label for="destination">Destination</label><input id="destination" name="destination" required /></div><div class="field"><label for="travelDate">Travel date</label><input id="travelDate" name="travelDate" type="date" /></div><div class="field"><label for="travellers">Travellers</label><input id="travellers" name="travellers" type="number" min="1" value="1" /></div><div class="field"><label for="budget">Budget per person</label><select id="budget" name="budget"><option>Under ₹20,000</option><option>₹20,000–₹50,000</option><option>₹50,000–₹1,00,000</option><option>Above ₹1,00,000</option></select></div><div class="field full"><label for="message">Trip preferences</label><textarea id="message" name="message" placeholder="Tell us about stays, activities, departure city or anything important."></textarea></div><div class="field full"><button class="btn btn-primary" type="submit">${icon('send')} Send enquiry</button></div></div><p class="form-status" role="status"></p><input type="hidden" name="type" value="${type}" /></form>`; }
 function wireForm(){const form=document.querySelector('#enquiry-form');if(!form)return;const params=new URLSearchParams(location.search);if(params.get('destination'))form.destination.value=params.get('destination');form.addEventListener('submit',async e=>{e.preventDefault();const button=form.querySelector('button');const status=form.querySelector('.form-status');button.disabled=true;status.textContent='Sending…';try{const body=Object.fromEntries(new FormData(form));body.travellers=Number(body.travellers);const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!response.ok)throw new Error();status.className='form-status success';status.textContent='Thanks! Your enquiry is saved. Our travel expert will contact you shortly.';form.reset();}catch{status.className='form-status error';status.textContent='Could not save your enquiry. Please try again.';}finally{button.disabled=false;}})}
 
-async function renderCustom(){setMeta('Plan a Custom Trip','Tell us your preferences and receive a personalised TravelEnfield itinerary.');mount.innerHTML=hero({title:'A trip that feels entirely yours.',description:'Tell us how you like to travel. A real trip expert will shape the route, stays and experiences around you—then explain every detail clearly.',eyebrow:'Personal planning, human support',image:'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542551/travelenfield/custom-trip-consultation.jpg'})+`<section class="custom-proof"><div class="container"><div>${icon('shield-check')}<span><strong>Transparent quote</strong><small>Clear inclusions before you confirm</small></span></div><div>${icon('users')}<span><strong>Real travel expert</strong><small>One person guides your planning</small></span></div><div>${icon('circle-check-big')}<span><strong>Verified partners</strong><small>Handpicked stays and experiences</small></span></div><div>${icon('phone')}<span><strong>Support throughout</strong><small>Help before and during the trip</small></span></div></div></section><section class="custom-planner"><div class="container custom-planner-grid"><aside class="custom-planner-copy"><span class="page-eyebrow">Start with the essentials</span><h2>You dream it.<br>We make it workable.</h2><p>There is no pressure to know the perfect itinerary. Share the basics and our specialist will help you make the right trade-offs.</p><div class="planner-steps"><div><b>01</b><span><strong>Tell us your preferences</strong><small>Dates, people, pace and approximate budget.</small></span></div><div><b>02</b><span><strong>Speak with one expert</strong><small>We understand priorities and propose the right route.</small></span></div><div><b>03</b><span><strong>Review a clear plan</strong><small>Itinerary, stays and inclusions—nothing hidden.</small></span></div></div><div class="planner-promise">${icon('shield-check')}<p><strong>Your details stay private.</strong><br>We only use them to plan and discuss this enquiry.</p></div></aside><div class="custom-form-wrap"><div class="custom-form-head"><span>Usually takes 2 minutes</span><h2>Tell us about your trip</h2><p>No payment required. Our team normally responds within one working day.</p></div>${enquiryForm('custom-trip')}</div></div></section><section class="custom-how"><div class="container"><div class="section-header"><div><span class="page-eyebrow">Why customise?</span><h2 class="section-title">More freedom. Less guesswork.</h2></div></div><div class="custom-benefits"><article>${icon('map-pin')}<h3>Routes built for your pace</h3><p>Slow mornings, packed adventure days, or a balanced mix—the schedule follows you.</p></article><article>${icon('backpack')}<h3>Stays that fit the occasion</h3><p>Friends, families, couples and teams need different spaces. We plan accordingly.</p></article><article>${icon('indian-rupee')}<h3>Budget used where it matters</h3><p>We help prioritise comfort and experiences instead of adding unnecessary extras.</p></article></div></div></section>`;wireForm();}
-async function renderBlogs(){const blogs=await api('/blogs');setMeta('Travel Blog','Original destination guides and practical travel advice.');mount.innerHTML=hero({title:'TravelEnfield Journal',description:'Useful guides, real planning advice and destination inspiration.',eyebrow:'Travel smarter',image:'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542569/travelenfield/social-banner.jpg'})+`<section class="page-shell"><div class="container">${filterBar(false)}<div class="cards-grid">${blogs.map(b=>`<article class="listing-card" data-search="${esc((b.title+' '+b.category).toLowerCase())}"><a class="listing-card-media" href="/blog/${b.slug}"><img src="${b.image}" alt="${esc(b.title)}" loading="lazy"></a><div class="listing-card-body"><div class="card-meta">${esc(b.category)} · ${esc(b.readTime)}</div><h2><a href="/blog/${b.slug}">${esc(b.title)}</a></h2><p>${esc(b.excerpt)}</p><a class="card-link" href="/blog/${b.slug}">Read guide ${icon('chevron-right')}</a></div></article>`).join('')}</div></div></section>`;wireFilters();}
+async function renderCustom(){setMeta('Plan a Custom Trip','Tell us your preferences and receive a personalised TravelEnfield itinerary.');mount.innerHTML=hero({title:'A trip that feels entirely yours.',description:'Tell us how you like to travel. A real trip expert will shape the route, stays and experiences around you—then explain every detail clearly.',eyebrow:'Personal planning, human support',image:'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/custom-trip-consultation.jpg'})+`<section class="custom-proof"><div class="container"><div>${icon('shield-check')}<span><strong>Transparent quote</strong><small>Clear inclusions before you confirm</small></span></div><div>${icon('users')}<span><strong>Real travel expert</strong><small>One person guides your planning</small></span></div><div>${icon('circle-check-big')}<span><strong>Verified partners</strong><small>Handpicked stays and experiences</small></span></div><div>${icon('phone')}<span><strong>Support throughout</strong><small>Help before and during the trip</small></span></div></div></section><section class="custom-planner"><div class="container custom-planner-grid"><aside class="custom-planner-copy"><span class="page-eyebrow">Start with the essentials</span><h2>You dream it.<br>We make it workable.</h2><p>There is no pressure to know the perfect itinerary. Share the basics and our specialist will help you make the right trade-offs.</p><div class="planner-steps"><div><b>01</b><span><strong>Tell us your preferences</strong><small>Dates, people, pace and approximate budget.</small></span></div><div><b>02</b><span><strong>Speak with one expert</strong><small>We understand priorities and propose the right route.</small></span></div><div><b>03</b><span><strong>Review a clear plan</strong><small>Itinerary, stays and inclusions—nothing hidden.</small></span></div></div><div class="planner-promise">${icon('shield-check')}<p><strong>Your details stay private.</strong><br>We only use them to plan and discuss this enquiry.</p></div></aside><div class="custom-form-wrap"><div class="custom-form-head"><span>Usually takes 2 minutes</span><h2>Tell us about your trip</h2><p>No payment required. Our team normally responds within one working day.</p></div>${enquiryForm('custom-trip')}</div></div></section><section class="custom-how"><div class="container"><div class="section-header"><div><span class="page-eyebrow">Why customise?</span><h2 class="section-title">More freedom. Less guesswork.</h2></div></div><div class="custom-benefits"><article>${icon('map-pin')}<h3>Routes built for your pace</h3><p>Slow mornings, packed adventure days, or a balanced mix—the schedule follows you.</p></article><article>${icon('backpack')}<h3>Stays that fit the occasion</h3><p>Friends, families, couples and teams need different spaces. We plan accordingly.</p></article><article>${icon('indian-rupee')}<h3>Budget used where it matters</h3><p>We help prioritise comfort and experiences instead of adding unnecessary extras.</p></article></div></div></section>`;wireForm();}
+async function renderBlogs(){const blogs=await api('/blogs');setMeta('Travel Blog','Original destination guides and practical travel advice.');mount.innerHTML=hero({title:'TravelEnfield Journal',description:'Useful guides, real planning advice and destination inspiration.',eyebrow:'Travel smarter',image:'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/social-banner.jpg'})+`<section class="page-shell"><div class="container">${filterBar(false)}<div class="cards-grid">${blogs.map(b=>`<article class="listing-card" data-search="${esc((b.title+' '+b.category).toLowerCase())}"><a class="listing-card-media" href="/blog/${b.slug}"><img src="${b.image}" alt="${esc(b.title)}" loading="lazy"></a><div class="listing-card-body"><div class="card-meta">${esc(b.category)} · ${esc(b.readTime)}</div><h2><a href="/blog/${b.slug}">${esc(b.title)}</a></h2><p>${esc(b.excerpt)}</p><a class="card-link" href="/blog/${b.slug}">Read guide ${icon('chevron-right')}</a></div></article>`).join('')}</div></div></section>`;wireFilters();}
 const blogAnchor = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
 const blogParagraphs = body => String(body || '').split(/\n\s*\n/).filter(Boolean).map(paragraph=>`<p>${esc(paragraph)}</p>`).join('');
 function blogSection(section) {
@@ -1306,19 +1338,19 @@ function renderReviewsPage() {
   const communityReviews = REVIEW_POOL;
   mount.innerHTML = `<div class="community-review-page">
     <section class="community-review-hero" aria-labelledby="community-review-title">
-      <img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542559/travelenfield/group-trips-himalaya-hero.jpg" alt="TravelEnfield riders travelling through the Himalayas" fetchpriority="high">
+      <img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/group-trips-himalaya-hero.jpg" alt="TravelEnfield riders travelling through the Himalayas" fetchpriority="high">
       <div class="community-review-hero-shade"></div><div class="container community-review-hero-copy"><span>${icon('users-round')} Our travel community</span><h1 id="community-review-title">Stories from the road, shared by our travellers.</h1><p>From first solo trips to unforgettable group adventures, every journey is better with the right people beside you.</p></div>
     </section>
     <section class="community-review-proof-strip" aria-label="TravelEnfield community proof"><div class="container">
-      <span><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542605/travelenfield/socialmedia/instagram.svg" alt="Instagram"> <b>573K+</b> Community</span>
-      <span><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542604/travelenfield/socialmedia/google.svg" alt="Google"> ${icon('star')} <b>4.9</b> (8.5K+ Reviews)</span>
-      <span><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542610/travelenfield/socialmedia/travellers.svg" alt="TravelEnfield travellers"> <b>35K+</b> Travellers</span>
+      <span><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/instagram.svg" alt="Instagram"> <b>573K+</b> Community</span>
+      <span><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/google.svg" alt="Google"> ${icon('star')} <b>4.9</b> (8.5K+ Reviews)</span>
+      <span><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/travellers.svg" alt="TravelEnfield travellers"> <b>35K+</b> Travellers</span>
     </div></section>
     <section class="community-review-intro"><div class="container">
       <div class="community-review-heading"><span class="section-kicker">Real trips, real people</span><h2>Reviews &amp; Community</h2><p>Our community is built by curious travellers who keep choosing meaningful routes, good company and the kind of memories that last long after the journey ends.</p></div>
       <div class="community-review-proof-cards">
-        <article><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542604/travelenfield/socialmedia/google.svg" alt="Google"><div>${reviewStars()}<strong>4.9/5</strong><p>Highly rated by thousands of travellers who have explored with us.</p></div></article>
-        <article><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542605/travelenfield/socialmedia/instagram.svg" alt="Instagram"><div><strong>573K+ Community</strong><p>A growing community sharing real journeys, photos and travel plans.</p></div></article>
+        <article><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/google.svg" alt="Google"><div>${reviewStars()}<strong>4.9/5</strong><p>Highly rated by thousands of travellers who have explored with us.</p></div></article>
+        <article><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/instagram.svg" alt="Instagram"><div><strong>573K+ Community</strong><p>A growing community sharing real journeys, photos and travel plans.</p></div></article>
       </div>
     </div></section>
     <section class="community-review-list"><div class="container"><div class="community-review-toolbar"><h2>What travellers are saying</h2><label>Sort by <select id="community-review-sort" aria-label="Sort traveller reviews"><option value="newest">Newest</option><option value="rating">Rating</option></select></label></div><div class="community-review-grid" id="community-review-grid">${communityReviews.map(communityReviewCard).join('')}</div><div class="community-review-cta"><div><span class="section-kicker">Your next story starts here</span><h2>Come travel with people who get it.</h2><p>Find a departure that fits your pace and turn a plan into a shared adventure.</p></div><a href="/upcoming-trips" class="btn btn-primary">Explore group trips ${icon('arrow-right')}</a></div></div></section>
@@ -1339,34 +1371,34 @@ function renderAboutPage(){
   setMeta('About TravelEnfield | Travel with your kind of people', 'TravelEnfield brings people together through memorable group journeys across India and beyond.');
   mount.innerHTML=`<div class="about-page about-capture-layout">
     <section class="about-hero about-visual-hero" aria-label="TravelEnfield travel community">
-      <img src="https://res.cloudinary.com/dq3typk9u/image/upload/f_auto,q_auto,w_1920,dpr_auto/v1788524339/travelenfield/about-hero.png" alt="TravelEnfield travellers sharing a journey" fetchpriority="high" decoding="async" />
+      <img src="https://res.cloudinary.com/rgw1moxc/image/upload/f_auto,q_auto,w_1920,dpr_auto/travelenfield/about-hero.png" alt="TravelEnfield travellers sharing a journey" fetchpriority="high" decoding="async" />
       <div class="about-hero-shade" aria-hidden="true"></div>
       <div class="about-hero-inner container"><a class="btn btn-primary about-hero-enquiry" href="/custom-trip">Enquire Now</a></div>
     </section>
     <section class="trust-strip about-trust-strip" aria-label="TravelEnfield community proof"><div class="container"><div class="trust-items about-trust-items">
-      <div class="trust-item"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542605/travelenfield/socialmedia/instagram.svg" alt="Instagram" /><span class="trust-value">573K+</span><span class="trust-label">Community</span></div>
-      <div class="trust-item"><img class="trust-google-logo" src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542604/travelenfield/socialmedia/google.svg" alt="Google" /><i class="trust-review-star" data-lucide="star" aria-hidden="true"></i><span class="trust-value">4.9</span><span class="trust-label">(8.5K+ Reviews)</span></div>
-      <div class="trust-item"><img class="trust-traveller-logo" src="https://res.cloudinary.com/dq3typk9u/image/upload/v1786542610/travelenfield/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
+      <div class="trust-item"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/instagram.svg" alt="Instagram" /><span class="trust-value">573K+</span><span class="trust-label">Community</span></div>
+      <div class="trust-item"><img class="trust-google-logo" src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/google.svg" alt="Google" /><i class="trust-review-star" data-lucide="star" aria-hidden="true"></i><span class="trust-value">4.9</span><span class="trust-label">(8.5K+ Reviews)</span></div>
+      <div class="trust-item"><img class="trust-traveller-logo" src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/travellers.svg" alt="Travellers community" /><span class="trust-value">35K+</span><span class="trust-label">Travellers</span></div>
     </div></div></section>
     <section class="about-story" aria-labelledby="about-story-title"><div class="container"><div class="about-story-copy"><h2 id="about-story-title">About TravelEnfield</h2><p>TravelEnfield was created with a simple belief: travel is better when it brings people together. What began as a shared love for discovering new roads has grown into a community built around meaningful group journeys, weekend escapes and customised holidays. We make travel planning feel human and uncomplicated, with practical stays, trusted trip captains, community-led activities and enough breathing room to enjoy the place—not just rush through it. From solo travellers taking their first group trip to friends and families making time for each other, we help people explore with more confidence, comfort and connection.</p></div></div></section>
-    <section class="about-timeline" aria-label="TravelEnfield journey"><div class="container"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/f_auto,q_auto,w_1440,dpr_auto/v1788524357/travelenfield/journey-img.png" alt="TravelEnfield's journey and milestones" loading="lazy" decoding="async" /></div></section>
+    <section class="about-timeline" aria-label="TravelEnfield journey"><div class="container"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/f_auto,q_auto,w_1440,dpr_auto/travelenfield/journey-img.png" alt="TravelEnfield's journey and milestones" loading="lazy" decoding="async" /></div></section>
     <section class="about-life" aria-labelledby="about-life-title"><div class="container"><div class="about-life-heading"><h2 id="about-life-title">Life at TravelEnfield</h2></div><div class="about-life-gallery" aria-label="TravelEnfield community gallery">
-      <figure class="about-life-tile about-life-tile--large"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244400/travelenfield/about/g1.jpg" alt="TravelEnfield community on a trip" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244401/travelenfield/about/g2.jpg" alt="Travellers enjoying a shared moment" loading="lazy" /></figure>
-      <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244402/travelenfield/about/g3.jpg" alt="TravelEnfield group journey" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--wide"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield community highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244409/travelenfield/about/gvideo.mp4" type="video/mp4" /></video></figure>
-      <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244403/travelenfield/about/g4.jpg" alt="Travellers exploring together" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244404/travelenfield/about/g5.jpg" alt="TravelEnfield traveller community" loading="lazy" /></figure>
-      <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244405/travelenfield/about/g6.jpg" alt="Friends on a group trip" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244406/travelenfield/about/g7.jpg" alt="Travel memories with TravelEnfield" loading="lazy" /></figure>
-      <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244406/travelenfield/about/g8.jpg" alt="TravelEnfield community experience" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--large"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield journey highlight"><source src="https://res.cloudinary.com/dq3typk9u/video/upload/v1788244410/travelenfield/about/gvideo2.mp4" type="video/mp4" /></video></figure>
-      <figure class="about-life-tile"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244407/travelenfield/about/g9.jpg" alt="Travellers connecting on a journey" loading="lazy" /></figure>
-      <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/dq3typk9u/image/upload/v1788244401/travelenfield/about/g10.jpg" alt="TravelEnfield group photo" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--large"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g1.jpg" alt="TravelEnfield community on a trip" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g2.jpg" alt="Travellers enjoying a shared moment" loading="lazy" /></figure>
+      <figure class="about-life-tile"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g3.jpg" alt="TravelEnfield group journey" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--wide"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield community highlight"><source src="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/about/gvideo.mp4" type="video/mp4" /></video></figure>
+      <figure class="about-life-tile"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g4.jpg" alt="Travellers exploring together" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--tall"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g5.jpg" alt="TravelEnfield traveller community" loading="lazy" /></figure>
+      <figure class="about-life-tile"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g6.jpg" alt="Friends on a group trip" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g7.jpg" alt="Travel memories with TravelEnfield" loading="lazy" /></figure>
+      <figure class="about-life-tile"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g8.jpg" alt="TravelEnfield community experience" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--large"><video data-deferred-video muted loop playsinline preload="metadata" aria-label="TravelEnfield journey highlight"><source src="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/about/gvideo2.mp4" type="video/mp4" /></video></figure>
+      <figure class="about-life-tile"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g9.jpg" alt="Travellers connecting on a journey" loading="lazy" /></figure>
+      <figure class="about-life-tile about-life-tile--wide"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/about/g10.jpg" alt="TravelEnfield group photo" loading="lazy" /></figure>
     </div></div></section>
   </div>`;
 }
-async function renderPage(slug){const p=await api(`/pages/${slug}`);setMeta(p.title,p.intro);const contact=slug==='contact-us'?`<section class="page-shell"><div class="container">${enquiryForm('contact')}</div></section>`:'';mount.innerHTML=hero({title:p.title,description:p.intro,eyebrow:p.eyebrow,image:slug==='reviews'?'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542569/travelenfield/social-banner.jpg':'https://res.cloudinary.com/dq3typk9u/image/upload/v1786542561/travelenfield/hero.jpg'})+`<section class="content-section"><div class="container article-layout prose">${p.sections.map(s=>`<h2>${esc(s.heading)}</h2><p>${esc(s.body)}</p>`).join('')}</div></section>${contact}`;wireForm();}
+async function renderPage(slug){const p=await api(`/pages/${slug}`);setMeta(p.title,p.intro);const contact=slug==='contact-us'?`<section class="page-shell"><div class="container">${enquiryForm('contact')}</div></section>`:'';mount.innerHTML=hero({title:p.title,description:p.intro,eyebrow:p.eyebrow,image:slug==='reviews'?'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/social-banner.jpg':'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hero.jpg'})+`<section class="content-section"><div class="container article-layout prose">${p.sections.map(s=>`<h2>${esc(s.heading)}</h2><p>${esc(s.body)}</p>`).join('')}</div></section>${contact}`;wireForm();}
 function authForm(){return `<form class="form-card" id="auth-form"><div class="form-grid"><div class="field full signup-only"><label for="auth-name">Name</label><input id="auth-name" name="name" autocomplete="name" /></div><div class="field full"><label for="auth-email">Email</label><input id="auth-email" name="email" type="email" required autocomplete="email" /></div><div class="field full"><label for="auth-password">Password</label><input id="auth-password" name="password" type="password" minlength="6" required autocomplete="current-password" /></div><div class="field full"><button class="btn btn-primary" type="submit">Continue</button></div></div><p class="form-status" role="status"></p></form>`}
 function renderAuth(mode){setMeta(mode==='signup'?'Create Account':'Login','Access your saved trips and enquiries.');mount.innerHTML=hero({title:mode==='signup'?'Create your account':'Welcome back',description:'Save favourites and keep your TravelEnfield journey details together.',eyebrow:'Traveller account'})+`<section class="page-shell"><div class="container">${authForm()}<p class="center">${mode==='signup'?'Already registered? <a href="/login">Login</a>':'New here? <a href="/signup">Create an account</a>'}</p></div></section>`;if(mode==='login')document.querySelector('.signup-only').remove();const form=document.querySelector('#auth-form');form.addEventListener('submit',async e=>{e.preventDefault();const status=form.querySelector('.form-status');try{const response=await fetch(`/api/auth/${mode}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form)))});const result=await response.json();if(!response.ok)throw new Error(result.error);localStorage.setItem('travelenfield-user',JSON.stringify(result.user));status.className='form-status success';status.textContent=`Welcome, ${result.user.name}!`; }catch(error){status.className='form-status error';status.textContent=error.message;}})}
 

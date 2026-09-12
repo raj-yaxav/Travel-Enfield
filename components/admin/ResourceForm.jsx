@@ -51,6 +51,37 @@ function MultiSelectField({ field, value, onChange }) {
   );
 }
 
+function ResourceMultiSelectField({ field, value, onChange, options }) {
+  const selected = Array.isArray(value) ? value : [];
+  const items = Array.isArray(options) ? options : [];
+  const labelFor = item => item.title || item.name || item.slug;
+
+  function toggle(slug) {
+    onChange(selected.includes(slug)
+      ? selected.filter(item => item !== slug)
+      : [...selected, slug]);
+  }
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-gray-50/60 p-3">
+      {items.length ? (
+        <div className="grid max-h-72 grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+          {items.map(item => {
+            const checked = selected.includes(item.slug);
+            return (
+              <label key={item.slug} className={`flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-sm font-medium transition-colors ${checked ? 'bg-brand-purple/10 text-brand-purple' : 'text-gray-700 hover:bg-white'}`}>
+                <input type="checkbox" checked={checked} onChange={() => toggle(item.slug)} className="h-4 w-4 rounded border-gray-300 text-brand-purple focus:ring-brand-purple" />
+                <span className="min-w-0 truncate">{labelFor(item)}</span>
+              </label>
+            );
+          })}
+        </div>
+      ) : <p className="text-sm text-gray-500">Loading selectable content…</p>}
+      {selected.length > 0 && <p className="mt-3 text-xs font-medium text-gray-500">{selected.length} selected. Uncheck and reselect an item to move it to the end of the display order.</p>}
+    </div>
+  );
+}
+
 function MultiDateField({ value, onChange }) {
   const [pendingDate, setPendingDate] = useState('');
   const dates = Array.isArray(value) ? value : [];
@@ -135,7 +166,7 @@ function ObjectArrayField({ items, itemFields, onChange }) {
   );
 }
 
-function FieldControl({ field, value, onChange }) {
+function FieldControl({ field, value, onChange, resourceOptions }) {
   switch (field.type) {
     case 'textarea':
       return <textarea rows={4} value={value ?? ''} onChange={e => onChange(e.target.value)} className={inputClass} />;
@@ -169,6 +200,8 @@ function FieldControl({ field, value, onChange }) {
       return <StringArrayField value={value} onChange={onChange} />;
     case 'multiSelect':
       return <MultiSelectField field={field} value={value} onChange={onChange} />;
+    case 'resourceMultiSelect':
+      return <ResourceMultiSelectField field={field} value={value} onChange={onChange} options={resourceOptions?.[field.resource]} />;
     case 'multiDate':
       return <MultiDateField value={value} onChange={onChange} />;
     case 'objectArray':
@@ -178,14 +211,14 @@ function FieldControl({ field, value, onChange }) {
   }
 }
 
-function FieldInput({ field, value, onChange, compact }) {
+function FieldInput({ field, value, onChange, compact, resourceOptions }) {
   return (
     <div>
       <label className={`mb-1 block font-semibold text-gray-700 ${compact ? 'text-xs' : 'text-sm'}`}>
         {field.label}
         {field.required && <span className="text-red-500"> *</span>}
       </label>
-      <FieldControl field={field} value={value} onChange={onChange} />
+      <FieldControl field={field} value={value} onChange={onChange} resourceOptions={resourceOptions} />
       {field.hint && !compact && <p className="mt-1 text-xs text-gray-400">{field.hint}</p>}
     </div>
   );
@@ -204,11 +237,14 @@ function cleanValue(fields, value) {
 }
 
 export default function ResourceForm({ config, initialValue, onSubmit, submitLabel, extraActions }) {
-  const [value, setValue] = useState(() => initialValue || {});
+  const [value, setValue] = useState(() => config.singular === 'Trip'
+    ? { recommendationMode: 'auto', ...(initialValue || {}) }
+    : (initialValue || {}));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [destinations, setDestinations] = useState([]);
   const [destinationsLoading, setDestinationsLoading] = useState(config.singular === 'Trip');
+  const [resourceOptions, setResourceOptions] = useState({ trips: [], hotels: [], blogs: [] });
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValue?.slug));
 
   useEffect(() => {
@@ -218,6 +254,16 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
       .then(data => { if (active) setDestinations(data.items || []); })
       .catch(() => { if (active) setError('Could not load destinations. Please refresh and try again.'); })
       .finally(() => { if (active) setDestinationsLoading(false); });
+    return () => { active = false; };
+  }, [config.singular]);
+
+  useEffect(() => {
+    if (config.singular !== 'Trip') return;
+    let active = true;
+    Promise.all(['trips', 'hotels', 'blogs'].map(resource => adminFetch(`${resource}?limit=100`)
+      .then(data => [resource, data.items || []])))
+      .then(entries => { if (active) setResourceOptions(Object.fromEntries(entries)); })
+      .catch(() => { if (active) setError('Could not load recommendation options. Please refresh and try again.'); });
     return () => { active = false; };
   }, [config.singular]);
 
@@ -260,7 +306,7 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
               hint: destinationsLoading ? 'Loading destinations...' : field.hint,
             }
           : field;
-        return <FieldInput key={field.name} field={enhancedField} value={value[field.name]} onChange={val => setField(field.name, val)} />;
+        return <FieldInput key={field.name} field={enhancedField} value={value[field.name]} onChange={val => setField(field.name, val)} resourceOptions={resourceOptions} />;
       })}
 
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}

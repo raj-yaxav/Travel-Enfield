@@ -2257,6 +2257,50 @@ body:has(.announcement-bar) #header { top: 40px !important; }
 .trip-detail-shell { padding: 70px 0 96px !important; background: #fff; }
 .trip-detail-layout { width: min(calc(100% - 64px), 1720px) !important; grid-template-columns: minmax(0, 1fr) minmax(390px, 468px) !important; gap: 32px !important; }
 .trip-detail-main { min-width: 0; }
+.trip-related-content { border-top: 1px solid rgba(85,22,123,.10); background: #faf8fc; padding: 76px 0 84px; }
+.trip-related-content .container { width: min(calc(100% - 64px), 1720px); }
+.trip-related-group + .trip-related-group { margin-top: 68px; }
+.trip-related-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+.trip-related-heading > div > span { display: block; margin-bottom: 5px; color: var(--color-brand-purple); font-size: 12px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.trip-related-heading h2 { margin: 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(27px, 2.2vw, 36px); font-weight: 800; letter-spacing: -.045em; line-height: 1.12; }
+.trip-related-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(285px, calc((100% - 60px) / 4), 414px);
+  grid-template-columns: none;
+  gap: 20px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  padding: 2px 1px 14px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.trip-related-grid::-webkit-scrollbar { display: none; }
+.trip-related-grid > * { scroll-snap-align: start; }
+.trip-related-trips { align-items: stretch; }
+.trip-related-trips .listing-card {
+  min-width: 0;
+  height: clamp(590px, 37vw, 654px);
+  align-self: stretch;
+}
+.trip-related-trips .listing-card-body { min-height: 0; }
+.trip-related-trips .listing-card-body h2,
+.trip-related-trips .listing-card-body h3 {
+  display: -webkit-box;
+  min-height: 2.7em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.trip-related-trips .listing-card-body > p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+.trip-related-hotels, .trip-related-blogs { align-items: stretch; }
+.trip-related-hotels > .h-fit { min-width: 0; }
+.trip-related-blogs .journal-card { min-width: 0; }
 .trip-about { padding: 11px 0 26px !important; text-align: left !important; }
 .trip-about-heading { margin: 0 0 20px !important; max-width: none !important; color: #211a1c !important; font-family: var(--font-manrope) !important; font-size: clamp(27px, 2.05vw, 35px) !important; font-weight: 800 !important; letter-spacing: -.05em !important; line-height: 1.12 !important; }
 .trip-about-copy { max-width: none !important; margin: 0 !important; color: #242124 !important; font-size: 18px !important; line-height: 1.5 !important; }
@@ -2357,6 +2401,15 @@ body:has(.announcement-bar) #header { top: 40px !important; }
   .trip-detail-shell { padding: 28px 0 112px !important; }
   .trip-detail-layout { width: calc(100% - 32px) !important; gap: 30px !important; }
   .trip-about { padding: 0 0 18px !important; }
+  .trip-related-content { padding: 46px 0 52px; }
+  .trip-related-content .container { width: calc(100% - 32px); }
+  .trip-related-group + .trip-related-group { margin-top: 45px; }
+  .trip-related-heading { align-items: flex-end; gap: 14px; margin-bottom: 17px; }
+  .trip-related-heading h2 { font-size: 25px; }
+  .trip-related-heading > div > span { margin-bottom: 4px; font-size: 10px; }
+  .trip-related-heading .see-all-link { flex: 0 0 auto; font-size: 12px; }
+  .trip-related-grid { grid-auto-columns: minmax(255px, 78vw); padding-bottom: 11px; }
+  .trip-related-trips .listing-card { height: clamp(455px, 125vw, 530px); }
   .trip-about-heading { margin-bottom: 12px !important; font-size: 26px !important; }
   .trip-about-copy,.trip-about-copy.clamped { max-height: 48px !important; font-size: 16px !important; line-height: 1.5 !important; }
   .trip-read-more { margin-top: 8px !important; font-size: 15px !important; }

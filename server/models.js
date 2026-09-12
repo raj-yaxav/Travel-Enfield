@@ -16,11 +16,21 @@ const Trip = mongoose.models.Trip || mongoose.model('Trip', new mongoose.Schema(
   summary: String, groupSize: String, pickup: String, dates: [String], showDates: { type: Boolean, default: true },
   itinerary: [{ day: Number, title: String, details: [String] }], inclusions: [String], exclusions: [String],
   notes: [String], featured: { type: Boolean, default: false },
+  recommendationMode: { type: String, enum: ['auto', 'manual'], default: 'auto' },
+  relatedTripSlugs: [String], recommendedHotelSlugs: [String], recommendedBlogSlugs: [String],
 }, options));
 // Mongoose preserves compiled models during Next development hot reloads. Keep
 // the new field available even if a Trip model was compiled before this change.
 if (!Trip.schema.path('showDates')) {
   Trip.schema.add({ showDates: { type: Boolean, default: true } });
+}
+// Keep recommendation fields available when Next hot reload reuses a previously
+// compiled Mongoose model.
+if (!Trip.schema.path('recommendationMode')) {
+  Trip.schema.add({
+    recommendationMode: { type: String, enum: ['auto', 'manual'], default: 'auto' },
+    relatedTripSlugs: [String], recommendedHotelSlugs: [String], recommendedBlogSlugs: [String],
+  });
 }
 if (!Trip.schema.indexes().some(([fields]) => fields.destinationSlug === 1 && fields.categories === 1)) Trip.schema.index({ destinationSlug: 1, categories: 1 });
 if (!Trip.schema.indexes().some(([fields]) => fields.categories === 1 && fields.featured === 1)) Trip.schema.index({ categories: 1, featured: 1 });

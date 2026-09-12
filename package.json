@@ -10,7 +10,8 @@
     "seed": "node server/seed.js",
     "seed:destinations": "node server/seed-destinations.js",
     "seed:trip-catalog": "node server/seed-trip-catalog.js",
-    "seed:blogs": "node server/seed-blogs.js"
+    "seed:blogs": "node server/seed-blogs.js",
+    "migrate:cloudinary": "node scripts/migrate-cloudinary-account.mjs"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",

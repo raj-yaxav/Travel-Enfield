@@ -480,13 +480,13 @@ wireReviewAutoplay('#review-track');
 // result (reels-upload-result.json); each slot's public id points to the
 // renamed Cloudinary URL.
 const REELS = [
-  { name: 'manali-snowfall', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532497/travelenfield/reels/travel-reel-1.mp4' },
-  { name: 'goa-beach', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532479/travelenfield/reels/manali-snowfall.mp4' },
-  { name: 'singapore-cruise', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532481/travelenfield/reels/goa-beach.mp4' },
-  { name: 'spiti-valley', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532491/travelenfield/reels/singapore-city.mp4' },
-  { name: 'nightlife-beach-party', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532486/travelenfield/reels/spiti-valley.mp4' },
-  { name: 'singapore-city', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532488/travelenfield/reels/nightlife-beach-party.mp4' },
-  { name: 'travel-reel-1', url: 'https://res.cloudinary.com/dq3typk9u/video/upload/v1786532483/travelenfield/reels/singapore-cruise.mp4' },
+  { name: 'manali-snowfall', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/travel-reel-1.mp4' },
+  { name: 'goa-beach', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/manali-snowfall.mp4' },
+  { name: 'singapore-cruise', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/goa-beach.mp4' },
+  { name: 'spiti-valley', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/singapore-city.mp4' },
+  { name: 'nightlife-beach-party', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/spiti-valley.mp4' },
+  { name: 'singapore-city', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/nightlife-beach-party.mp4' },
+  { name: 'travel-reel-1', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/singapore-cruise.mp4' },
 ];
 
 const reelVideoHtml = url => `<video class="block size-full object-cover" src="${url}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="Travel reel"></video>`;

@@ -52,6 +52,39 @@ function pickAllowedFields(config, body) {
   return allowed;
 }
 
+const RECOMMENDATION_FIELDS = [
+  ['relatedTripSlugs', 'trips'],
+  ['recommendedHotelSlugs', 'hotels'],
+  ['recommendedBlogSlugs', 'blogs'],
+];
+
+// Recommendation values are selected from admin-controlled records. Validate
+// every incoming slug so a crafted request cannot create arbitrary or broken
+// links on a public trip page.
+async function validateTripRecommendations(data, currentSlug) {
+  if (data.recommendationMode !== undefined && !['auto', 'manual'].includes(data.recommendationMode)) {
+    throw new Error('Recommendation source must be automatic or manual');
+  }
+
+  for (const [field, resourceKey] of RECOMMENDATION_FIELDS) {
+    if (data[field] === undefined) continue;
+    if (!Array.isArray(data[field]) || data[field].length > 12) {
+      throw new Error(`${field} must contain up to 12 selections`);
+    }
+    const slugs = data[field].map(value => String(value || '').trim());
+    if (slugs.some(slug => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) || new Set(slugs).size !== slugs.length) {
+      throw new Error(`Invalid ${field} selection`);
+    }
+    if (field === 'relatedTripSlugs' && currentSlug && slugs.includes(currentSlug)) {
+      throw new Error('A trip cannot recommend itself');
+    }
+    const found = await ADMIN_RESOURCES[resourceKey].model.find({ slug: { $in: slugs } }, { slug: 1 }).lean();
+    if (found.length !== slugs.length) throw new Error(`One or more selected ${resourceKey} no longer exist`);
+    data[field] = slugs;
+  }
+  return data;
+}
+
 function buildSearchQuery(config, search) {
   if (!search || !config.searchFields?.length) return {};
   const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
@@ -146,6 +179,7 @@ export async function POST(request, context) {
     if (!body) return json({ error: 'A valid JSON request body is required' }, 400);
 
     const data = pickAllowedFields(config, body);
+    if (resourceKey === 'trips') await validateTripRecommendations(data, data.slug);
     const created = await config.model.create(data);
     return json(sanitizeDoc(resourceKey, created), 201);
   } catch (error) {
@@ -179,6 +213,7 @@ export async function PUT(request, context) {
     if (!existing) return json({ error: `${config.singular} not found` }, 404);
 
     const data = pickAllowedFields(config, body);
+    if (resourceKey === 'trips') await validateTripRecommendations(data, data.slug || existing.slug);
     const updated = await config.model.findByIdAndUpdate(id, data, { new: true, runValidators: true });
     if (!updated) return json({ error: `${config.singular} not found` }, 404);
 
