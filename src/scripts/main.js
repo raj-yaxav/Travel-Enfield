@@ -14,6 +14,7 @@ import {
   Search,
   Bike,
   BookOpen,
+  BriefcaseBusiness,
   BadgeIndianRupee,
   CalendarClock,
   CalendarDays,
@@ -83,6 +84,7 @@ renderIcons({
     Search,
     Bike,
     BookOpen,
+    BriefcaseBusiness,
     BadgeIndianRupee,
     CalendarClock,
     CalendarDays,
@@ -157,6 +159,33 @@ const announcement = $('#announcement-bar');
 $('#announcement-close')?.addEventListener('click', () => {
   announcement?.remove();
 });
+
+// The announcement is managed in Admin → Site settings. Keep the HTML value
+// as a no-JS/database fallback, then replace only the safe public fields once
+// the page is ready.
+const syncAnnouncementBanner = async () => {
+  const bar = $('#announcement-bar');
+  const link = $('#announcement-link');
+  const text = $('#announcement-text');
+  if (!bar || !link || !text) return;
+  try {
+    const response = await fetch('/api/site-settings', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    if (!response.ok) return;
+    const settings = await response.json();
+    if (settings.announcementEnabled === false) {
+      bar.classList.add('is-hidden');
+      bar.setAttribute('aria-hidden', 'true');
+      return;
+    }
+    const message = String(settings.announcementText || '').trim();
+    const destination = String(settings.announcementHref || '').trim();
+    if (message) text.textContent = message;
+    if (destination && !/^\s*javascript:/i.test(destination) && !destination.startsWith('//')) link.href = destination;
+  } catch {
+    // Leave the server-rendered fallback intact if settings cannot be reached.
+  }
+};
+syncAnnouncementBanner();
 
 // Video intro hero: mute toggle, and header switches from a transparent
 // overlay to its normal solid styling once scrolled past the video.
@@ -389,6 +418,34 @@ wireRail('#review-track', '#review-prev', '#review-next', '.review-card', 340);
 wireRail('#activities-track', '#activities-prev', '#activities-next', '.activity-card', 280);
 wireRail('#vibe-reel-track', '#vibe-prev', '#vibe-next', '.vibe-reel-card', 240);
 
+function wireActivityVideoPopup(root = document) {
+  root.querySelectorAll('[data-activity-video]').forEach(trigger => {
+    if (trigger.dataset.activityPopupReady) return;
+    trigger.dataset.activityPopupReady = 'true';
+    trigger.addEventListener('click', () => {
+      const videoUrl = trigger.dataset.activityVideo;
+      const title = trigger.dataset.activityTitle || 'TravelEnfield activity';
+      if (!videoUrl) return;
+      document.querySelector('.activity-video-dialog')?.remove();
+      const dialog = document.createElement('div');
+      dialog.className = 'activity-video-dialog';
+      dialog.setAttribute('role', 'dialog');
+      dialog.setAttribute('aria-modal', 'true');
+      dialog.setAttribute('aria-label', title);
+      dialog.innerHTML = `<div class="activity-video-dialog-backdrop"></div><section class="activity-video-dialog-card"><button type="button" class="activity-video-dialog-close" aria-label="Close video">×</button><video controls autoplay playsinline preload="metadata"><source src="${videoUrl}" type="video/mp4" /></video><p>${title}</p></section>`;
+      const close = () => { dialog.querySelector('video')?.pause(); dialog.remove(); document.body.style.overflow = ''; trigger.focus(); };
+      dialog.querySelector('.activity-video-dialog-close')?.addEventListener('click', close);
+      dialog.querySelector('.activity-video-dialog-backdrop')?.addEventListener('click', close);
+      dialog.addEventListener('keydown', event => { if (event.key === 'Escape') close(); });
+      document.body.append(dialog);
+      document.body.style.overflow = 'hidden';
+      dialog.querySelector('.activity-video-dialog-close')?.focus();
+      dialog.querySelector('video')?.play().catch(() => {});
+    });
+  });
+}
+wireActivityVideoPopup();
+
 // Embla-style "peek" carousel: the card nearest the track's centre scales up
 // to full size, the rest sit at 0.9 — driven by scroll position, not :hover,
 // so it also works on touch.
@@ -416,17 +473,13 @@ function wireJournalScale() {
 }
 wireJournalScale();
 
-// Captureatrip uses Embla plus its official wheel-gestures plugin. The plugin
-// adds/removes `.is-wheel-dragging` on the viewport and supplies the same
-// damped boundary behaviour for mouse wheels and precision trackpads.
+// Load Embla only when a card rail is present. The official wheel-gestures
+// plugin preserves trackpad support; dragFree + short duration keep movement
+// close to the pointer instead of adding a long carousel easing delay.
 let emblaModules;
 const loadEmblaModules = () => {
-  if (!emblaModules) {
-    emblaModules = Promise.all([
-      import('embla-carousel'),
-      import('embla-carousel-wheel-gestures'),
-    ]).then(([embla, wheel]) => ({ EmblaCarousel: embla.default, WheelGesturesPlugin: wheel.WheelGesturesPlugin }));
-  }
+  if (!emblaModules) emblaModules = Promise.all([import('embla-carousel'), import('embla-carousel-wheel-gestures')])
+    .then(([embla, wheel]) => ({ EmblaCarousel: embla.default, WheelGesturesPlugin: wheel.WheelGesturesPlugin }));
   return emblaModules;
 };
 async function wireEmblaWheelGestures(trackSelector) {
@@ -438,10 +491,9 @@ async function wireEmblaWheelGestures(trackSelector) {
     track.before(viewport);
     viewport.append(track);
     track.dataset.emblaWheelReady = 'true';
-    const embla = EmblaCarousel(viewport, { align: 'start', containScroll: 'trimSnaps', dragFree: true, loop: false }, [
+    track._emblaWheelApi = EmblaCarousel(viewport, { align: 'start', containScroll: 'trimSnaps', dragFree: true, loop: false, duration: 20 }, [
       WheelGesturesPlugin({ wheelDraggingClass: 'is-wheel-dragging', target: viewport }),
     ]);
-    track._emblaWheelApi = embla;
   });
 }
 wireEmblaWheelGestures('.journal-grid');
@@ -462,6 +514,12 @@ function wireReviewAutoplay(trackSelector) {
   const stop = () => window.clearInterval(timer);
   const advance = () => {
     if (!isSingleCardLayout()) return;
+    const api = track._emblaWheelApi;
+    if (api) {
+      if (api.canScrollNext()) api.scrollNext();
+      else api.scrollTo(0);
+      return;
+    }
     const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 5;
     track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + track.clientWidth, behavior: 'smooth' });
   };

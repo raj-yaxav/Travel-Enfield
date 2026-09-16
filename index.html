@@ -36,8 +36,8 @@
   <!-- ============ 1. ANNOUNCEMENT BAR ============ -->
   <div class="announcement-bar relative z-50 grid min-h-10 place-items-center overflow-hidden bg-brand-deep text-brand-yellow" id="announcement-bar">
     <div class="announcement-shimmer"></div>
-    <a href="#deals" class="announcement-link block w-full px-4 py-2 text-center text-xs font-extrabold sm:text-sm">
-      <p><i data-lucide="gift"></i> Monsoon Sale is LIVE — Flat ₹5,000 Off </p>
+    <a href="/deals" class="announcement-link block w-full px-4 py-2 text-center text-xs font-extrabold sm:text-sm" id="announcement-link">
+      <p><i data-lucide="gift"></i><span id="announcement-text">Monsoon Sale is LIVE — Flat ₹5,000 Off</span></p>
     </a>
     <button class="announcement-close absolute right-4 top-1/2 grid size-9 -translate-y-1/2 place-items-center rounded-full text-brand-yellow transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-brand-yellow" id="announcement-close" aria-label="Close announcement">✕</button>
   </div>
@@ -50,7 +50,7 @@
         <span></span><span></span><span></span>
       </button>
       <a href="/" class="header-logo-mobile justify-self-center">
-        <img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img-mobile h-16 w-auto object-contain" />
+        <img src="/logo.png" alt="TravelEnfield Logo" class="logo-img-mobile h-16 w-auto object-contain" />
       </a>
       <a href="tel:+919873656044" class="header-phone-mobile grid size-11 place-items-center justify-self-end text-brand-purple" aria-label="Call us">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -61,7 +61,7 @@
     <div class="header-desktop hidden min-[1100px]:block">
       <div class="header-top mx-auto grid min-h-20 w-[min(calc(100%_-_48px),1740px)] grid-cols-[140px_minmax(160px,1fr)_auto] items-center gap-3 lg:grid-cols-[250px_minmax(320px,540px)_1fr] lg:gap-7">
         <a href="/" class="header-logo flex w-32 items-center lg:w-52">
-          <img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/brand/logo-navbar.png" alt="TravelEnfield Logo" class="logo-img h-12 w-auto object-contain object-left lg:h-[76px]" />
+          <img src="/logo.png" alt="TravelEnfield Logo" class="logo-img h-12 w-auto object-contain object-left lg:h-[76px]" />
         </a>
         <div class="header-search relative flex h-12 items-center gap-2.5 rounded-full border border-brand-purple/15 bg-brand-surface px-4 focus-within:border-brand-purple focus-within:ring-4 focus-within:ring-brand-purple/10">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -106,6 +106,9 @@
         </div></div>
         <a href="/upcoming-trips" class="nav-link"><i data-lucide="luggage"></i> Upcoming Trips</a>
         <a href="/weekend-trips" class="nav-link"><i data-lucide="car-front"></i> Weekend Trip</a>
+        <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="globe-2"></i> Customised Trips <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu">
+          <a href="/custom-trip"><i data-lucide="sparkles"></i><span><strong>Plan a custom trip</strong><small>Your dates, pace and preferences</small></span></a><a href="/corporate-tours"><i data-lucide="briefcase-business"></i><span><strong>Corporate Tours</strong><small>Team offsites and company retreats</small></span></a>
+        </div></div>
         <div class="nav-dropdown"><button class="nav-link nav-dropdown-toggle" aria-expanded="false"><i data-lucide="sparkles"></i> More <i data-lucide="chevron-down" class="nav-chevron"></i></button><div class="nav-dropdown-menu nav-menu-right">
           <a href="/about-us"><i data-lucide="circle-user-round"></i><span><strong>About us</strong></span></a><a href="/reviews"><i data-lucide="star"></i><span><strong>Traveller reviews</strong></span></a>
         </div></div>
@@ -116,7 +119,7 @@
     <div class="mobile-nav-overlay invisible fixed inset-0 z-50 block bg-brand-ink/60 opacity-0 transition [&.open]:visible [&.open]:opacity-100 min-[1100px]:hidden" id="mobile-nav-overlay"></div>
     <nav class="mobile-nav fixed inset-y-0 left-0 z-[60] grid h-dvh w-[min(88vw,380px)] -translate-x-full grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden bg-white shadow-2xl transition-transform duration-300 [&.open]:translate-x-0 min-[1100px]:hidden" id="mobile-nav">
       <div class="mobile-nav-header flex min-h-18 items-center justify-between border-b border-brand-purple/10 px-3.5 py-2">
-        <img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/brand/logo-navbar.png" alt="TravelEnfield" class="mobile-nav-logo h-16 w-auto object-contain" />
+        <img src="/logo.png" alt="TravelEnfield" class="mobile-nav-logo h-16 w-auto object-contain" />
         <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">✕</button>
       </div>
       <div class="mobile-nav-links grid min-h-0 content-start gap-1 overflow-y-auto bg-white p-3 [&_.mobile-nav-link]:flex [&_.mobile-nav-link]:min-h-12 [&_.mobile-nav-link]:w-full [&_.mobile-nav-link]:items-center [&_.mobile-nav-link]:gap-2.5 [&_.mobile-nav-link]:rounded-xl [&_.mobile-nav-link]:px-3 [&_.mobile-nav-link]:py-2.5 [&_.mobile-nav-link]:font-semibold [&_.mobile-nav-link:hover]:bg-brand-surface [&_.mobile-nav-link:hover]:text-brand-purple [&_.mobile-dropdown-menu]:invisible [&_.mobile-dropdown-menu]:grid [&_.mobile-dropdown-menu]:max-h-0 [&_.mobile-dropdown-menu]:gap-0.5 [&_.mobile-dropdown-menu]:overflow-hidden [&_.mobile-dropdown-menu]:pl-5 [&_.mobile-dropdown-menu]:opacity-0 [&_.mobile-dropdown-menu]:transition-all [&_.mobile-nav-dropdown.open_.mobile-dropdown-menu]:visible [&_.mobile-nav-dropdown.open_.mobile-dropdown-menu]:max-h-80 [&_.mobile-nav-dropdown.open_.mobile-dropdown-menu]:opacity-100 [&_.mobile-dropdown-menu_a]:flex [&_.mobile-dropdown-menu_a]:min-h-11 [&_.mobile-dropdown-menu_a]:items-center [&_.mobile-dropdown-menu_a]:gap-2.5 [&_.mobile-dropdown-menu_a]:rounded-lg [&_.mobile-dropdown-menu_a]:px-3 [&_.mobile-dropdown-menu_a]:py-2 [&_.mobile-dropdown-menu_a]:text-sm [&_.mobile-dropdown-menu_a]:text-gray-600 [&_.mobile-dropdown-menu_a:hover]:bg-brand-surface [&_.mobile-dropdown-menu_a:hover]:text-brand-purple">
@@ -157,6 +160,13 @@
         </div>
         <a href="/upcoming-trips" class="mobile-nav-link"><i data-lucide="luggage"></i> Upcoming Trips</a>
         <a href="/weekend-trips" class="mobile-nav-link"><i data-lucide="car-front"></i> Weekend Trip</a>
+        <div class="mobile-nav-dropdown">
+          <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="globe-2"></i> Customised Trips <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
+          <div class="mobile-dropdown-menu">
+            <a href="/custom-trip"><i data-lucide="sparkles"></i> Plan a custom trip</a>
+            <a href="/corporate-tours"><i data-lucide="briefcase-business"></i> Corporate Tours</a>
+          </div>
+        </div>
         <div class="mobile-nav-dropdown">
           <button class="mobile-nav-link mobile-dropdown-toggle" aria-expanded="false"><i data-lucide="sparkles"></i> More <i data-lucide="chevron-down" class="mobile-nav-chevron"></i></button>
           <div class="mobile-dropdown-menu">
@@ -901,21 +911,11 @@
         </div>
         <p class="section-subtitle">From breathtaking landscapes to thrilling adventures, discover the experiences that make every journey unforgettable.</p>
         <div class="activities-track" id="activities-track">
-          <a href="/reviews" class="activity-card">
-            <div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/woman-adventure-traveller.jpg" alt="Mountain diaries" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
-            <div class="activity-body"><span class="activity-icon"><i data-lucide="mountain-snow"></i></span><div><h3>Mountain Diaries</h3><p>Trek through stunning trails and embrace the beauty of nature.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
-          </a>
-          <a href="/reviews" class="activity-card">
-            <div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/bike-trip-captain.jpg" alt="Meet the captains" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
-            <div class="activity-body"><span class="activity-icon"><i data-lucide="bike"></i></span><div><h3>Meet The Captains</h3><p>Ride with our expert captains and feel the thrill of the road.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
-          </a>
-          <a href="/reviews" class="activity-card">
-            <div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/spiti.jpg" alt="Spiti, day by day" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div>
-            <div class="activity-body"><span class="activity-icon"><i data-lucide="footprints"></i></span><div><h3>Spiti, Day By Day</h3><p>Experience the raw beauty and culture of Spiti valley.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
-          </a>
-          <a href="/reviews" class="activity-card">
-            <div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>First Timers Friendly</h3><p>Perfect experiences for first-time travellers, crafted with care.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div>
-          </a>
+          <button type="button" class="activity-card" data-activity-video="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/112040-695204669-medium.mp4" data-activity-title="Mountain Diaries" aria-label="Watch Mountain Diaries"><div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/112040-695204669-medium.jpg" alt="Mountain Diaries video preview" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="mountain-snow"></i></span><div><h3>Mountain Diaries</h3><p>Little moments from the road, the trails and the views that stay with you.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>
+          <button type="button" class="activity-card" data-activity-video="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/1408-147169812-small.mp4" data-activity-title="Ride With Us" aria-label="Watch Ride With Us"><div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/1408-147169812-small.jpg" alt="Ride With Us video preview" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="bike"></i></span><div><h3>Ride With Us</h3><p>Open roads, good company and the kind of ride you keep talking about.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>
+          <button type="button" class="activity-card" data-activity-video="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/197898-905833761-medium.mp4" data-activity-title="The Group Vibe" aria-label="Watch The Group Vibe"><div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/197898-905833761-medium.jpg" alt="The Group Vibe video preview" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="users-round"></i></span><div><h3>The Group Vibe</h3><p>Meet the people who turn every itinerary into a shared story.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>
+          <button type="button" class="activity-card" data-activity-video="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/24541-343454486-medium.mp4" data-activity-title="Travel Unfiltered" aria-label="Watch Travel Unfiltered"><div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/24541-343454486-medium.jpg" alt="Travel Unfiltered video preview" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>Travel Unfiltered</h3><p>The candid, colourful side of travelling together.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>
+          <button type="button" class="activity-card" data-activity-video="https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/751-139151387-medium.mp4" data-activity-title="Beyond The Map" aria-label="Watch Beyond The Map"><div class="activity-media"><img src="https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/751-139151387-medium.jpg" alt="Beyond The Map video preview" loading="lazy" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="footprints"></i></span><div><h3>Beyond The Map</h3><p>A closer look at the places and experiences we explore together.</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>
         </div>
         <div class="mt-9 text-center"><a href="/reviews" class="btn btn-outline-purple">View All Activities <i data-lucide="arrow-right"></i></a></div>
       </div>
@@ -975,7 +975,7 @@
           <a href="/privacy-policy">Privacy Policy</a>
           <a href="/cancellation-policy">Cancellation Policy</a>
           <a href="/terms-and-conditions">Terms &amp; Conditions</a>
-          <a href="/custom-trip">Corporate Tours</a>
+          <a href="/corporate-tours">Corporate Tours</a>
           </div>
         </div>
         <div class="footer-col">
@@ -1068,7 +1068,7 @@
               <li><a href="/privacy-policy">Privacy Policy</a></li>
               <li><a href="/cancellation-policy">Cancellation Policy</a></li>
               <li><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
-              <li><a href="/custom-trip">Corporate Tours</a></li>
+              <li><a href="/corporate-tours">Corporate Tours</a></li>
             </ul>
           </div>
           <div class="footer-links-col">

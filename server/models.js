@@ -69,4 +69,22 @@ const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema(
   otpHash: String, otpExpiresAt: Date, otpAttempts: { type: Number, default: 0 }, otpVerifiedAt: Date,
 }, options));
 
-export { Destination, Trip, Category, Hotel, Blog, Page, Enquiry, User };
+// A deliberately small, singleton document for public-facing site controls.
+// Keep it separate from editable page content so the announcement can be
+// fetched safely by the legacy home and route renderers without exposing any
+// private administration data.
+const SiteSettings = mongoose.models.SiteSettings || mongoose.model('SiteSettings', new mongoose.Schema({
+  key: { type: String, required: true, unique: true, default: 'site' },
+  announcementEnabled: { type: Boolean, default: true },
+  announcementText: { type: String, default: 'Monsoon Sale is LIVE — Flat ₹5,000 Off', maxlength: 140 },
+  announcementHref: { type: String, default: '/deals', maxlength: 2048 },
+}, options));
+if (!SiteSettings.schema.path('announcementEnabled')) {
+  SiteSettings.schema.add({
+    announcementEnabled: { type: Boolean, default: true },
+    announcementText: { type: String, default: 'Monsoon Sale is LIVE — Flat ₹5,000 Off', maxlength: 140 },
+    announcementHref: { type: String, default: '/deals', maxlength: 2048 },
+  });
+}
+
+export { Destination, Trip, Category, Hotel, Blog, Page, Enquiry, User, SiteSettings };
