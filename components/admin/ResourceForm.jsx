@@ -237,7 +237,8 @@ function cleanValue(fields, value) {
 }
 
 export default function ResourceForm({ config, initialValue, onSubmit, submitLabel, extraActions }) {
-  const [value, setValue] = useState(() => config.singular === 'Trip'
+  const usesRecommendations = config.singular === 'Trip' || config.singular === 'Destination';
+  const [value, setValue] = useState(() => usesRecommendations
     ? { recommendationMode: 'auto', ...(initialValue || {}) }
     : (initialValue || {}));
   const [busy, setBusy] = useState(false);
@@ -258,7 +259,7 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
   }, [config.singular]);
 
   useEffect(() => {
-    if (config.singular !== 'Trip') return;
+    if (!usesRecommendations) return;
     let active = true;
     Promise.all(['trips', 'hotels', 'blogs'].map(resource => adminFetch(`${resource}?limit=100`)
       .then(data => [resource, data.items || []])))
@@ -306,7 +307,14 @@ export default function ResourceForm({ config, initialValue, onSubmit, submitLab
               hint: destinationsLoading ? 'Loading destinations...' : field.hint,
             }
           : field;
-        return <FieldInput key={field.name} field={enhancedField} value={value[field.name]} onChange={val => setField(field.name, val)} resourceOptions={resourceOptions} />;
+        const scopedOptions = enhancedField.destinationScoped && value.slug
+          ? {
+              ...resourceOptions,
+              [enhancedField.resource]: (resourceOptions[enhancedField.resource] || [])
+                .filter(item => item.destinationSlug === value.slug),
+            }
+          : resourceOptions;
+        return <FieldInput key={field.name} field={enhancedField} value={value[field.name]} onChange={val => setField(field.name, val)} resourceOptions={scopedOptions} />;
       })}
 
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}

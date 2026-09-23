@@ -86,6 +86,9 @@ export default function ResourceTable({ resourceKey, config }) {
   const [allTripDatesVisible, setAllTripDatesVisible] = useState(true);
   const [dateBusy, setDateBusy] = useState(false);
   const [dateUpdateScope, setDateUpdateScope] = useState(null);
+  const [siteSettings, setSiteSettings] = useState(null);
+  const [dateMessageBusy, setDateMessageBusy] = useState(false);
+  const [dateMessageSaved, setDateMessageSaved] = useState(false);
 
   const load = useCallback(async (p, s) => {
     setLoading(true);
@@ -93,15 +96,17 @@ export default function ResourceTable({ resourceKey, config }) {
     try {
       const params = new URLSearchParams({ page: String(p), limit: '20' });
       if (s) params.set('search', s);
-      const [data, visibility] = await Promise.all([
+      const [data, visibility, settings] = await Promise.all([
         adminFetch(`${resourceKey}?${params.toString()}`),
         resourceKey === 'trips' ? adminFetch('trips/date-visibility') : Promise.resolve(null),
+        resourceKey === 'trips' ? adminFetch('site-settings') : Promise.resolve(null),
       ]);
       setItems(data.items);
       setTotal(data.total);
       setPages(data.pages);
       setPage(data.page);
       if (visibility) setAllTripDatesVisible(visibility.showDates);
+      if (settings) setSiteSettings(settings);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -155,6 +160,19 @@ export default function ResourceTable({ resourceKey, config }) {
     }
   }
 
+  async function saveDatesAvailableMessage() {
+    if (!siteSettings || !String(siteSettings.datesAvailableMessage || '').trim()) return;
+    setDateMessageBusy(true);
+    setDateMessageSaved(false);
+    try {
+      const saved = await adminFetch('site-settings', { method: 'PUT', body: JSON.stringify(siteSettings) });
+      setSiteSettings(saved);
+      setDateMessageSaved(true);
+    } catch (err) {
+      window.alert(err.message);
+    } finally { setDateMessageBusy(false); }
+  }
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -176,6 +194,7 @@ export default function ResourceTable({ resourceKey, config }) {
         <input type="checkbox" checked={allTripDatesVisible} disabled={dateBusy} onChange={event => handleAllTripDates(event.target.checked)} className="h-4 w-4 rounded border-gray-300 text-brand-purple focus:ring-brand-purple" />
         Show exact departure dates on all trips
       </label>}
+      {resourceKey === 'trips' && siteSettings && <section className="mb-4 max-w-3xl rounded-xl border border-brand-purple/15 bg-brand-surface/50 p-4" aria-labelledby="dates-message-title"><h2 id="dates-message-title" className="font-heading text-base font-extrabold text-brand-deep">When exact dates are hidden</h2><p className="mt-1 text-xs leading-5 text-gray-500">This message appears on a trip when its exact departure dates are turned off.</p><div className="mt-3 flex flex-col gap-2 sm:flex-row"><input value={siteSettings.datesAvailableMessage || ''} maxLength={220} onChange={event => { setDateMessageSaved(false); setSiteSettings(current => ({ ...current, datesAvailableMessage: event.target.value })); }} className="min-h-11 min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20" aria-label="Dates available message" /><button type="button" disabled={dateMessageBusy || !String(siteSettings.datesAvailableMessage || '').trim()} onClick={saveDatesAvailableMessage} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-brand-purple px-4 text-sm font-bold text-white transition hover:bg-brand-deep disabled:cursor-wait disabled:opacity-60">{dateMessageBusy ? <><IconLoader className="mr-2 h-4 w-4 animate-spin" />Saving…</> : dateMessageSaved ? 'Saved' : 'Save message'}</button></div></section>}
       {resourceKey === 'trips' && dateBusy && <p className="mb-4 inline-flex min-h-9 items-center gap-2 rounded-lg bg-brand-purple/10 px-3 text-sm font-semibold text-brand-purple" role="status" aria-live="polite"><IconLoader className="h-4 w-4 animate-spin motion-reduce:animate-none" />{dateUpdateScope === 'all' ? 'Updating departure dates on all trips…' : 'Updating this trip…'}</p>}
 
       {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}

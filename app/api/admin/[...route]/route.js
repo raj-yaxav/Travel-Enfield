@@ -60,8 +60,8 @@ const RECOMMENDATION_FIELDS = [
 
 // Recommendation values are selected from admin-controlled records. Validate
 // every incoming slug so a crafted request cannot create arbitrary or broken
-// links on a public trip page.
-async function validateTripRecommendations(data, currentSlug) {
+// links on a public trip or destination page.
+async function validateRecommendations(data, currentSlug, destinationSlug) {
   if (data.recommendationMode !== undefined && !['auto', 'manual'].includes(data.recommendationMode)) {
     throw new Error('Recommendation source must be automatic or manual');
   }
@@ -78,8 +78,15 @@ async function validateTripRecommendations(data, currentSlug) {
     if (field === 'relatedTripSlugs' && currentSlug && slugs.includes(currentSlug)) {
       throw new Error('A trip cannot recommend itself');
     }
-    const found = await ADMIN_RESOURCES[resourceKey].model.find({ slug: { $in: slugs } }, { slug: 1 }).lean();
+    const found = await ADMIN_RESOURCES[resourceKey].model.find(
+      { slug: { $in: slugs } },
+      { slug: 1, destinationSlug: 1 }
+    ).lean();
     if (found.length !== slugs.length) throw new Error(`One or more selected ${resourceKey} no longer exist`);
+    if (destinationSlug && ['relatedTripSlugs', 'recommendedHotelSlugs'].includes(field)
+      && found.some(item => item.destinationSlug !== destinationSlug)) {
+      throw new Error(`Selected ${resourceKey} must belong to this destination`);
+    }
     data[field] = slugs;
   }
   return data;
@@ -179,7 +186,8 @@ export async function POST(request, context) {
     if (!body) return json({ error: 'A valid JSON request body is required' }, 400);
 
     const data = pickAllowedFields(config, body);
-    if (resourceKey === 'trips') await validateTripRecommendations(data, data.slug);
+    if (resourceKey === 'trips') await validateRecommendations(data, data.slug);
+    if (resourceKey === 'destinations') await validateRecommendations(data, null, data.slug);
     const created = await config.model.create(data);
     return json(sanitizeDoc(resourceKey, created), 201);
   } catch (error) {
@@ -213,7 +221,20 @@ export async function PUT(request, context) {
     if (!existing) return json({ error: `${config.singular} not found` }, 404);
 
     const data = pickAllowedFields(config, body);
-    if (resourceKey === 'trips') await validateTripRecommendations(data, data.slug || existing.slug);
+    // Validate the complete saved selection set, not just fields in this
+    // request. This prevents a crafted partial update (or a slug change) from
+    // leaving cross-destination or self-referencing recommendations behind.
+    if (resourceKey === 'trips' || resourceKey === 'destinations') {
+      const completeRecommendations = { ...existing.toObject(), ...data };
+      await validateRecommendations(
+        completeRecommendations,
+        resourceKey === 'trips' ? completeRecommendations.slug : null,
+        resourceKey === 'destinations' ? completeRecommendations.slug : undefined
+      );
+      ['recommendationMode', ...RECOMMENDATION_FIELDS.map(([field]) => field)].forEach(field => {
+        if (completeRecommendations[field] !== undefined) data[field] = completeRecommendations[field];
+      });
+    }
     const updated = await config.model.findByIdAndUpdate(id, data, { new: true, runValidators: true });
     if (!updated) return json({ error: `${config.singular} not found` }, 404);
 

@@ -30,15 +30,20 @@ export default function ImageUploader({ value, onChange, label }) {
   return (
     <div>
       {value ? (
-        <div className="relative inline-block">
-          <img src={value} alt="" className="h-24 w-24 rounded-lg border border-gray-200 object-cover" />
-          <button
-            type="button"
-            onClick={() => onChange('')}
-            className="absolute -right-2 -top-2 rounded-full bg-white p-1 text-gray-500 shadow ring-1 ring-gray-200 hover:text-red-600"
-            aria-label="Remove image"
-          >
-            <IconX className="h-3.5 w-3.5" />
+        <div className="inline-flex flex-col items-start gap-2">
+          <div className="relative inline-block">
+            <img src={value} alt="" className="h-24 w-24 rounded-lg border border-gray-200 object-cover" />
+            <button
+              type="button"
+              onClick={() => onChange('')}
+              className="absolute -right-2 -top-2 rounded-full bg-white p-1 text-gray-500 shadow ring-1 ring-gray-200 hover:text-red-600"
+              aria-label="Remove image"
+            >
+              <IconX className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <button type="button" onClick={() => inputRef.current?.click()} disabled={busy} className="min-h-9 rounded-lg border border-gray-300 px-3 text-xs font-bold text-gray-700 transition hover:border-brand-purple hover:text-brand-purple disabled:opacity-60">
+            {busy ? 'Uploading…' : 'Replace photo'}
           </button>
         </div>
       ) : (

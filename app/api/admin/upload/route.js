@@ -20,11 +20,14 @@ export async function POST(request) {
   if (!file || typeof file === 'string') {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
   }
-  if (!file.type?.startsWith('image/')) {
-    return NextResponse.json({ error: 'Only image files are supported' }, { status: 400 });
+  const isImage = file.type?.startsWith('image/');
+  const isVideo = ['video/mp4', 'video/webm', 'video/quicktime'].includes(file.type);
+  if (!isImage && !isVideo) {
+    return NextResponse.json({ error: 'Upload an image, MP4, WebM or MOV video' }, { status: 400 });
   }
-  if (file.size > 10 * 1024 * 1024) {
-    return NextResponse.json({ error: 'Image must be smaller than 10MB' }, { status: 400 });
+  const sizeLimit = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+  if (file.size > sizeLimit) {
+    return NextResponse.json({ error: isVideo ? 'Video must be smaller than 50MB' : 'Image must be smaller than 10MB' }, { status: 400 });
   }
 
   const timestamp = Math.floor(Date.now() / 1000);
@@ -47,7 +50,7 @@ export async function POST(request) {
 
   let cloudinaryResponse;
   try {
-    cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+    cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${isVideo ? 'video' : 'image'}/upload`, {
       method: 'POST',
       body: uploadForm,
     });
@@ -59,7 +62,7 @@ export async function POST(request) {
   const result = await cloudinaryResponse.json().catch(() => null);
   if (!cloudinaryResponse.ok || !result?.secure_url) {
     console.error('Cloudinary upload failed:', result);
-    return NextResponse.json({ error: result?.error?.message || 'Image upload failed' }, { status: 502 });
+    return NextResponse.json({ error: result?.error?.message || `${isVideo ? 'Video' : 'Image'} upload failed` }, { status: 502 });
   }
 
   return NextResponse.json({ ok: true, url: result.secure_url });

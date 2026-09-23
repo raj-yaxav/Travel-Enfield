@@ -142,6 +142,20 @@ dropdowns.forEach(dropdown => dropdown.querySelector('.nav-dropdown-toggle')?.ad
 document.addEventListener('click', event => { if (!event.target.closest('.nav-dropdown')) dropdowns.forEach(item => { item.classList.remove('open'); item.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false'); }); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') dropdowns.forEach(item => { item.classList.remove('open'); item.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false'); }); });
 
+const groupTripsDropdown = document.querySelector('#header-nav > .nav-dropdown:first-child');
+const positionGroupTripsMenu = () => {
+  const menu = groupTripsDropdown?.querySelector('.nav-group-menu');
+  const trigger = groupTripsDropdown?.querySelector('.nav-dropdown-toggle');
+  if (!menu || !trigger || !window.matchMedia('(min-width: 1100px)').matches) return;
+  const triggerRect = trigger.getBoundingClientRect();
+  const width = Math.min(360, window.innerWidth - 32);
+  const left = Math.max(16, Math.min(triggerRect.left, window.innerWidth - width - 16));
+  menu.style.setProperty('--group-menu-left', `${left}px`);
+  menu.style.setProperty('--group-menu-top', `${triggerRect.bottom - 2}px`);
+};
+groupTripsDropdown?.querySelector('.nav-dropdown-toggle')?.addEventListener('click', () => requestAnimationFrame(positionGroupTripsMenu));
+window.addEventListener('resize', () => { if (groupTripsDropdown?.classList.contains('open')) positionGroupTripsMenu(); }, { passive: true });
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
@@ -163,15 +177,119 @@ $('#announcement-close')?.addEventListener('click', () => {
 // The announcement is managed in Admin → Site settings. Keep the HTML value
 // as a no-JS/database fallback, then replace only the safe public fields once
 // the page is ready.
+const safeFooterHref = value => {
+  const href = String(value || '').trim();
+  if (!href) return '';
+  if (href.startsWith('/') && !href.startsWith('//')) return href;
+  try {
+    const parsed = new URL(href);
+    return ['http:', 'https:'].includes(parsed.protocol) ? href : '';
+  } catch { return ''; }
+};
+
+const replaceFooterLinks = (container, links, isDesktop) => {
+  if (!container) return;
+  const fragment = document.createDocumentFragment();
+  links.forEach(link => {
+    const href = safeFooterHref(link?.href);
+    const label = String(link?.label || '').trim();
+    if (!href || !label) return;
+    const anchor = document.createElement('a');
+    anchor.href = href;
+    anchor.textContent = label;
+    if (/^https?:\/\//i.test(href)) { anchor.target = '_blank'; anchor.rel = 'noopener noreferrer'; }
+    if (isDesktop) {
+      const item = document.createElement('li');
+      item.append(anchor);
+      fragment.append(item);
+    } else fragment.append(anchor);
+  });
+  if (fragment.childNodes.length) container.replaceChildren(fragment);
+};
+
+const syncFooterTripGroups = settings => {
+  const groups = settings?.footerTripGroups;
+  if (!groups || typeof groups !== 'object') return;
+  const desktopGroups = $$('.footer-desktop .footer-trip-group');
+  const mobileGroups = $$('.footer-mobile-groups .footer-col');
+  ['domestic', 'international'].forEach((key, index) => {
+    const group = groups[key];
+    if (!group || !Array.isArray(group.links) || !group.links.length) return;
+    const title = String(group.title || '').trim();
+    const desktop = desktopGroups[index];
+    const mobile = mobileGroups[index];
+    if (title) {
+      const desktopTitle = desktop?.querySelector('h4');
+      const mobileTitle = mobile?.querySelector('h4');
+      if (desktopTitle) desktopTitle.textContent = title;
+      if (mobileTitle) mobileTitle.textContent = title;
+    }
+    replaceFooterLinks(desktop?.querySelector('.footer-trip-grid'), group.links, true);
+    replaceFooterLinks(mobile?.querySelector('.footer-col-links'), group.links, false);
+  });
+};
+
+const escapeActivityHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+const safeMediaUrl = value => {
+  try { const parsed = new URL(String(value || '')); return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : ''; } catch { return ''; }
+};
+const ACTIVITY_FALLBACK_ITEMS = [
+  ['112040-695204669-medium', 'Mountain Diaries', 'Little moments from the road, the trails and the views that stay with you.'],
+  ['1408-147169812-small', 'Ride With Us', 'Open roads, good company and the kind of ride you keep talking about.'],
+  ['197898-905833761-medium', 'The Group Vibe', 'Meet the people who turn every itinerary into a shared story.'],
+  ['24541-343454486-medium', 'Travel Unfiltered', 'The candid, colourful side of travelling together.'],
+  ['751-139151387-medium', 'Beyond The Map', 'A closer look at the places and experiences we explore together.'],
+].map(([videoId, title, description]) => ({
+  video: `https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/${videoId}.mp4`,
+  title,
+  description,
+}));
+const resolvedActivityItems = items => {
+  const configured = Array.isArray(items) ? items : [];
+  const defaults = ACTIVITY_FALLBACK_ITEMS.map((fallback, index) => ({ ...fallback, ...(configured[index] || {}) }));
+  const extras = configured.slice(ACTIVITY_FALLBACK_ITEMS.length)
+    .filter(item => item && (item.video || item.title || item.description))
+    .map((item, index) => ({ ...ACTIVITY_FALLBACK_ITEMS[index % ACTIVITY_FALLBACK_ITEMS.length], ...item }));
+  return [...defaults, ...extras];
+};
+const syncActivities = settings => {
+  const activities = settings?.activities;
+  const section = $('#activities');
+  if (!section || !activities) return;
+  const cards = resolvedActivityItems(activities.items).map((item, index) => {
+    const video = safeMediaUrl(item?.video);
+    const title = String(item?.title || `Activity ${index + 1}`).trim();
+    const description = String(item?.description || '').trim();
+    if (!video || !title) return '';
+    return `<button type="button" class="activity-card" data-activity-video="${escapeActivityHtml(video)}" data-activity-title="${escapeActivityHtml(title)}" aria-label="Watch ${escapeActivityHtml(title)}"><div class="activity-media"><video src="${escapeActivityHtml(video)}" muted playsinline preload="metadata" aria-hidden="true"></video><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>${escapeActivityHtml(title)}</h3><p>${escapeActivityHtml(description)}</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>`;
+  }).filter(Boolean).join('');
+  if (!cards) return;
+  const eyebrow = String(activities.eyebrow || '').trim();
+  const title = String(activities.title || '').trim();
+  const description = String(activities.description || '').trim();
+  section.querySelector('.section-kicker').textContent = eyebrow;
+  section.querySelector('#activities-title').textContent = title;
+  const subtitle = section.querySelector('.section-subtitle');
+  if (subtitle) subtitle.textContent = description;
+  const track = section.querySelector('#activities-track');
+  if (!track) return;
+  track.innerHTML = cards;
+  track._emblaWheelApi?.reInit();
+  renderIcons({ ArrowRight, Play, Sparkles }, track);
+  wireActivityVideoPopup(track);
+};
+
 const syncAnnouncementBanner = async () => {
   const bar = $('#announcement-bar');
   const link = $('#announcement-link');
   const text = $('#announcement-text');
-  if (!bar || !link || !text) return;
   try {
     const response = await fetch('/api/site-settings', { headers: { Accept: 'application/json' }, cache: 'no-store' });
     if (!response.ok) return;
     const settings = await response.json();
+    syncFooterTripGroups(settings);
+    syncActivities(settings);
+    if (!bar || !link || !text) return;
     if (settings.announcementEnabled === false) {
       bar.classList.add('is-hidden');
       bar.setAttribute('aria-hidden', 'true');

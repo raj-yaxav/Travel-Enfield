@@ -52,8 +52,8 @@
   .activity-card { @apply relative flex w-full cursor-pointer flex-col overflow-hidden rounded-3xl border border-brand-purple/10 bg-white p-0 text-left shadow-[0_18px_45px_rgba(69,13,105,.1)] transition hover:-translate-y-1 [scroll-snap-align:start]; }
   .activity-card::after { content: ''; @apply absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-brand-purple to-brand-yellow; }
   .activity-media { @apply relative aspect-[4/3] overflow-hidden; }
-  .activity-media img { @apply size-full object-cover transition duration-500; }
-  .activity-card:hover .activity-media img { @apply scale-105; }
+  .activity-media img, .activity-media video { @apply size-full object-cover transition duration-500; }
+  .activity-card:hover .activity-media img, .activity-card:hover .activity-media video { @apply scale-105; }
   .activity-play { @apply absolute left-1/2 top-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-brand-purple shadow-xl; }
   .activity-play svg { @apply size-5; }
   .activity-body { @apply flex items-center gap-3 p-5; }
@@ -532,7 +532,7 @@
 
 /* Capture-style category listings: fixed filter rail plus a dense two-column
    landscape card grid. Used by /bike-trips and the other travel-style pages. */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .legacy-document-bridge #page-content .category-results > .container {
     width: min(calc(100% - 40px), 1760px) !important;
   }
@@ -706,11 +706,11 @@ button.bt-calendar-day { cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) { .bt-trip-card { transition: none; } }
 
-/* Capture A Trip category chrome: desktop navigation starts at 768px and the
+/* Capture A Trip category chrome: desktop navigation starts at 1100px and the
    fixed chrome occupies 154px (40px announcement + 66px utility row + 48px
    navigation). Category filters use that same offset, so no chips or rail
    can sit beneath the header while scrolling. */
-@media (min-width: 768px) {
+@media (min-width: 1100px) {
   .header-mobile { display: none !important; }
   .header-desktop { display: block !important; }
   .header-top {
@@ -726,7 +726,7 @@ button.bt-calendar-day { cursor: pointer; }
   .bt-desktop-chips-dock { top: 154px !important; }
   .bt-filter-rail { top: 154px !important; }
 }
-@media (max-width: 767px) {
+@media (max-width: 1099px) {
   .header-desktop { display: none !important; }
   .announcement-bar { height: 34px !important; min-height: 34px !important; }
   body:has(.announcement-bar) #header { top: 34px !important; }
@@ -848,6 +848,71 @@ button.bt-calendar-day { cursor: pointer; }
 .page-hero::after { content: ''; @apply pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-black/80 via-brand-deep/35 to-transparent; }
 .page-hero-content { @apply absolute inset-0 z-10; }
 
+/* Privacy policy: a calm long-form document layout that keeps the legal copy
+   easy to scan on desktop and intentionally simple on smaller screens. */
+.privacy-page { background: #fff; color: #29212d; }
+.privacy-hero { position: relative; overflow: hidden; padding: clamp(74px, 10vw, 138px) 0 clamp(62px, 8vw, 112px); text-align: center; background: linear-gradient(135deg, #f9f3fc 0%, #fff 52%, #fff8dc 100%); border-bottom: 1px solid rgba(75, 18, 111, .12); }
+.privacy-hero::before, .privacy-hero::after { position: absolute; content: ''; width: min(34vw, 470px); aspect-ratio: 1; border: 1px solid rgba(75, 18, 111, .12); border-radius: 50%; pointer-events: none; }
+.privacy-hero::before { top: -57%; left: -9%; }
+.privacy-hero::after { right: -11%; bottom: -72%; border-color: rgba(244, 189, 24, .45); }
+.privacy-hero .container { position: relative; z-index: 1; }
+.privacy-script { margin: 0 0 11px; color: var(--color-brand-purple); font-family: Georgia, 'Times New Roman', cursive; font-size: clamp(20px, 2vw, 29px); font-style: italic; font-weight: 600; }
+.privacy-brand { margin: 0 0 12px; color: var(--color-brand-purple); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+.privacy-hero h1 { margin: 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(39px, 5.35vw, 76px); font-weight: 800; letter-spacing: -.065em; line-height: .98; text-transform: uppercase; }
+.privacy-intro { max-width: 550px; margin: 19px auto 0; color: #675b6d; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.55; }
+.privacy-document { padding: clamp(42px, 6vw, 86px) 0 clamp(64px, 8vw, 112px); }
+.privacy-layout { display: grid; grid-template-columns: 210px minmax(0, 820px); justify-content: center; gap: clamp(42px, 7vw, 100px); align-items: start; }
+.privacy-nav { position: sticky; top: 126px; display: grid; gap: 10px; padding-top: 8px; }
+.privacy-nav p { margin: 0 0 5px; color: var(--color-brand-purple); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.privacy-nav a { color: #74697a; font-size: 13px; line-height: 1.35; text-decoration: none; transition: color .2s ease, transform .2s ease; }
+.privacy-nav a:hover, .privacy-nav a:focus-visible { color: var(--color-brand-purple); transform: translateX(3px); }
+.privacy-content { min-width: 0; }
+.privacy-lead { margin: 0; color: #403747; font-size: clamp(17px, 1.55vw, 20px); line-height: 1.7; }
+.privacy-updated { margin: 20px 0 46px; color: #766b7c; font-size: 14px; }
+.privacy-section { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; padding: 31px 0; border-top: 1px solid #ebe5ee; scroll-margin-top: 120px; }
+.privacy-section > span { color: var(--color-brand-purple); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.privacy-section h2 { margin: -3px 0 13px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; letter-spacing: -.045em; line-height: 1.15; text-transform: uppercase; }
+.privacy-section p { margin: 0 0 14px; color: #514857; font-size: 16px; line-height: 1.75; }
+.privacy-section p:last-child { margin-bottom: 0; }
+.privacy-emphasis { margin: 21px 0 !important; padding: 15px 18px; border-left: 4px solid var(--color-brand-yellow); background: #fff9e8; color: #594519 !important; }
+.privacy-section dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 22px 0 0; }
+.privacy-section dl div { min-width: 0; padding: 13px; border: 1px solid #eadff0; border-radius: 10px; background: #fcfaff; }
+.privacy-section dt { margin-bottom: 5px; color: var(--color-brand-purple); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.privacy-section dd { margin: 0; color: #4e4255; font-size: 13px; line-height: 1.45; }
+.privacy-section dd a { color: var(--color-brand-purple); font-weight: 700; }
+.privacy-contact-card { margin-top: 20px; padding: clamp(25px, 4vw, 44px); border-radius: 20px; background: var(--color-brand-deep); color: #fff; }
+.privacy-contact-card > p { margin: 0 0 8px; color: var(--color-brand-yellow); font-size: 11px; font-weight: 800; letter-spacing: .14em; }
+.privacy-contact-card h2 { margin: 0; font-family: var(--font-manrope); font-size: clamp(26px, 3vw, 38px); letter-spacing: -.05em; }
+.privacy-contact-card div { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 23px; }
+.privacy-contact-card a { min-height: 42px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: 0 15px; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; transition: background-color .2s ease, color .2s ease; }
+.privacy-contact-card a:hover, .privacy-contact-card a:focus-visible { background: var(--color-brand-yellow); border-color: var(--color-brand-yellow); color: var(--color-brand-deep); }
+@media (max-width: 850px) { .privacy-layout { display: block; max-width: 760px; } .privacy-nav { display: none; } }
+@media (max-width: 600px) { .privacy-hero { padding: 66px 0 58px; } .privacy-document { padding-top: 38px; } .privacy-lead { font-size: 16px; } .privacy-section { grid-template-columns: 31px minmax(0, 1fr); gap: 10px; padding: 25px 0; } .privacy-section h2 { font-size: 22px; } .privacy-section p { font-size: 15px; line-height: 1.68; } .privacy-section dl { grid-template-columns: 1fr; } .privacy-contact-card { border-radius: 15px; } .privacy-contact-card div { display: grid; } .privacy-contact-card a { justify-content: center; } }
+
+/* Cancellation policy uses the same legal-document grid with extra scanning
+   aids for the cancellation timing bands and nested trip types. */
+.cancellation-hero h1 span { color: var(--color-brand-purple); }
+.cancellation-page .privacy-nav { max-height: calc(100vh - 145px); overflow-y: auto; scrollbar-width: thin; }
+.cancellation-reminder { margin: 25px 0 30px; padding: 18px 20px; border-left: 4px solid var(--color-brand-yellow); background: #fff9e8; color: #594519; font-size: 16px; line-height: 1.7; }
+.cancellation-timing { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0 0 25px; }
+.cancellation-timing article { padding: 15px; border: 1px solid #e9dff0; border-radius: 12px; background: #fcfaff; }
+.cancellation-timing b { display: block; margin-bottom: 7px; color: var(--color-brand-deep); font-size: 13px; line-height: 1.35; }
+.cancellation-timing span { color: #6b6171; font-size: 12px; line-height: 1.45; }
+.cancellation-section { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; padding: 31px 0; border-top: 1px solid #ebe5ee; scroll-margin-top: 120px; }
+.cancellation-section > span { color: var(--color-brand-purple); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.cancellation-section h2 { margin: -3px 0 13px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(23px, 2.4vw, 32px); font-weight: 800; letter-spacing: -.045em; line-height: 1.15; text-transform: uppercase; }
+.cancellation-section > div > p, .cancellation-sub p { margin: 0 0 14px; color: #514857; font-size: 16px; line-height: 1.75; }
+.cancellation-sub { margin-top: 22px; padding: 18px 19px; border: 1px solid #e8deed; border-radius: 12px; background: #fcfaff; }
+.cancellation-sub h3 { margin: 0 0 10px; color: var(--color-brand-purple); font-family: var(--font-manrope); font-size: 17px; font-weight: 800; line-height: 1.3; }
+.cancellation-sub p:last-child, .cancellation-section > div > p:last-child { margin-bottom: 0; }
+.cancellation-final { margin-top: 28px; }
+.cancellation-final p { margin: 0; }
+.cancellation-page .privacy-contact-card > p:not(:first-child) { max-width: 650px; margin: 12px 0 0; color: #eee6f3; font-size: 15px; line-height: 1.6; }
+.terms-page .privacy-lead + .privacy-lead { margin-top: 14px; }
+.terms-highlight { margin-bottom: 0 !important; padding: 16px 18px; border-left: 4px solid var(--color-brand-yellow); background: #fff9e8; color: #594519 !important; font-style: italic; }
+.terms-final { margin-top: 28px; }
+@media (max-width: 600px) { .cancellation-timing { grid-template-columns: 1fr; } .cancellation-section { grid-template-columns: 31px minmax(0, 1fr); gap: 10px; padding: 25px 0; } .cancellation-section h2 { font-size: 22px; } .cancellation-section > div > p, .cancellation-sub p { font-size: 15px; line-height: 1.68; } .cancellation-sub { padding: 15px; } }
+
 /* Trip detail routes: shared Tailwind component skin for every /trips/[slug]. */
 @layer components {
   .trip-tabs { @apply sticky top-0 z-30 border-b border-brand-purple/10 bg-white/95 shadow-sm backdrop-blur-xl; }
@@ -960,6 +1025,7 @@ button.bt-calendar-day { cursor: pointer; }
 .trip-breakdown { @apply pt-14 pb-2; }
 .trip-breakdown-head { @apply flex items-center justify-between gap-4; }
 .trip-download { @apply inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-full bg-brand-purple px-5 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:shadow-lg; }
+.trip-download[aria-busy="true"] { @apply cursor-wait opacity-80; }
 .trip-download svg { @apply size-4; }
 .breakdown-list { @apply mt-6 grid list-none gap-3 p-0; }
 .breakdown-item { @apply overflow-hidden rounded-2xl border border-brand-purple/10 bg-white transition-colors; }
@@ -2156,11 +2222,11 @@ body:has(.announcement-bar.is-hidden) #header { top: 0 !important; }
 .about-timeline { padding: 0 0 clamp(72px, 9vw, 130px); background: #fff; }
 .about-timeline .container { max-width: 1240px; }
 .about-timeline img { display: block; width: 100%; height: auto; border-radius: 24px; box-shadow: 0 20px 55px rgba(69,13,105,.10); }
-.about-life { padding: 0 0 34px; background: #fff; }
+.about-life { padding: 0 0 28px; background: #fff; }
 .about-life .container { width: 100%; max-width: none; padding-right: 0; padding-left: 32px; }
-.about-life-heading { margin: 0 0 32px; }
+.about-life-heading { margin: 0 0 24px; }
 .about-life-heading h2 { margin: 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(34px, 2.4vw, 44px); font-weight: 800; letter-spacing: -.045em; line-height: 1.15; }
-.about-life-gallery { display: grid; grid-template-columns: repeat(8, minmax(230px, 300px)); grid-template-rows: repeat(2, 300px); grid-auto-flow: column; width: 100%; min-width: 0; gap: 20px; overflow-x: auto; padding: 2px 32px 10px 0; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-y; }
+.about-life-gallery { display: grid; grid-template-columns: repeat(8, minmax(210px, 272px)); grid-template-rows: repeat(2, 220px); grid-auto-flow: column; width: 100%; min-width: 0; gap: 16px; overflow-x: auto; padding: 2px 32px 10px 0; scroll-snap-type: x proximity; scrollbar-width: none; touch-action: pan-y; }
 .about-life-gallery::-webkit-scrollbar { display: none; }
 .about-life-tile { grid-column: span 1; grid-row: span 1; width: 100%; min-width: 0; margin: 0; overflow: hidden; border-radius: 20px; background: #eae3ed; scroll-snap-align: start; }
 .about-life-tile--large, .about-life-tile--tall { grid-row: span 2; }
@@ -2197,26 +2263,26 @@ body:has(.announcement-bar.is-hidden) #header { top: 0 !important; }
   .about-capture-layout .about-story-copy p { margin: 0; font-size: 16px; line-height: 1.6; }
   .about-capture-layout .about-timeline { padding-bottom: 70px; }
   .about-timeline img { border-radius: 16px; }
-  .about-life { padding-bottom: 24px; }
+  .about-life { padding-bottom: 20px; }
   .about-life .container { padding-left: 16px; }
-  .about-life-heading { margin-bottom: 20px; }
+  .about-life-heading { margin-bottom: 16px; }
   .about-life-heading h2 { font-size: 34px; }
-  .about-life-gallery { grid-template-columns: repeat(8, 154px); grid-template-rows: repeat(2, 156px); gap: 10px; padding-right: 16px; padding-bottom: 8px; }
+  .about-life-gallery { grid-template-columns: repeat(8, 136px); grid-template-rows: repeat(2, 124px); gap: 9px; padding-right: 16px; padding-bottom: 8px; }
   .about-life-tile { border-radius: 13px; }
   .about-capture-layout .about-visual-hero .about-hero-enquiry { width: calc(100% - 40px); min-width: 0; min-height: 42px; height: 42px; margin: 0; padding-inline: 20px; font-size: 14px; }
 }
 
 /* Capture A Trip category-header calibration.
    320/375/430: 34px sale strip + 52px navigation = 86px.
-   768px and above: 40px sale strip + 66px primary header + 48px nav = 154px. */
+   1100px and above: 40px sale strip + 66px primary header + 48px nav = 154px. */
 .announcement-bar { height: 40px !important; min-height: 40px !important; }
-@media (min-width: 768px) {
+@media (min-width: 1100px) {
   body:has(.announcement-bar) #header { top: 40px !important; }
   .header-top { min-height: 66px !important; }
   .header-nav { min-height: 48px !important; }
   .bt-desktop-chips-dock, .bt-filter-rail { top: 154px !important; }
 }
-@media (max-width: 767px) {
+@media (max-width: 1099px) {
   .announcement-bar { height: 34px !important; min-height: 34px !important; }
   body:has(.announcement-bar) #header { top: 34px !important; }
   .header-mobile {
@@ -2579,3 +2645,39 @@ body:has(.announcement-bar.is-hidden) #header { top: 0 !important; }
 .corporate-company-marquee .corporate-company-logo b { overflow: hidden; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: 15px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
 .corporate-company-logo:nth-child(3n) i { background: #156a53; }.corporate-company-logo:nth-child(4n) i { background: #b46d09; }
 @media (max-width: 560px) { .corporate-company-marquee > div { gap: 16px; }.corporate-company-marquee .corporate-company-logo { width: 150px; height: 50px; padding: 7px 9px; }.corporate-company-logo i { width: 27px; height: 27px; font-size: 11px; }.corporate-company-marquee .corporate-company-logo b { font-size: 13px; } }
+
+/* Founder profile — editable through Admin → Site settings. */
+.about-founder { overflow: hidden; padding: 74px 0 78px; background: #d8eeee; clip-path: polygon(0 2.4%, 1.5% 0, 3% 2.4%, 4.5% 0, 6% 2.4%, 7.5% 0, 9% 2.4%, 10.5% 0, 12% 2.4%, 13.5% 0, 15% 2.4%, 16.5% 0, 18% 2.4%, 19.5% 0, 21% 2.4%, 22.5% 0, 24% 2.4%, 25.5% 0, 27% 2.4%, 28.5% 0, 30% 2.4%, 31.5% 0, 33% 2.4%, 34.5% 0, 36% 2.4%, 37.5% 0, 39% 2.4%, 40.5% 0, 42% 2.4%, 43.5% 0, 45% 2.4%, 46.5% 0, 48% 2.4%, 49.5% 0, 51% 2.4%, 52.5% 0, 54% 2.4%, 55.5% 0, 57% 2.4%, 58.5% 0, 60% 2.4%, 61.5% 0, 63% 2.4%, 64.5% 0, 66% 2.4%, 67.5% 0, 69% 2.4%, 70.5% 0, 72% 2.4%, 73.5% 0, 75% 2.4%, 76.5% 0, 78% 2.4%, 79.5% 0, 81% 2.4%, 82.5% 0, 84% 2.4%, 85.5% 0, 87% 2.4%, 88.5% 0, 90% 2.4%, 91.5% 0, 93% 2.4%, 94.5% 0, 96% 2.4%, 97.5% 0, 100% 2.4%, 100% 97.6%, 98.5% 100%, 97% 97.6%, 95.5% 100%, 94% 97.6%, 92.5% 100%, 91% 97.6%, 89.5% 100%, 88% 97.6%, 86.5% 100%, 85% 97.6%, 83.5% 100%, 82% 97.6%, 80.5% 100%, 79% 97.6%, 77.5% 100%, 76% 97.6%, 74.5% 100%, 73% 97.6%, 71.5% 100%, 70% 97.6%, 68.5% 100%, 67% 97.6%, 65.5% 100%, 64% 97.6%, 62.5% 100%, 61% 97.6%, 59.5% 100%, 58% 97.6%, 56.5% 100%, 55% 97.6%, 53.5% 100%, 52% 97.6%, 50.5% 100%, 49% 97.6%, 47.5% 100%, 46% 97.6%, 44.5% 100%, 43% 97.6%, 41.5% 100%, 40% 97.6%, 38.5% 100%, 37% 97.6%, 35.5% 100%, 34% 97.6%, 32.5% 100%, 31% 97.6%, 29.5% 100%, 28% 97.6%, 26.5% 100%, 25% 97.6%, 23.5% 100%, 22% 97.6%, 20.5% 100%, 19% 97.6%, 17.5% 100%, 16% 97.6%, 14.5% 100%, 13% 97.6%, 11.5% 100%, 10% 97.6%, 8.5% 100%, 7% 97.6%, 5.5% 100%, 4% 97.6%, 2.5% 100%, 1% 97.6%, 0 100%); }
+.about-founder-grid { display: grid; grid-template-columns: minmax(310px, 500px) minmax(0, 1fr); align-items: center; gap: clamp(42px, 5.8vw, 88px); }
+.about-founder-photo { aspect-ratio: 1 / 1; overflow: hidden; border-radius: 10px; background: var(--color-brand-deep); box-shadow: 0 13px 30px rgba(27, 43, 45, .12); }.about-founder-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.about-founder-copy h2 { margin: 0; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(31px, 3vw, 45px); font-weight: 800; letter-spacing: -.05em; line-height: 1.08; }.about-founder-role { margin: 8px 0 0; color: #1d292a; font-size: 19px; font-weight: 800; }.about-founder-socials { display: flex; gap: 8px; margin: 15px 0 17px; }.about-founder-socials a { display: inline-flex; min-height: 38px; align-items: center; border: 1px solid rgba(69, 13, 105, .22); border-radius: 999px; padding: 0 13px; color: var(--color-brand-deep); font-size: 13px; font-weight: 800; text-decoration: none; }.about-founder-socials a:hover { background: var(--color-brand-purple); color: #fff; }.about-founder-bio { max-width: 1100px; margin: 0; color: #263435; font-size: clamp(16px, 1.28vw, 19px); line-height: 1.58; }
+@media (max-width: 800px) { .about-founder { padding: 61px 0 66px; }.about-founder-grid { grid-template-columns: minmax(230px, .72fr) minmax(0, 1fr); gap: 30px; }.about-founder-role { font-size: 16px; }.about-founder-bio { font-size: 15px; } }
+@media (max-width: 560px) { .about-founder { padding: 50px 0 55px; }.about-founder-grid { grid-template-columns: 1fr; gap: 28px; }.about-founder-photo { width: min(100%, 350px); margin: 0 auto; }.about-founder-copy h2 { font-size: 31px; }.about-founder-role { font-size: 16px; }.about-founder-bio { font-size: 16px; line-height: 1.62; } }
+
+.about-team { padding: 74px 0 82px; background: #fff; }.about-team h2 { margin: 0 0 30px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(31px, 2.8vw, 42px); font-weight: 800; letter-spacing: -.05em; line-height: 1.1; }.about-team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }.about-team-card { min-width: 0; }.about-team-card img { display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; object-fit: cover; background: #e7e1ea; }.about-team-card h3 { margin: 17px 0 5px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(20px, 1.7vw, 28px); font-weight: 800; letter-spacing: -.04em; line-height: 1.15; }.about-team-card p { margin: 0; color: #312a32; font-size: 16px; line-height: 1.4; }@media (max-width: 900px) { .about-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } }@media (max-width: 560px) { .about-team { padding: 54px 0 60px; }.about-team h2 { margin-bottom: 23px; font-size: 30px; }.about-team-grid { grid-template-columns: 1fr; gap: 27px; }.about-team-card img { aspect-ratio: 1.15 / 1; }.about-team-card h3 { margin-top: 13px; font-size: 24px; }.about-team-card p { font-size: 16px; } }
+
+/* Fresh Group Trips menu: a compact, single-column navigation card. */
+@media (min-width: 1100px) {
+  #header-nav .nav-group-menu {
+    position: fixed !important;
+    top: var(--group-menu-top, 152px) !important;
+    left: var(--group-menu-left, 16px) !important;
+    width: min(360px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+    padding: 8px !important;
+    border-color: rgba(85, 22, 123, .14) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 18px 42px rgba(35, 10, 50, .18) !important;
+    translate: none !important;
+  }
+  #header-nav .nav-group-menu > a {
+    min-height: 66px;
+    gap: 13px;
+    padding: 10px 12px;
+  }
+  #header-nav .nav-group-menu > a > svg { width: 22px; height: 22px; }
+  #header-nav .nav-group-menu > a strong { font-size: 15px; }
+  #header-nav .nav-group-menu > a small { margin-top: 2px; font-size: 12px; }
+}
