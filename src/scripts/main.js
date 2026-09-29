@@ -233,6 +233,13 @@ const escapeActivityHtml = value => String(value ?? '').replace(/[&<>'"]/g, char
 const safeMediaUrl = value => {
   try { const parsed = new URL(String(value || '')); return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : ''; } catch { return ''; }
 };
+const activityPosterUrl = video => {
+  const source = safeMediaUrl(video);
+  if (!/res\.cloudinary\.com\/[^/]+\/video\/upload\//i.test(source)) return '';
+  return source
+    .replace('/video/upload/', '/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/')
+    .replace(/\.mp4(?=\?|$)/i, '.jpg');
+};
 const ACTIVITY_FALLBACK_ITEMS = [
   ['112040-695204669-medium', 'Mountain Diaries', 'Little moments from the road, the trails and the views that stay with you.'],
   ['1408-147169812-small', 'Ride With Us', 'Open roads, good company and the kind of ride you keep talking about.'],
@@ -261,7 +268,8 @@ const syncActivities = settings => {
     const title = String(item?.title || `Activity ${index + 1}`).trim();
     const description = String(item?.description || '').trim();
     if (!video || !title) return '';
-    return `<button type="button" class="activity-card" data-activity-video="${escapeActivityHtml(video)}" data-activity-title="${escapeActivityHtml(title)}" aria-label="Watch ${escapeActivityHtml(title)}"><div class="activity-media"><video src="${escapeActivityHtml(video)}" muted playsinline preload="metadata" aria-hidden="true"></video><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>${escapeActivityHtml(title)}</h3><p>${escapeActivityHtml(description)}</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>`;
+    const poster = activityPosterUrl(video) || activityPosterUrl(ACTIVITY_FALLBACK_ITEMS[index % ACTIVITY_FALLBACK_ITEMS.length].video);
+    return `<button type="button" class="activity-card" data-activity-video="${escapeActivityHtml(video)}" data-activity-title="${escapeActivityHtml(title)}" aria-label="Watch ${escapeActivityHtml(title)}"><div class="activity-media"><img src="${escapeActivityHtml(poster)}" alt="${escapeActivityHtml(title)} video preview" loading="lazy" decoding="async" /><span class="activity-play"><i data-lucide="play"></i></span></div><div class="activity-body"><span class="activity-icon"><i data-lucide="sparkles"></i></span><div><h3>${escapeActivityHtml(title)}</h3><p>${escapeActivityHtml(description)}</p></div><i data-lucide="arrow-right" class="activity-arrow"></i></div></button>`;
   }).filter(Boolean).join('');
   if (!cards) return;
   const eyebrow = String(activities.eyebrow || '').trim();
@@ -665,7 +673,20 @@ const REELS = [
   { name: 'travel-reel-1', url: 'https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/reels/singapore-cruise.mp4' },
 ];
 
-const reelVideoHtml = url => `<video class="block size-full object-cover" src="${url}" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-label="Travel reel"></video>`;
+const reelPosterUrl = url => String(url || '')
+  .replace('/video/upload/', '/video/upload/f_jpg,so_0,w_720,h_1280,c_fill,q_auto/')
+  .replace(/\.mp4(?=\?|$)/i, '.jpg');
+// Keep the card dimensions and visual preview immediate, but do not assign a
+// network video source until a reel is actually near the viewport or played.
+const reelVideoHtml = url => `<video class="block size-full object-cover" data-reel-src="${url}" poster="${reelPosterUrl(url)}" muted loop playsinline preload="none" disablepictureinpicture aria-label="Travel reel"></video>`;
+
+const loadReelSource = video => {
+  if (!video || video.currentSrc || video.src) return;
+  const source = video.dataset.reelSrc;
+  if (!source) return;
+  video.src = source;
+  video.load();
+};
 
 const reelControlsHtml = () => `
   <div class="reel-controls">
@@ -694,7 +715,7 @@ function wireReelControls(card) {
   const playBtn = card.querySelector('[data-reel-play]');
   const muteBtn = card.querySelector('[data-reel-mute]');
   if (!video || !playBtn || !muteBtn) return;
-  playBtn.addEventListener('click', () => { if (video.paused) video.play()?.catch(() => {}); else video.pause(); });
+  playBtn.addEventListener('click', () => { if (video.paused) { loadReelSource(video); video.play()?.catch(() => {}); } else video.pause(); });
   muteBtn.addEventListener('click', () => { video.muted = !video.muted; });
   const sync = () => {
     setReelIcon(playBtn, video.paused ? 'play' : 'pause');
@@ -715,19 +736,24 @@ $$('[data-reels-embed-target]').forEach(target => {
   $$(full ? '.reels-slide' : '.vibe-reel-card', target).forEach(wireReelControls);
 });
 
-// Muted autoplay is allowed by browsers, so every reel starts on its own.
-// Only the on-screen videos keep playing; off-screen ones pause to save
-// bandwidth (rail is horizontal, viewer is vertical full-screen).
+// Muted autoplay is allowed by browsers. Only a reel that is close to the
+// viewport gets its source and plays; off-screen cards stay poster-only.
 if ('IntersectionObserver' in window) {
   const reelPlayObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const video = entry.target.querySelector('video');
       if (!video) return;
-      if (entry.isIntersecting) video.play()?.catch(() => {});
+      if (entry.isIntersecting) { loadReelSource(video); video.play()?.catch(() => {}); }
       else video.pause();
     });
-  }, { threshold: 0.4 });
+  }, { rootMargin: '160px 0px', threshold: 0.4 });
   $$('.vibe-reel-card, .reels-slide').forEach(card => reelPlayObserver.observe(card));
+} else {
+  // Older browsers retain a functional first reel instead of loading every
+  // off-screen video eagerly.
+  const firstVideo = $('.vibe-reel-card video, .reels-slide video');
+  loadReelSource(firstVideo);
+  firstVideo?.play()?.catch(() => {});
 }
 
 const reelsViewer = $('#reels-viewer');
@@ -739,7 +765,9 @@ const openReelsViewer = () => {
   reelsViewer.classList.add('open');
   reelsViewer.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  reelsViewer.querySelector('video')?.play()?.catch(() => {});
+  const firstVideo = reelsViewer.querySelector('video');
+  loadReelSource(firstVideo);
+  firstVideo?.play()?.catch(() => {});
 };
 const closeReelsViewer = () => {
   if (!reelsViewer) return;

@@ -24,6 +24,16 @@ const PUBLIC_CACHE_HEADERS = {
 const json = (data, status = 200, headers) => NextResponse.json(data, { status, headers });
 const cachedJson = data => json(data, 200, PUBLIC_CACHE_HEADERS);
 
+// Card rails only need these lightweight display fields. Keeping full
+// itineraries, galleries and FAQs out of their responses noticeably reduces
+// payloads on trip and destination detail pages without changing the cards.
+const CARD_PROJECTIONS = {
+  trips: 'title slug destinationSlug categories image duration nights price oldPrice discount badge summary groupSize pickup dates showDates featured',
+  hotels: 'name slug destinationSlug location area star rating reviews image badge tagline summary pricePerNight oldPricePerNight roomType featured',
+  blogs: 'title slug excerpt image category author readTime publishedAt seoTitle seoDescription',
+};
+const cardProjection = (url, resource) => url.searchParams.get('view') === 'card' ? CARD_PROJECTIONS[resource] : undefined;
+
 const failure = error => {
   console.error('API request failed:', error);
   return json({ error: 'Something went wrong. Please try again shortly.' }, 500);
@@ -58,6 +68,49 @@ const mergeSeedTrips = (databaseTrips, seedTrips) => {
   const knownSlugs = new Set(databaseTrips.map(trip => trip.slug));
   return [...databaseTrips, ...seedTrips.filter(trip => !knownSlugs.has(trip.slug))];
 };
+const uniqueBySlug = items => [...new Map((items || []).filter(item => item?.slug).map(item => [item.slug, item])).values()];
+const orderedBySlug = (items, slugs) => {
+  const bySlug = new Map((items || []).map(item => [item.slug, item]));
+  return (slugs || []).map(slug => bySlug.get(slug)).filter(Boolean);
+};
+
+async function getTripRecommendations(slug) {
+  const source = await Trip.findOne({ slug }).lean() || trips.find(item => item.slug === slug);
+  if (!source) return null;
+  const manual = source.recommendationMode === 'manual';
+  const styles = (source.categories || []).filter(category => category !== 'all');
+  const tripQuery = manual
+    ? { slug: { $in: source.relatedTripSlugs || [] } }
+    : { slug: { $ne: source.slug }, $or: [{ destinationSlug: source.destinationSlug }, ...(styles.length ? [{ categories: { $in: styles } }] : [])] };
+  const hotelQuery = manual
+    ? { slug: { $in: source.recommendedHotelSlugs || [] } }
+    : { destinationSlug: source.destinationSlug };
+  const [dbTrips, dbHotels, dbBlogs] = await Promise.all([
+    Trip.find(tripQuery, CARD_PROJECTIONS.trips).limit(manual ? 20 : 12).lean(),
+    Hotel.find(hotelQuery, CARD_PROJECTIONS.hotels).sort({ rating: -1 }).limit(manual ? 20 : 4).lean(),
+    manual ? Blog.find({ slug: { $in: source.recommendedBlogSlugs || [] } }, CARD_PROJECTIONS.blogs).lean() : Blog.find({}, CARD_PROJECTIONS.blogs).sort({ publishedAt: -1 }).limit(12).lean(),
+  ]);
+  const seedTripCandidates = trips.filter(item => item.slug !== source.slug && (manual
+    ? (source.relatedTripSlugs || []).includes(item.slug)
+    : item.destinationSlug === source.destinationSlug || (item.categories || []).some(category => styles.includes(category))));
+  const tripCandidates = uniqueBySlug([...dbTrips, ...seedTripCandidates]);
+  const relatedTrips = manual
+    ? orderedBySlug(tripCandidates, source.relatedTripSlugs).slice(0, 4)
+    : uniqueBySlug([
+      ...tripCandidates.filter(item => item.destinationSlug === source.destinationSlug),
+      ...tripCandidates.filter(item => item.destinationSlug !== source.destinationSlug),
+    ]).slice(0, 4);
+  let hotelCandidates = uniqueBySlug(dbHotels);
+  if (!manual && hotelCandidates.length < 4) {
+    const featuredHotels = await Hotel.find({ featured: true }, CARD_PROJECTIONS.hotels).sort({ rating: -1 }).limit(4).lean();
+    hotelCandidates = uniqueBySlug([...hotelCandidates, ...featuredHotels]);
+  }
+  const relatedHotels = manual ? orderedBySlug(hotelCandidates, source.recommendedHotelSlugs).slice(0, 4) : hotelCandidates.slice(0, 4);
+  const terms = [source.destinationSlug].filter(Boolean).map(value => String(value).toLowerCase());
+  const relevantBlogs = dbBlogs.filter(item => terms.some(term => `${item.title || ''} ${item.excerpt || ''} ${item.category || ''}`.toLowerCase().includes(term)));
+  const relatedBlogs = manual ? orderedBySlug(dbBlogs, source.recommendedBlogSlugs).slice(0, 4) : (relevantBlogs.length ? relevantBlogs : dbBlogs).slice(0, 4);
+  return { trips: relatedTrips, hotels: relatedHotels, blogs: relatedBlogs };
+}
 
 export async function GET(request, context) {
   try {
@@ -73,12 +126,20 @@ export async function GET(request, context) {
       || pathname === 'blogs'
       || pathname === 'pages'
       || pathname === 'hotels'
+      || pathname === 'recommendations'
       || (['destinations', 'trips', 'categories', 'blogs', 'pages', 'hotels'].includes(route[0]) && Boolean(route[1]))
       || (route[0] === 'profile' && Boolean(route[1]))
       || pathname === 'auth/me';
     if (!knownReadRoute) return json({ error: 'API route not found' }, 404);
     await connectDatabase();
     const url = new URL(request.url);
+
+    if (pathname === 'recommendations') {
+      const slug = String(url.searchParams.get('trip') || '').trim();
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return json({ error: 'A valid trip is required' }, 400);
+      const recommendations = await getTripRecommendations(slug);
+      return recommendations ? cachedJson(recommendations) : json({ error: 'Trip not found' }, 404);
+    }
 
     if (pathname === 'destinations') return cachedJson(await Destination.find().lean());
     if (route[0] === 'destinations' && route[1]) {
@@ -92,7 +153,7 @@ export async function GET(request, context) {
       if (category && category !== 'all') query.categories = category;
       if (destination) query.destinationSlug = destination;
       const [databaseTrips, persistedTripSlugs] = await Promise.all([
-        Trip.find(query).lean(),
+        Trip.find(query, cardProjection(url, 'trips')).lean(),
         Trip.find({}, { slug: 1 }).lean(),
       ]);
       const persistedSlugs = new Set(persistedTripSlugs.map(trip => trip.slug));
@@ -113,7 +174,7 @@ export async function GET(request, context) {
       const item = await Category.findOne({ slug: route[1] }).lean();
       return item ? cachedJson(item) : json({ error: 'Category not found' }, 404);
     }
-    if (pathname === 'blogs') return cachedJson(await Blog.find().sort({ publishedAt: -1 }).lean());
+    if (pathname === 'blogs') return cachedJson(await Blog.find({}, cardProjection(url, 'blogs')).sort({ publishedAt: -1 }).lean());
     if (route[0] === 'blogs' && route[1]) {
       const item = await Blog.findOne({ slug: route[1] }).lean();
       return item ? cachedJson(item) : json({ error: 'Article not found' }, 404);
@@ -134,7 +195,7 @@ export async function GET(request, context) {
       const query = {};
       const destination = url.searchParams.get('destination');
       if (destination) query.destinationSlug = destination;
-      return cachedJson(await Hotel.find(query).sort({ rating: -1 }).lean());
+      return cachedJson(await Hotel.find(query, cardProjection(url, 'hotels')).sort({ rating: -1 }).lean());
     }
     if (route[0] === 'hotels' && route[1]) {
       const item = await Hotel.findOne({ slug: route[1] }).lean();

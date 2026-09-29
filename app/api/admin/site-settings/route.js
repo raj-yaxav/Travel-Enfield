@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { connectDatabase } from '../../../../lib/mongodb';
 import { isAdminRequest } from '../../../../lib/admin-auth';
 import { destroyCloudinaryImages, destroyCloudinaryVideos } from '../../../../lib/cloudinary';
@@ -223,6 +224,9 @@ export async function PUT(request) {
       const result = await destroyCloudinaryVideos(removedActivityVideos);
       if (result.failed.length) console.warn('Could not delete some replaced activity videos:', result.failed);
     }
+    // Expire the public read cache immediately. The next visitor gets the
+    // settings just saved instead of waiting for the normal cache lifetime.
+    revalidateTag('public-site-settings', { expire: 0 });
     return json(publicSettings(settings));
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unable to save site settings';

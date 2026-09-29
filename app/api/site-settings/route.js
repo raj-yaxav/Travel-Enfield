@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { connectDatabase } from '../../../lib/mongodb';
 import { SiteSettings } from '../../../server/models';
 
@@ -48,12 +49,23 @@ const footerTripGroups = settings => Object.fromEntries(Object.entries(DEFAULT_F
   return [key, Array.isArray(group?.links) && group.links.length ? { ...fallback, ...group } : fallback];
 }));
 
+// Public chrome reads these values on every page. Cache only the database read
+// (not the browser response), then invalidate this exact entry after an admin
+// save so visitors never need to wait on MongoDB for unchanged settings.
+const getCachedSiteSettings = unstable_cache(
+  async () => {
+    await connectDatabase();
+    return SiteSettings.findOne({ key: 'site' }).lean();
+  },
+  ['public-site-settings'],
+  { tags: ['public-site-settings'], revalidate: 300 }
+);
+
 // This endpoint is intentionally limited to the three public fields used by
 // the site chrome. It never serialises internal settings or user data.
 export async function GET() {
   try {
-    await connectDatabase();
-    const settings = await SiteSettings.findOne({ key: 'site' }).lean();
+    const settings = await getCachedSiteSettings();
     return NextResponse.json({
       announcementEnabled: settings?.announcementEnabled ?? DEFAULT_ANNOUNCEMENT.announcementEnabled,
       announcementText: settings?.announcementText || DEFAULT_ANNOUNCEMENT.announcementText,

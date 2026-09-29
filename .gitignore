@@ -9,6 +9,8 @@ audit-*.png
 screenshots/
 artifacts/
 source-assets/
+/public/activity/
+/public/reels/
 /scripts/
 docx_content.txt
 extract_docx.ps1

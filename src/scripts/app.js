@@ -1,10 +1,8 @@
 import './enquiry-popup.js';
 import { setLoginPopup } from './login-popup.js';
-import EmblaCarousel from 'embla-carousel';
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-import { createIcons, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, BriefcaseBusiness, Building2, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Globe2, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map as MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
+import { createIcons, ArrowDown, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, BriefcaseBusiness, Building2, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Globe2, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map as MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X } from 'lucide';
 
-const iconSet = { ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, BriefcaseBusiness, Building2, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Globe2, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map: MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
+const iconSet = { ArrowDown, ArrowRight, Armchair, Baby, BadgeCheck, Backpack, Bath, Bed, BedDouble, Bike, BookOpen, BriefcaseBusiness, Building2, CalendarClock, CalendarDays, CarFront, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CircleCheckBig, CircleUserRound, Clock3, Coffee, ConciergeBell, CookingPot, DoorOpen, Droplets, Dumbbell, Earth, Flame, Footprints, Gift, Globe2, Headphones, Home, Hotel, IndianRupee, KeyRound, LogIn, LogOut, Luggage, Mail, Map: MapIcon, MapPin, MapPinned, Maximize, Menu, MessageCircle, Mountain, MountainSnow, Phone, Plane, PlaneTakeoff, Play, ReceiptText, Refrigerator, Search, Send, ShieldCheck, Ship, SlidersHorizontal, Snowflake, Sparkles, Star, Tags, Tent, ThumbsUp, Trees, Tv, Users, UserRoundCheck, UsersRound, UtensilsCrossed, WandSparkles, Waves, Wifi, Wind, X };
 const mount = document.querySelector('#page-content');
 document.querySelectorAll('.logo-img, .logo-img-mobile, .mobile-nav-logo').forEach(img => { img.src = '/logo.png'; });
 
@@ -580,6 +578,13 @@ const ACTIVITY_CARDS = [
 
 const activityVideoUrl = id => `https://res.cloudinary.com/rgw1moxc/video/upload/travelenfield/activity/${id}.mp4`;
 const activityPosterUrl = id => `https://res.cloudinary.com/rgw1moxc/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/travelenfield/activity/${id}.jpg`;
+const activityPosterFromVideo = video => {
+  const source = String(video || '');
+  if (!/res\.cloudinary\.com\/[^/]+\/video\/upload\//i.test(source)) return '';
+  return source
+    .replace('/video/upload/', '/video/upload/f_jpg,so_0,w_720,h_540,c_fill,q_auto/')
+    .replace(/\.mp4(?=\?|$)/i, '.jpg');
+};
 
 function activitiesSection(managedActivities) {
   const fallback = { eyebrow: 'Explore. Experience. Enrich.', title: 'Our Activities', description: 'From breathtaking landscapes to thrilling adventures, discover the experiences that make every journey unforgettable.', items: ACTIVITY_CARDS.map(([videoId, iconName, title, description]) => ({ video: activityVideoUrl(videoId), iconName, title, description })) };
@@ -594,7 +599,7 @@ function activitiesSection(managedActivities) {
     const description = item?.description || '';
     const video = item?.video || fallback.items[index % fallback.items.length].video;
     const iconName = item?.iconName || fallback.items[index % fallback.items.length].iconName;
-    return `<button type="button" class="activity-card" data-activity-video="${esc(video)}" data-activity-title="${esc(title)}" aria-label="Watch ${esc(title)}"><div class="activity-media"><video src="${esc(video)}" muted playsinline preload="metadata" aria-hidden="true"></video><span class="activity-play">${icon('play')}</span></div><div class="activity-body"><span class="activity-icon">${icon(iconName)}</span><div><h3>${esc(title)}</h3><p>${esc(description)}</p></div>${icon('arrow-right', 'activity-arrow')}</div></button>`;
+    return `<button type="button" class="activity-card" data-activity-video="${esc(video)}" data-activity-title="${esc(title)}" aria-label="Watch ${esc(title)}"><div class="activity-media"><img src="${esc(activityPosterFromVideo(video) || activityPosterUrl(ACTIVITY_CARDS[index % ACTIVITY_CARDS.length][0]))}" alt="${esc(title)} video preview" loading="lazy" decoding="async" /><span class="activity-play">${icon('play')}</span></div><div class="activity-body"><span class="activity-icon">${icon(iconName)}</span><div><h3>${esc(title)}</h3><p>${esc(description)}</p></div>${icon('arrow-right', 'activity-arrow')}</div></button>`;
   }).join('');
   return `<section class="activities py-16 md:py-20" id="activities" aria-labelledby="activities-title"><div class="container"><div class="section-header"><div><span class="section-kicker normal-case italic text-base font-medium tracking-normal text-brand-purple">${esc(activities.eyebrow)}</span><h2 class="section-title" id="activities-title">${esc(activities.title)}</h2></div><div class="destination-scroll-controls"><button type="button" id="activities-prev" aria-label="Previous activities">${icon('chevron-left')}</button><button type="button" id="activities-next" aria-label="Next activities">${icon('chevron-right')}</button></div></div><p class="section-subtitle">${esc(activities.description)}</p><div class="activities-track" id="activities-track">${cards}</div><div class="mt-9 text-center"><a href="/reviews" class="btn btn-outline-purple">View All Activities ${icon('arrow-right')}</a></div></div></section>`;
 }
@@ -934,7 +939,11 @@ function appendSharedTravelSections() {
 
 function wireRails() {
   const wireRail = (trackSelector, prevSelector, nextSelector, itemSelector, fallback) => {
-    const track = document.querySelector(trackSelector); if (!track) return;
+    const track = document.querySelector(trackSelector);
+    // Shared sections can finish loading asynchronously and call wireRails()
+    // again. Keep one controls/resize subscription per physical rail.
+    if (!track || track.dataset.railControlsReady) return;
+    track.dataset.railControlsReady = 'true';
     const prev = document.querySelector(prevSelector); const next = document.querySelector(nextSelector);
     const step = () => (track.querySelector(itemSelector)?.getBoundingClientRect().width || fallback) + 20;
     prev?.addEventListener('click', () => track._emblaWheelApi ? track._emblaWheelApi.scrollPrev() : track.scrollBy({ left: -step(), behavior: 'smooth' }));
@@ -1010,20 +1019,49 @@ function wireRelatedRecommendationRails() {
   });
 }
 
-// Shared Embla + official wheel-gestures setup for every dynamic card rail.
-// It is intentionally drag-free and uses a short duration so the rail follows
-// touch/trackpad movement without a heavy easing delay.
+// Keep native scrolling available immediately, then code-split Embla until a
+// rail is actually close to view. This removes carousel code from initial
+// route execution without changing its eventual drag/wheel behaviour.
+let emblaModules;
+const loadEmblaModules = () => {
+  if (!emblaModules) emblaModules = Promise.all([import('embla-carousel'), import('embla-carousel-wheel-gestures')])
+    .then(([embla, wheel]) => ({ EmblaCarousel: embla.default, WheelGesturesPlugin: wheel.WheelGesturesPlugin }));
+  return emblaModules;
+};
+
+async function mountEmblaRail(track) {
+  if (!track.isConnected || track.dataset.emblaWheelReady) return;
+  const { EmblaCarousel, WheelGesturesPlugin } = await loadEmblaModules();
+  if (!track.isConnected || track.dataset.emblaWheelReady) return;
+  const viewport = document.createElement('div');
+  viewport.className = 'embla-wheel-viewport';
+  track.before(viewport);
+  viewport.append(track);
+  track.dataset.emblaWheelReady = 'true';
+  track._emblaWheelApi = EmblaCarousel(viewport, { align: 'start', containScroll: 'trimSnaps', dragFree: true, loop: false, duration: 20 }, [
+    WheelGesturesPlugin({ wheelDraggingClass: 'is-wheel-dragging', target: viewport }),
+  ]);
+  const refreshControls = () => track.dispatchEvent(new Event('scroll'));
+  track._emblaWheelApi.on('select', refreshControls);
+  track._emblaWheelApi.on('reInit', refreshControls);
+  if (track._journalScaleUpdate) {
+    track._emblaWheelApi.on('scroll', track._journalScaleUpdate);
+    track._emblaWheelApi.on('select', track._journalScaleUpdate);
+  }
+  refreshControls();
+}
+
 function wireEmblaWheelGestures(trackSelector) {
   document.querySelectorAll(trackSelector).forEach(track => {
-    if (track.dataset.emblaWheelReady) return;
-    const viewport = document.createElement('div');
-    viewport.className = 'embla-wheel-viewport';
-    track.before(viewport);
-    viewport.append(track);
-    track.dataset.emblaWheelReady = 'true';
-    track._emblaWheelApi = EmblaCarousel(viewport, { align: 'start', containScroll: 'trimSnaps', dragFree: true, loop: false, duration: 20 }, [
-      WheelGesturesPlugin({ wheelDraggingClass: 'is-wheel-dragging', target: viewport }),
-    ]);
+    if (track.dataset.emblaWheelReady || track.dataset.emblaWheelScheduled) return;
+    track.dataset.emblaWheelScheduled = 'true';
+    if (!('IntersectionObserver' in window)) { mountEmblaRail(track); return; }
+    const observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      observer.disconnect();
+      mountEmblaRail(track);
+    }, { rootMargin: '500px 0px' });
+    observer.observe(track);
   });
 }
 
@@ -1047,6 +1085,7 @@ function wireJournalScale() {
       });
       cards.forEach(card => { card.style.transform = card === closest ? 'scale(1)' : 'scale(0.9)'; });
     };
+    track._journalScaleUpdate = update;
     // Embla moves the container with translate3d, so its own scroll event is
     // the reliable source while dragging. Keep the native listener as a
     // graceful fallback for any rail that has not been initialised yet.
@@ -1100,9 +1139,9 @@ function destinationTripCard(trip) {
 async function renderDestination(slug) {
   const [item, trips, hotels, blogs] = await Promise.all([
     api(`/destinations/${slug}`),
-    api(`/trips?destination=${slug}`),
-    api('/hotels').catch(() => []),
-    api('/blogs').catch(() => []),
+    api(`/trips?destination=${slug}&view=card`),
+    api('/hotels?view=card').catch(() => []),
+    api('/blogs?view=card').catch(() => []),
   ]);
   setMeta(item.seoTitle || `${item.name} Tour Packages`, item.seoDescription || item.summary);
   const matched = blogs.filter(b => (b.slug || '').includes(slug) || (b.image || '').includes(slug));
@@ -1293,11 +1332,9 @@ function wireHotelExperience() {
 
 async function renderTrip(slug) {
   const trip=await api(`/trips/${slug}`); setMeta(trip.title,trip.summary);
-  const [destination, tripCatalogue, hotelCatalogue, blogCatalogue, siteSettings] = await Promise.all([
+  const [destination, recommendations, siteSettings] = await Promise.all([
     api(`/destinations/${trip.destinationSlug}`).catch(()=>null),
-    api('/trips').catch(()=>[]),
-    api('/hotels').catch(()=>[]),
-    api('/blogs').catch(()=>[]),
+    api(`/recommendations?trip=${encodeURIComponent(trip.slug)}`).catch(()=>({ trips: [], hotels: [], blogs: [] })),
     api('/site-settings').catch(()=>({})),
   ]);
   const itinerary=(trip.itinerary||[]);
@@ -1315,28 +1352,9 @@ async function renderTrip(slug) {
   const includedItems=packageItems(trip.inclusions,inclusionFallbacks,10);
   const excludedItems=packageItems(trip.exclusions,exclusionFallbacks,5);
   const costingRows=Array.isArray(trip.costing)&&trip.costing.length ? trip.costing : [{mode:'Standard sharing / Per person',price:trip.price,oldPrice:trip.oldPrice},{mode:'Double sharing / Per person',price:trip.price,oldPrice:trip.oldPrice},{mode:'Solo upgrade',price:'On request',oldPrice:''}];
-  const recommendationIsManual = trip.recommendationMode === 'manual';
-  const relatedTrips = recommendationIsManual
-    ? orderedSelections(tripCatalogue, trip.relatedTripSlugs).filter(item => item.slug !== trip.slug).slice(0, 4)
-    : (() => {
-        const sameDestination = tripCatalogue.filter(item => item.slug !== trip.slug && item.destinationSlug === trip.destinationSlug);
-        const sharedCategories = new Set((trip.categories || []).filter(category => category !== 'all'));
-        const sameStyle = tripCatalogue.filter(item => item.slug !== trip.slug && item.destinationSlug !== trip.destinationSlug && (item.categories || []).some(category => sharedCategories.has(category)));
-        return [...sameDestination, ...sameStyle].filter((item, index, list) => list.findIndex(candidate => candidate.slug === item.slug) === index).slice(0, 4);
-      })();
-  const relatedHotels = recommendationIsManual
-    ? orderedSelections(hotelCatalogue, trip.recommendedHotelSlugs).slice(0, 4)
-    : (() => {
-        const sameDestination = hotelCatalogue.filter(item => item.destinationSlug === trip.destinationSlug);
-        return (sameDestination.length ? sameDestination : hotelCatalogue.filter(item => item.featured)).slice(0, 4);
-      })();
-  const destinationTerms = [trip.destinationSlug, destination?.name].filter(Boolean).map(value => String(value).toLowerCase());
-  const relatedBlogs = recommendationIsManual
-    ? orderedSelections(blogCatalogue, trip.recommendedBlogSlugs).slice(0, 4)
-    : (() => {
-        const relevant = blogCatalogue.filter(item => destinationTerms.some(term => `${item.title || ''} ${item.excerpt || ''} ${item.category || ''}`.toLowerCase().includes(term)));
-        return (relevant.length ? relevant : blogCatalogue).slice(0, 4);
-      })();
+  const relatedTrips = recommendations?.trips || [];
+  const relatedHotels = recommendations?.hotels || [];
+  const relatedBlogs = recommendations?.blogs || [];
   mount.innerHTML=tripDetailHero(tripImage, trip.title)
   + `<section class="trip-detail-shell"><div class="container trip-detail-layout">
     <main class="trip-detail-main">
