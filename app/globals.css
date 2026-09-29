@@ -2638,13 +2638,12 @@ body:has(.announcement-bar.is-hidden) #header { top: 0 !important; }
   .corporate-reference-offer-grid img { height: 190px; }
 }
 
-/* Local wordmarks keep the company marquee reliable when third-party logo
-   hosts deny hotlinking. Each remains legible at every breakpoint. */
-.corporate-company-marquee .corporate-company-logo { display: inline-flex; width: 172px; height: 58px; flex: 0 0 auto; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid rgba(85, 22, 123, .13); border-radius: 12px; background: #fff; box-shadow: 0 3px 12px rgba(43, 19, 55, .07); }
-.corporate-company-logo i { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border-radius: 9px; background: var(--color-brand-purple); color: #fff; font-family: var(--font-manrope); font-size: 12px; font-style: normal; font-weight: 800; letter-spacing: -.04em; }
-.corporate-company-marquee .corporate-company-logo b { overflow: hidden; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: 15px; font-weight: 800; letter-spacing: -.04em; line-height: 1.1; text-overflow: ellipsis; white-space: nowrap; }
-.corporate-company-logo:nth-child(3n) i { background: #156a53; }.corporate-company-logo:nth-child(4n) i { background: #b46d09; }
-@media (max-width: 560px) { .corporate-company-marquee > div { gap: 16px; }.corporate-company-marquee .corporate-company-logo { width: 150px; height: 50px; padding: 7px 9px; }.corporate-company-logo i { width: 27px; height: 27px; font-size: 11px; }.corporate-company-marquee .corporate-company-logo b { font-size: 13px; } }
+/* Verified company logo artwork, kept in equal cards so the moving social-proof
+   strip remains stable at every width. */
+.corporate-company-marquee .corporate-company-logo { display: grid; width: 172px; height: 58px; flex: 0 0 auto; place-items: center; padding: 8px 12px; border: 1px solid rgba(85, 22, 123, .13); border-radius: 12px; background: #fff; box-shadow: 0 3px 12px rgba(43, 19, 55, .07); }
+.corporate-company-logo img { display: block; width: 100%; height: 100%; max-width: 138px; object-fit: contain; }
+.corporate-company-logo b { color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: 16px; font-weight: 800; letter-spacing: -.045em; line-height: 1.1; text-align: center; }
+@media (max-width: 560px) { .corporate-company-marquee > div { gap: 16px; }.corporate-company-marquee .corporate-company-logo { width: 150px; height: 50px; padding: 7px 9px; }.corporate-company-logo img { max-width: 122px; } }
 
 /* Founder profile — editable through Admin → Site settings. */
 .about-founder { overflow: hidden; padding: 74px 0 78px; background: #d8eeee; clip-path: polygon(0 2.4%, 1.5% 0, 3% 2.4%, 4.5% 0, 6% 2.4%, 7.5% 0, 9% 2.4%, 10.5% 0, 12% 2.4%, 13.5% 0, 15% 2.4%, 16.5% 0, 18% 2.4%, 19.5% 0, 21% 2.4%, 22.5% 0, 24% 2.4%, 25.5% 0, 27% 2.4%, 28.5% 0, 30% 2.4%, 31.5% 0, 33% 2.4%, 34.5% 0, 36% 2.4%, 37.5% 0, 39% 2.4%, 40.5% 0, 42% 2.4%, 43.5% 0, 45% 2.4%, 46.5% 0, 48% 2.4%, 49.5% 0, 51% 2.4%, 52.5% 0, 54% 2.4%, 55.5% 0, 57% 2.4%, 58.5% 0, 60% 2.4%, 61.5% 0, 63% 2.4%, 64.5% 0, 66% 2.4%, 67.5% 0, 69% 2.4%, 70.5% 0, 72% 2.4%, 73.5% 0, 75% 2.4%, 76.5% 0, 78% 2.4%, 79.5% 0, 81% 2.4%, 82.5% 0, 84% 2.4%, 85.5% 0, 87% 2.4%, 88.5% 0, 90% 2.4%, 91.5% 0, 93% 2.4%, 94.5% 0, 96% 2.4%, 97.5% 0, 100% 2.4%, 100% 97.6%, 98.5% 100%, 97% 97.6%, 95.5% 100%, 94% 97.6%, 92.5% 100%, 91% 97.6%, 89.5% 100%, 88% 97.6%, 86.5% 100%, 85% 97.6%, 83.5% 100%, 82% 97.6%, 80.5% 100%, 79% 97.6%, 77.5% 100%, 76% 97.6%, 74.5% 100%, 73% 97.6%, 71.5% 100%, 70% 97.6%, 68.5% 100%, 67% 97.6%, 65.5% 100%, 64% 97.6%, 62.5% 100%, 61% 97.6%, 59.5% 100%, 58% 97.6%, 56.5% 100%, 55% 97.6%, 53.5% 100%, 52% 97.6%, 50.5% 100%, 49% 97.6%, 47.5% 100%, 46% 97.6%, 44.5% 100%, 43% 97.6%, 41.5% 100%, 40% 97.6%, 38.5% 100%, 37% 97.6%, 35.5% 100%, 34% 97.6%, 32.5% 100%, 31% 97.6%, 29.5% 100%, 28% 97.6%, 26.5% 100%, 25% 97.6%, 23.5% 100%, 22% 97.6%, 20.5% 100%, 19% 97.6%, 17.5% 100%, 16% 97.6%, 14.5% 100%, 13% 97.6%, 11.5% 100%, 10% 97.6%, 8.5% 100%, 7% 97.6%, 5.5% 100%, 4% 97.6%, 2.5% 100%, 1% 97.6%, 0 100%); }
@@ -2656,28 +2655,55 @@ body:has(.announcement-bar.is-hidden) #header { top: 0 !important; }
 
 .about-team { padding: 74px 0 82px; background: #fff; }.about-team h2 { margin: 0 0 30px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(31px, 2.8vw, 42px); font-weight: 800; letter-spacing: -.05em; line-height: 1.1; }.about-team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }.about-team-card { min-width: 0; }.about-team-card img { display: block; width: 100%; aspect-ratio: 1 / 1; border-radius: 10px; object-fit: cover; background: #e7e1ea; }.about-team-card h3 { margin: 17px 0 5px; color: var(--color-brand-deep); font-family: var(--font-manrope); font-size: clamp(20px, 1.7vw, 28px); font-weight: 800; letter-spacing: -.04em; line-height: 1.15; }.about-team-card p { margin: 0; color: #312a32; font-size: 16px; line-height: 1.4; }@media (max-width: 900px) { .about-team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } }@media (max-width: 560px) { .about-team { padding: 54px 0 60px; }.about-team h2 { margin-bottom: 23px; font-size: 30px; }.about-team-grid { grid-template-columns: 1fr; gap: 27px; }.about-team-card img { aspect-ratio: 1.15 / 1; }.about-team-card h3 { margin-top: 13px; font-size: 24px; }.about-team-card p { font-size: 16px; } }
 
-/* Fresh Group Trips menu: a compact, single-column navigation card. */
-@media (min-width: 1100px) {
+/* Group Trips: hover/focus opens a compact two-column chooser; selecting a
+   region replaces it with that region's destination links. */
+/* This remains outside a viewport breakpoint: a desktop browser can be
+   zoomed or narrow, and pointer hover should still reveal the menu. */
+#header-nav .nav-dropdown:hover .nav-group-menu { visibility: visible !important; opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto; }
   #header-nav .nav-group-menu {
     position: fixed !important;
     top: var(--group-menu-top, 152px) !important;
     left: var(--group-menu-left, 16px) !important;
-    width: min(360px, calc(100vw - 32px)) !important;
+    width: min(460px, calc(100vw - 32px)) !important;
     max-width: calc(100vw - 32px) !important;
     grid-template-columns: 1fr !important;
-    gap: 4px !important;
-    padding: 8px !important;
+    gap: 0 !important;
+    padding: 10px !important;
     border-color: rgba(85, 22, 123, .14) !important;
     border-radius: 18px !important;
     box-shadow: 0 18px 42px rgba(35, 10, 50, .18) !important;
     translate: none !important;
   }
-  #header-nav .nav-group-menu > a {
-    min-height: 66px;
-    gap: 13px;
-    padding: 10px 12px;
+  #header-nav .nav-group-menu [hidden] { display: none !important; }
+  #header-nav .nav-group-panel[data-group-panel="overview"] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  #header-nav .nav-group-panel:not([hidden]) { display: grid; gap: 6px; }
+  #header-nav .nav-group-parent {
+    display: grid !important;
+    grid-template-columns: 24px minmax(0, 1fr) 16px !important;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 86px;
+    padding: 12px;
+    border: 0;
+    border-radius: 13px;
+    background: transparent;
+    color: var(--color-brand-ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background .18s ease, color .18s ease;
   }
-  #header-nav .nav-group-menu > a > svg { width: 22px; height: 22px; }
-  #header-nav .nav-group-menu > a strong { font-size: 15px; }
-  #header-nav .nav-group-menu > a small { margin-top: 2px; font-size: 12px; }
-}
+  #header-nav .nav-group-parent:hover, #header-nav .nav-group-parent:focus-visible { background: rgba(85, 22, 123, .07); color: var(--color-brand-purple); outline: none; }
+  #header-nav .nav-group-parent > svg { width: 22px; height: 22px; color: var(--color-brand-purple); }
+  #header-nav .nav-group-parent > span { display: grid !important; gap: 3px; min-width: 0; }
+  #header-nav .nav-group-parent strong { font-size: 15px; line-height: 1.2; }
+  #header-nav .nav-group-parent small { color: #697386; font-size: 12px; font-weight: 600; line-height: 1.35; }
+  #header-nav .nav-group-parent .nav-group-parent-arrow { width: 16px; height: 16px; justify-self: end; color: #7b6c82; }
+  #header-nav .nav-group-back { display: inline-flex; min-height: 36px; align-items: center; gap: 4px; justify-self: start; border: 0; border-radius: 9px; background: transparent; padding: 6px 8px; color: var(--color-brand-purple); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+  #header-nav .nav-group-back:hover, #header-nav .nav-group-back:focus-visible { background: rgba(85, 22, 123, .07); outline: none; }
+  #header-nav .nav-group-back svg { width: 16px; height: 16px; }
+  #header-nav .nav-group-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+  #header-nav .nav-group-links a { display: flex; min-height: 40px; align-items: center; border-radius: 10px; padding: 8px 10px; font-size: 13px; font-weight: 750; }
+  #header-nav .nav-group-view-all { display: flex !important; min-height: 40px; align-items: center; justify-content: space-between; gap: 8px; margin-top: 3px; border-top: 1px solid rgba(85, 22, 123, .1); border-radius: 0; padding: 11px 10px 3px; color: var(--color-brand-purple); font-size: 13px; font-weight: 800; }
+  #header-nav .nav-group-view-all svg { width: 16px; height: 16px; }

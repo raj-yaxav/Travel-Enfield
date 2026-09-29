@@ -8,6 +8,17 @@ export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.travelenfield.in'),
   title: { default: 'TravelEnfield: Group Trips & Custom Tour Packages', template: '%s | TravelEnfield' },
   description: 'Explore curated group trips, fixed departures and customised holidays with TravelEnfield.',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   icons: {
     icon: [{ url: '/favicon.png', type: 'image/png', sizes: '512x512' }],
     apple: [{ url: '/apple-touch-icon.png', type: 'image/png', sizes: '180x180' }],

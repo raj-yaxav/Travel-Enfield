@@ -148,13 +148,47 @@ const positionGroupTripsMenu = () => {
   const trigger = groupTripsDropdown?.querySelector('.nav-dropdown-toggle');
   if (!menu || !trigger || !window.matchMedia('(min-width: 1100px)').matches) return;
   const triggerRect = trigger.getBoundingClientRect();
-  const width = Math.min(360, window.innerWidth - 32);
+  const width = Math.min(440, window.innerWidth - 32);
   const left = Math.max(16, Math.min(triggerRect.left, window.innerWidth - width - 16));
   menu.style.setProperty('--group-menu-left', `${left}px`);
   menu.style.setProperty('--group-menu-top', `${triggerRect.bottom - 2}px`);
 };
 groupTripsDropdown?.querySelector('.nav-dropdown-toggle')?.addEventListener('click', () => requestAnimationFrame(positionGroupTripsMenu));
 window.addEventListener('resize', () => { if (groupTripsDropdown?.classList.contains('open')) positionGroupTripsMenu(); }, { passive: true });
+const groupPanels = [...(groupTripsDropdown?.querySelectorAll('[data-group-panel]') || [])];
+const showGroupPanel = name => {
+  groupPanels.forEach(panel => {
+    // Keep the India/International parent choices visible while the selected
+    // region's destination links expand underneath them.
+    panel.hidden = panel.dataset.groupPanel !== 'overview' && panel.dataset.groupPanel !== name;
+  });
+  groupTripsDropdown?.querySelectorAll('[data-group-panel-trigger]').forEach(trigger => {
+    trigger.setAttribute('aria-expanded', String(trigger.dataset.groupPanelTrigger === name));
+  });
+};
+groupTripsDropdown?.querySelector('.nav-dropdown-toggle')?.addEventListener('click', () => showGroupPanel('overview'));
+groupTripsDropdown?.querySelectorAll('[data-group-panel-trigger]').forEach(trigger => {
+  const openPanel = () => showGroupPanel(trigger.dataset.groupPanelTrigger);
+  trigger.addEventListener('click', openPanel);
+  trigger.addEventListener('mouseenter', openPanel);
+  trigger.addEventListener('focus', openPanel);
+});
+groupTripsDropdown?.querySelectorAll('[data-group-panel-back]').forEach(button => button.addEventListener('click', () => showGroupPanel('overview')));
+let groupMenuLeaveTimer;
+groupTripsDropdown?.addEventListener('mouseenter', () => {
+  window.clearTimeout(groupMenuLeaveTimer);
+  dropdowns.forEach(item => { if (item !== groupTripsDropdown) item.classList.remove('open'); });
+  groupTripsDropdown.classList.add('open');
+  groupTripsDropdown.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'true');
+  showGroupPanel('overview');
+  requestAnimationFrame(positionGroupTripsMenu);
+});
+groupTripsDropdown?.addEventListener('mouseleave', () => {
+  groupMenuLeaveTimer = window.setTimeout(() => {
+    groupTripsDropdown.classList.remove('open');
+    groupTripsDropdown.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+  }, 150);
+});
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
