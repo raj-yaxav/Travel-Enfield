@@ -440,20 +440,64 @@ function wireFilters() {
   input?.addEventListener('input', update); sort?.addEventListener('change', update); update();
 }
 
+const TRAVEL_STYLE_LISTINGS = {
+  'family-vacations': {
+    name: 'Travel styles', eyebrow: 'Made for togetherness', title: 'Family Vacations',
+    description: 'Easy-paced holidays with comfortable stays, shared experiences and room for every generation to enjoy the journey.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/kerala.jpg',
+    destinations: ['kerala', 'manali', 'bali'],
+  },
+  'india-escapes': {
+    name: 'Travel styles', eyebrow: 'Closer than you think', title: 'India Escapes',
+    description: 'From Himalayan roads to calm backwaters, find a thoughtfully paced Indian escape for every kind of traveller.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/meghalaya.jpg',
+    destinations: ['ladakh', 'spiti', 'manali', 'meghalaya', 'kerala', 'kashmir'],
+  },
+  'world-journeys': {
+    name: 'Travel styles', eyebrow: 'Go a little further', title: 'World Journeys',
+    description: 'Well-planned international holidays with local character, reliable stays and every important detail handled.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/bali.jpg',
+    destinations: ['bali', 'thailand', 'vietnam', 'dubai', 'maldives', 'nepal'],
+  },
+  'romance-honeymoons': {
+    name: 'Travel styles', eyebrow: 'Just the two of you', title: 'Romance & Honeymoons',
+    description: 'Slow mornings, memorable stays and beautiful settings—planned around the moments you want to share.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/bali.jpg',
+    destinations: ['bali', 'maldives', 'kerala', 'manali'],
+  },
+  'short-breaks-staycations': {
+    name: 'Travel styles', eyebrow: 'Press pause', title: 'Short Breaks & Staycations',
+    description: 'Quick, refreshing getaways that fit neatly into a long weekend without compromising on the experience.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/manali.jpg',
+    destinations: ['manali', 'kerala', 'meghalaya', 'kashmir'],
+  },
+  'spiritual-journeys': {
+    name: 'Travel styles', eyebrow: 'Travel with intention', title: 'Spiritual Journeys',
+    description: 'Meaningful routes through serene landscapes, sacred places and unhurried moments of reflection.',
+    image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/ladakh.jpg',
+    destinations: ['ladakh', 'kerala', 'meghalaya', 'kashmir'],
+  },
+};
+
 async function renderListing(slug) {
-  const map = { 'trips':'all','upcoming-trips':'upcoming','domestic-trips':'domestic','international-trips':'international','weekend-trips':'weekend','deals':'deals','bike-trips':'bike-trips','backpacking-trips':'backpacking-trips','trekking-trips':'trekking-trips','announcement':'all' };
+  const map = { 'trips':'all','upcoming-trips':'upcoming','domestic-trips':'domestic','international-trips':'international','weekend-trips':'weekend','deals':'deals','bike-trips':'bike-trips','backpacking-trips':'backpacking-trips','trekking-trips':'trekking-trips','announcement':'all', ...Object.fromEntries(Object.keys(TRAVEL_STYLE_LISTINGS).map(key => [key, 'all'])) };
   const isAnnouncementLanding = slug === 'announcement';
+  const travelStyle = TRAVEL_STYLE_LISTINGS[slug];
   const tripCategory = map[slug];
   const [categoryResponse, loadedTrips, blogs, destinations, siteSettings] = await Promise.all([
-    isAnnouncementLanding ? Promise.resolve(null) : api(`/categories/${slug}`).catch(() => ({ name:'Trips', title:'Explore all trips', description:'Compare curated domestic and international journeys.' })),
+    (isAnnouncementLanding || travelStyle) ? Promise.resolve(null) : api(`/categories/${slug}`).catch(() => ({ name:'Trips', title:'Explore all trips', description:'Compare curated domestic and international journeys.' })),
     api(`/trips${tripCategory && tripCategory !== 'all' ? `?category=${encodeURIComponent(tripCategory)}` : ''}`),
     api('/blogs').catch(() => []),
     api('/destinations').catch(() => []),
     isAnnouncementLanding ? api('/site-settings').catch(() => ({})) : Promise.resolve({}),
   ]);
   const announcementDefaults = { name: 'Special offer', eyebrow: 'Limited-time offer', title: 'Explore India', description: 'From Himalayan roads to tropical backwaters, discover curated journeys closer to home.', image: 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/destinations/ladakh.jpg', tripSlugs: [] };
-  const category = isAnnouncementLanding ? { ...announcementDefaults, ...(siteSettings?.announcementLanding || {}) } : categoryResponse;
+  const category = isAnnouncementLanding ? { ...announcementDefaults, ...(siteSettings?.announcementLanding || {}) } : (travelStyle || categoryResponse);
   let trips = loadedTrips || []; if(slug==='deals') trips=trips.filter(t=>t.discount);
+  if (travelStyle?.destinations?.length) {
+    const matchedTrips = trips.filter(trip => travelStyle.destinations.includes(String(trip.destinationSlug || '').toLowerCase()));
+    if (matchedTrips.length) trips = matchedTrips;
+  }
   if (isAnnouncementLanding && Array.isArray(category.tripSlugs) && category.tripSlugs.length) trips = orderedSelections(trips, category.tripSlugs);
   const destinationsList=[...new Set(trips.map(t=>t.destinationSlug).filter(Boolean))];
   setMeta(category.title, category.description);
@@ -889,6 +933,21 @@ function offersSliderSection() {
   return `<section class="promo-banner shared-campaigns bg-white py-10 md:py-16" aria-label="TravelEnfield travel categories"><div class="container"><div class="campaign-slider campaign-image-slider relative aspect-[4/1] w-full overflow-hidden rounded-2xl bg-brand-deep shadow-2xl md:aspect-[16/3] md:rounded-3xl" aria-roledescription="carousel" aria-label="TravelEnfield travel categories"><div class="campaign-track flex transition-transform duration-500 ease-out"><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/domestic-trips" aria-label="1 of 3: Explore Himalayan group adventures"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-himalayan-adventures.png" alt="Himalayan group adventures across Ladakh and Spiti" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/international-trips" aria-label="2 of 3: Explore international escapes"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-world-escapes.png" alt="International escapes across Bali, Thailand and Europe" loading="lazy" draggable="false"></a><a class="campaign-slide campaign-image-slide relative min-w-full overflow-hidden" href="/hotels" aria-label="3 of 3: Explore handpicked stays"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/campaigns/travelenfield-handpicked-stays.png" alt="Handpicked mountain resorts, pool villas and heritage stays" loading="lazy" draggable="false"></a></div></div></div></section>`;
 }
 
+const companyPartners = [
+  ['Aviator Consulting', 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/companies/aviator-consulting.svg'],
+  ['HighLevel', 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/companies/highlevel.svg'],
+  ['CashKaro', 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/companies/cash-karo.svg'],
+  ['Estailo', 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/companies/estailo.svg'],
+  ['RoadGods', 'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/companies/roadgods.svg'],
+];
+
+function companiesTravelledSection() {
+  const logos = [...companyPartners, ...companyPartners]
+    .map(([name, source]) => `<span class="corporate-company-logo"><img src="${source}" alt="${esc(name)} logo" loading="lazy" decoding="async"></span>`)
+    .join('');
+  return `<section class="corporate-reference-companies companies-travelled" aria-labelledby="companies-travelled-title"><div class="container"><h2 id="companies-travelled-title">Companies Travelled with Us</h2><div class="corporate-company-marquee" aria-label="Companies travelled with TravelEnfield"><div>${logos}</div></div></div></section>`;
+}
+
 function wireCampaignSlider(root = mount) {
   const slider = root.querySelector('.campaign-slider'); if (!slider || slider.dataset.ready) return;
   slider.dataset.ready = 'true';
@@ -914,6 +973,10 @@ function appendSharedTravelSections() {
   // Activities are editorial content, so they should appear on every public
   // content route. Keep account screens intentionally focused on their task.
   const accountRoute = ['login', 'signup', 'profile'].includes(first);
+  const detailRoute = routeParts.length === 2 && ['trips', 'destinations', 'hotels', 'blog'].includes(first);
+  if (detailRoute && !mount.querySelector('.companies-travelled')) {
+    mount.insertAdjacentHTML('beforeend', companiesTravelledSection());
+  }
   if (!accountRoute && !mount.querySelector('.activities')) {
     mount.insertAdjacentHTML('beforeend', activitiesSection());
     const routeAtRequest = location.pathname;
@@ -1341,7 +1404,9 @@ async function renderTrip(slug) {
   ]);
   const itinerary=(trip.itinerary||[]);
   const tripImage=trip.image||'https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/hero.jpg';
-  const waLink=`https://wa.me/919310656044?text=${encodeURIComponent(`Hi TravelEnfield! I am interested in the ${trip.title} trip.`)}`;
+  const whatsappNumber = '918929836726';
+  const whatsappMessage = (departure, travellers = 1) => `Hi TravelEnfield! I would like to enquire about *${trip.title}*.\n\nPreferred departure: ${departure}\nTravellers: ${travellers}\n\nPlease share availability and booking details.`;
+  const waLink=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage(trip.showDates === false ? 'Flexible dates' : (trip.dates?.[0] || 'Flexible dates')))}`;
   const aboutCopy=[trip.summary,`${trip.title} runs for ${trip.duration} with a group of ${trip.groupSize}. Every day is paced so you experience the place instead of just ticking it off — transfers, stays and the experiences listed in the inclusions are handled end to end.`,`The group meets at ${trip.pickup} and moves together with a dedicated trip captain throughout. Ideal for friends, couples and solo travellers, this itinerary is built to feel smooth, safe and memorable from start to finish.`];
   const destLabel=(trip.destinationSlug||trip.title).split('-').map(word=>word.charAt(0).toUpperCase()+word.slice(1)).join(' ');
   const standardNotes=['Carry a valid government photo ID and keep a digital backup handy.','Please arrive at the reporting point before the scheduled departure time.','Keep personal medicines, prescriptions and a basic first-aid kit with you.','Weather, road conditions and local restrictions can require itinerary changes.','Respect local culture, customs, photography rules and environmental guidelines.','Use sturdy footwear and layers suitable for changing mountain or coastal weather.','Keep valuables secure; TravelEnfield is not responsible for unattended belongings.','Follow your trip captain’s safety instructions during transfers and activities.','Alcohol or unsafe behaviour during the trip may lead to removal from activities.','Mobile connectivity can be limited in remote areas; share your itinerary with family before departure.','Any additional activity not listed in the inclusions is payable directly by the traveller.','Room allocation is on the booked sharing basis and is subject to availability.','Please carry reusable water bottles and avoid single-use plastic where possible.','Trip timings are estimates and may shift due to traffic, weather or operational needs.','Contact the support team promptly if you need help before or during the trip.'];
@@ -1388,10 +1453,11 @@ async function renderTrip(slug) {
       ` : `<div class="trip-dates-head"><h4>${icon('calendar-days')} Dates available</h4></div><p class="mt-3 text-sm font-semibold text-brand-purple">${esc(datesAvailableMessage)}</p>`}</div>
       <div class="trip-booking-count"><h4>${icon('users')} No. of Travellers</h4><div class="count-stepper"><button type="button" data-count-minus aria-label="Fewer travellers">−</button><span data-count>1</span><button type="button" data-count-plus aria-label="More travellers">+</button></div></div>
       <button type="button" class="btn btn-primary btn-block" data-book-now>${icon('send')} Enquiry Now</button>
-      <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener"><img src="/socialmedia/whatsapp.svg" alt="" width="18" height="18">WhatsApp</a></div>
+      <div class="trip-doubt-row"><span>Any Doubt?</span><a class="trip-whatsapp" href="${waLink}" target="_blank" rel="noopener"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/whatsapp.svg" alt="" width="18" height="18">WhatsApp</a></div>
     </div></aside>
   </div></section>
-  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Book Now</button></div>`
+  <a class="trip-floating-whatsapp" href="${waLink}" target="_blank" rel="noopener" aria-label="Chat about ${esc(trip.title)} on WhatsApp"><img src="https://res.cloudinary.com/rgw1moxc/image/upload/travelenfield/socialmedia/whatsapp.svg" alt="" width="26" height="26"></a>
+  <div class="trip-mobile-cta"><div class="trip-mobile-price"><small>Trip Starts From</small><strong>${money(trip.price)}</strong></div><button type="button" class="trip-mobile-book" data-book-now>${icon('send')} Enquire Now</button></div>`
   + tripRecommendationsSection({ trips: relatedTrips, hotels: relatedHotels, blogs: relatedBlogs })
   + tripTrendingDestinations()
   + reviewsSection(reviewsForTrips([trip]))
@@ -1418,7 +1484,11 @@ function wireTripExperience(trip){
   window.addEventListener('resize',syncTabShadow,{passive:true});
   const countEl=document.querySelector('[data-count]');let count=1;
   document.querySelectorAll('[data-count-minus],[data-count-plus]').forEach(btn=>btn.addEventListener('click',()=>{count=btn.dataset.countMinus!==undefined?Math.max(1,count-1):Math.min(30,count+1);if(countEl)countEl.textContent=count;}));
-  document.querySelectorAll('[data-book-now]').forEach(btn=>btn.addEventListener('click',()=>openDepartureForm(trip,trip.showDates === false ? 'your preferred date' : (trip.dates?.[0]||'your preferred dates'),btn,count)));
+  document.querySelectorAll('[data-book-now]').forEach(btn=>btn.addEventListener('click',()=>{
+    const departure = trip.showDates === false ? 'Flexible dates' : (document.querySelector('.trip-date-row.selected')?.dataset.departure || trip.dates?.[0] || 'Flexible dates');
+    const message = `Hi TravelEnfield! I would like to enquire about *${trip.title}*.\n\nPreferred departure: ${departure}\nTravellers: ${count}\n\nPlease share availability and booking details.`;
+    window.location.assign(`https://wa.me/918929836726?text=${encodeURIComponent(message)}`);
+  }));
   document.querySelectorAll('[data-departure]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.trip-date-row').forEach(row=>row.classList.toggle('selected',row===button));openDepartureForm(trip,button.dataset.departure,button,count);}));
   const monthSelect=document.querySelector('[data-month-select]'),dateRows=[...document.querySelectorAll('.trip-date-row')];
   const applyMonthFilter=()=>{const month=monthSelect?.value;dateRows.forEach(row=>row.classList.toggle('hidden',Boolean(month)&&row.dataset.month!==month));};
@@ -1531,19 +1601,10 @@ function renderCorporateTours() {
   // section on the same optimized source as the rest of the public media.
   const gallery = ['g1','g2','g3','g4','g5','g6','g7','g8','g9','g10'];
   const galleryImage = photo => `https://res.cloudinary.com/rgw1moxc/image/upload/f_auto,q_auto,w_720,dpr_auto/travelenfield/about/${photo}.jpg`;
-  const companyPartners = [
-    ['Aviator Consulting'],
-    ['HighLevel'],
-    ['CashKaro', '/images/corporate-partners/id0g.svg'],
-    ['Estailo'],
-    ['Diva'],
-    ['RoadGods', '/images/corporate-partners/roadgods.svg'],
-  ];
-  const companyLogos = [...companyPartners, ...companyPartners].map(([name, source]) => `<span class="corporate-company-logo">${source ? `<img src="${source}" alt="${esc(name)} logo" loading="lazy" decoding="async">` : `<b>${esc(name)}</b>`}</span>`).join('');
   mount.innerHTML = `<main class="corporate-reference-page">
     <section class="corporate-reference-hero" aria-label="Corporate team travel"><picture><source media="(max-width: 560px)" srcset="/hero-coorporate-mobile.png"><img src="/hero-corporate.png" alt="TravelEnfield corporate tours" fetchpriority="high"></picture><a href="/custom-trip" class="corporate-reference-cta">Enquire Now</a></section>
     <section class="corporate-reference-trust" aria-label="TravelEnfield community proof"><div class="container"><div><img src="/socialmedia/instagram.svg" alt="Instagram"><b>573K+ Community</b></div><div><img src="/socialmedia/google.svg" alt="Google"><b>${icon('star')} 4.9</b><span>(8.5K+ Reviews)</span></div><div><img src="/socialmedia/travellers.svg" alt="Travellers"><b>35K+ Travellers</b></div></div></section>
-    <section class="corporate-reference-companies"><div class="container"><h2>Companies Travelled with Us</h2><div class="corporate-company-marquee" aria-label="Company partners"><div>${companyLogos}</div></div></div></section>
+    ${companiesTravelledSection()}
     <section class="corporate-reference-offers"><div class="container"><h2>What we Offer</h2><div class="corporate-reference-offer-grid">${offerItems.map(([title, copy, image]) => `<article><img src="${image}" alt="${esc(title)}" loading="lazy"><div><h3>${esc(title)}</h3><p>${esc(copy)}</p></div></article>`).join('')}</div></div></section>
     ${list('Domestic Destinations', destinationLists.domestic)}
     ${list('International Destinations', destinationLists.international)}
@@ -1759,7 +1820,7 @@ async function renderProfile(){
 
 function renderRouteLoader(){mount.innerHTML=`<div class="page-loader"><span aria-hidden="true"></span><p>Preparing your next adventure…</p></div>`;}
 
-async function router(){try{renderRouteLoader();activateIcons();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips','announcement'].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='corporate-tours')renderCorporateTours();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(first==='reviews')renderReviewsPage();else if(first==='about-us')await renderAboutPage();else if(['contact-us','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();wireDeferredVideos(mount);}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);activateIcons();}finally{hideRouteOverlay();}}
+async function router(){try{renderRouteLoader();activateIcons();const parts=location.pathname.split('/').filter(Boolean);const first=parts[0]||'';if(['trips','upcoming-trips','domestic-trips','international-trips','weekend-trips','deals','backpacking-trips','trekking-trips','bike-trips','announcement',...Object.keys(TRAVEL_STYLE_LISTINGS)].includes(first)&&parts.length===1)await renderListing(first);else if(first==='trips'&&parts[1])await renderTrip(parts[1]);else if(first==='destinations'&&parts[1])await renderDestination(parts[1]);else if(first==='hotels'&&parts.length===1)await renderHotels();else if(first==='hotels'&&parts[1])await renderHotel(parts[1]);else if(first==='custom-trip')await renderCustom();else if(first==='corporate-tours')renderCorporateTours();else if(first==='blog'&&!parts[1])await renderBlogs();else if(first==='blog'&&parts[1])await renderBlog(parts[1]);else if(first==='reviews')renderReviewsPage();else if(first==='about-us')await renderAboutPage();else if(['contact-us','faq','privacy-policy','terms-and-conditions','cancellation-policy'].includes(first))await renderPage(first);else if(first==='profile')await renderProfile();else if(['login','signup'].includes(first))renderAuth(first);else throw new Error('Page not found');appendSharedTravelSections();applyTailwindStyles(mount);activateIcons();wireDeferredVideos(mount);}catch(error){setMeta('Page not found','The requested page could not be loaded.');mount.innerHTML=`<section class="page-shell"><div class="container empty-state"><h1>${esc(error.message)}</h1><p>Return to the homepage or explore available trips.</p><a class="btn btn-primary" href="/">Go home</a></div></section>`;applyTailwindStyles(mount);activateIcons();}finally{hideRouteOverlay();}}
 
 // Shared chrome is visible while route data loads, so render its icons before
 // awaiting API calls. Dynamic page icons are rendered again after each route.

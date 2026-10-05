@@ -28,6 +28,12 @@ const listingMetadata = {
   'bike-trips': ['Bike Trip Packages', 'Explore guided bike trips with scenic routes, experienced trip captains and practical travel support.'],
   'backpacking-trips': ['Backpacking Trip Packages', 'Join social backpacking trips with curated stays, flexible experiences and a welcoming travel community.'],
   'trekking-trips': ['Trekking Trip Packages', 'Discover guided trekking trips with route planning, experienced support and unforgettable mountain experiences.'],
+  'family-vacations': ['Family Vacation Packages', 'Plan comfortable family holidays with thoughtful stays, shared experiences and flexible itineraries from TravelEnfield.'],
+  'india-escapes': ['India Escape Packages', 'Explore curated India escapes across mountains, coastlines and culture-rich destinations with TravelEnfield.'],
+  'world-journeys': ['International Holiday Packages', 'Discover curated international holidays with practical itineraries, memorable stays and expert support.'],
+  'romance-honeymoons': ['Romantic Getaways & Honeymoons', 'Plan a beautiful honeymoon or romantic escape with memorable stays and thoughtful travel details.'],
+  'short-breaks-staycations': ['Short Breaks & Staycations', 'Find refreshing short breaks, staycations and quick getaways designed for your next days off.'],
+  'spiritual-journeys': ['Spiritual Journey Packages', 'Explore meaningful spiritual journeys with serene routes, thoughtful planning and unhurried travel.'],
   deals: ['Travel Deals & Offers', 'Browse current TravelEnfield offers on group departures, weekend trips and curated holidays.'],
   destinations: ['Travel Destinations', 'Explore destination guides, tour packages, best times to visit and curated trips across India and beyond.'],
   hotels: ['Handpicked Hotels & Stays', 'Browse handpicked hotels and stays for memorable trips, from mountain escapes to beachside holidays.'],
@@ -186,7 +192,7 @@ async function structuredDataFor(slug) {
 export default async function ContentPage({ params }) {
   const { slug = [] } = await params;
   const [section, itemSlug] = slug;
-  const publicSingleRoutes = new Set(['trips', 'upcoming-trips', 'domestic-trips', 'international-trips', 'weekend-trips', 'deals', 'backpacking-trips', 'trekking-trips', 'bike-trips', 'destinations', 'hotels', 'custom-trip', 'corporate-tours', 'blog', 'reviews', 'about-us', 'contact-us', 'faq', 'privacy-policy', 'terms-and-conditions', 'cancellation-policy', 'profile', 'login', 'signup', 'announcement']);
+  const publicSingleRoutes = new Set(['trips', 'upcoming-trips', 'domestic-trips', 'international-trips', 'weekend-trips', 'deals', 'backpacking-trips', 'trekking-trips', 'bike-trips', 'family-vacations', 'india-escapes', 'world-journeys', 'romance-honeymoons', 'short-breaks-staycations', 'spiritual-journeys', 'destinations', 'hotels', 'custom-trip', 'corporate-tours', 'blog', 'reviews', 'about-us', 'contact-us', 'faq', 'privacy-policy', 'terms-and-conditions', 'cancellation-policy', 'profile', 'login', 'signup', 'announcement']);
   const detailRoute = ['trips', 'destinations', 'hotels', 'blog'].includes(section) && Boolean(itemSlug) && slug.length === 2;
   if ((!detailRoute && (slug.length !== 1 || !publicSingleRoutes.has(section))) || (['trips', 'destinations', 'hotels', 'blog'].includes(section) && !detailRoute)) notFound();
   const schemas = await structuredDataFor(slug);

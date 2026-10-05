@@ -175,7 +175,7 @@
   .corporate-destination-links::-webkit-scrollbar { display: none; }
   .corporate-destination-card { flex: 0 0 clamp(280px, 24vw, 355px); min-height: 258px !important; scroll-snap-align: start; }
   .corporate-company-marquee > div { width: max-content; }
-  .corporate-company-marquee img { display: block; width: 132px; height: 54px; flex: 0 0 auto; object-fit: contain; filter: grayscale(1); opacity: .85; }
+  .corporate-company-marquee img { display: block; width: 132px; height: 54px; flex: 0 0 auto; object-fit: contain; opacity: .85; }
   .corporate-reference-reviews .container { width: 100%; max-width: none; padding-right: 0; }
   .corporate-reference-review-grid { display: grid !important; grid-auto-flow: column; grid-auto-columns: min(38vw, 550px); grid-template-columns: none !important; gap: 20px; overflow-x: auto; padding: 2px 28px 18px 0; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .corporate-reference-review-grid::-webkit-scrollbar { display: none; }
@@ -1103,6 +1103,8 @@ button.bt-calendar-day { cursor: pointer; }
 .trip-mobile-price { @apply grid min-w-0 leading-tight; flex: 1 1 0; }
 .trip-mobile-price small { @apply whitespace-nowrap text-[9px] font-extrabold uppercase tracking-wide text-gray-500; }
 .trip-mobile-price strong { @apply whitespace-nowrap font-heading text-[17px] font-extrabold text-brand-purple; }
+.trip-floating-whatsapp { @apply fixed bottom-24 right-4 z-[70] hidden size-12 place-items-center rounded-full border border-[#25d366]/35 bg-[#eefcf4] shadow-[0_10px_24px_rgba(18,140,75,.25)] transition hover:scale-105 hover:bg-[#dcf8e6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#128c4b]; }
+.trip-floating-whatsapp img { @apply size-[26px] object-contain; }
 .trip-mobile-book { @apply inline-flex min-h-[48px] min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-full bg-brand-yellow px-4 text-[15px] font-extrabold text-brand-deep shadow-[0_8px_18px_rgba(251,207,8,.35)] transition active:scale-[.98]; flex-basis: 0; }
 .trip-mobile-book svg { @apply size-[18px] shrink-0; }
 
@@ -1128,6 +1130,7 @@ button.bt-calendar-day { cursor: pointer; }
 @media (max-width: 1023px) {
   .trip-enquiry-sticky { @apply hidden; }
   .trip-mobile-cta { @apply flex; }
+  .trip-floating-whatsapp { @apply grid; bottom: calc(164px + env(safe-area-inset-bottom)); }
   body:has(.trip-mobile-cta) { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
   body:has(.trip-mobile-cta) .footer { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
 }
@@ -1138,6 +1141,7 @@ button.bt-calendar-day { cursor: pointer; }
      navigation would duplicate the primary action and consume screen space. */
   body:has(.trip-detail-shell) .mobile-bottom-nav { display: none; }
   body:has(.trip-detail-shell) .trip-mobile-cta { bottom: 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  body:has(.trip-detail-shell) .trip-floating-whatsapp { bottom: calc(92px + env(safe-area-inset-bottom)); }
   body:has(.trip-detail-shell) { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
   body:has(.trip-detail-shell) .footer { padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
 }
