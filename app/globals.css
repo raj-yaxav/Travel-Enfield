@@ -693,7 +693,7 @@ button.bt-calendar-day { cursor: pointer; }
   .bt-listing-intro h1 { font-size: 30px; line-height: 36px; }
   .bt-listing-intro p { margin-top: 16px; }
   .bt-desktop-chips-dock { top: 154px; }
-  .bt-trip-card { height: 146px; }
+  .bt-trip-card { min-height: 168px; height: auto; }
   .bt-filter-rail { width: 25%; }
   .bt-calendar { padding: 18px; }
 }
