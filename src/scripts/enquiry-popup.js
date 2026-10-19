@@ -77,8 +77,10 @@ form.addEventListener('submit', async event => {
     const response = await fetch('/api/enquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     if (!response.ok) throw new Error();
     status.classList.add('success');
-    status.textContent = 'Request received. A TravelEnfield expert will contact you shortly.';
+    status.textContent = 'Request received. Opening WhatsApp...';
     form.reset();
+    const message = `Hi TravelEnfield! I have submitted an enquiry.\n\nName: ${body.name}\nDestination: ${body.destination}\nPhone: +91 ${body.phone}${body.email ? `\nEmail: ${body.email}` : ''}\n\nPlease help me plan my trip.`;
+    window.setTimeout(() => window.location.assign(`https://wa.me/918929836726?text=${encodeURIComponent(message)}`), 250);
   } catch {
     status.classList.add('error');
     status.textContent = 'Could not send right now. Please try again or use WhatsApp.';
